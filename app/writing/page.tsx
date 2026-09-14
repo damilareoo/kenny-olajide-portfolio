@@ -10,7 +10,7 @@ export default function WritingIndex() {
   const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date));
 
   return (
-    <main className="mx-auto w-full max-w-[760px] px-6 pb-32 pt-16">
+    <main id="main" className="mx-auto w-full max-w-[760px] px-6 pb-32 pt-16">
       <Label>Writing</Label>
       {/* Visible in the page, not only in data/writing.ts's source comment,
           so nobody reads this list believing the posts are real. */}

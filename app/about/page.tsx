@@ -6,7 +6,7 @@ export const metadata = { title: "About" };
 
 export default function About() {
   return (
-    <main className="mx-auto w-full max-w-[1240px] px-6 pb-32 pt-16">
+    <main id="main" className="mx-auto w-full max-w-[1240px] px-6 pb-32 pt-16">
       <h1 className="text-text-1 text-[length:var(--text-xl)] font-medium tracking-[var(--tracking-tight)]">
         {site.name}
       </h1>

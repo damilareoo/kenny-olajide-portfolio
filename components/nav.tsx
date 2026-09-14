@@ -13,6 +13,14 @@ const SECTIONS = [
   { href: "/about", label: "About" },
 ];
 
+/** "Kenny Olajide" -> "KO". The condensed header's wordmark. */
+function initials(name: string) {
+  return name
+    .split(" ")
+    .map((word) => word[0])
+    .join("");
+}
+
 /**
  * The active pill morphs between items rather than fading in under each.
  *
@@ -35,15 +43,29 @@ const SECTIONS = [
  * the reduced-motion block in globals.css and needs its own guard here. Under
  * reduced motion the transition duration drops to 0, so the pill still marks
  * the active item but jumps to it instantly rather than sliding.
+ *
+ * `condensed` is `components/site-header.tsx`'s scroll state, threaded
+ * through rather than read here a second time — Nav has no opinion of its own
+ * on scroll position, only on how to render one. It shrinks the row's padding
+ * and swaps the wordmark to initials; the full name is kept as an
+ * `aria-label` so the link's accessible name does not shrink along with it.
  */
-export function Nav() {
+export function Nav({ condensed = false }: { condensed?: boolean }) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
 
   return (
-    <nav className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-6 py-5">
-      <Link href="/" className="text-text-1 text-[length:var(--text-sm)] font-medium">
-        {site.name}
+    <nav
+      className={`mx-auto flex w-full max-w-[1240px] items-center justify-between px-6 ${
+        reduced ? "" : "transition-[padding] duration-[var(--dur-base)] ease-[var(--ease-out)]"
+      } ${condensed ? "py-3" : "py-5"}`}
+    >
+      <Link
+        href="/"
+        aria-label={condensed ? site.name : undefined}
+        className="text-text-1 text-[length:var(--text-sm)] font-medium"
+      >
+        {condensed ? initials(site.name) : site.name}
       </Link>
 
       <ul className="flex items-center gap-1">

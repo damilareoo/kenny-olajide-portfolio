@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { BootScreen } from "@/components/boot-screen";
-import { Nav } from "@/components/nav";
+import { SiteHeader } from "@/components/site-header";
+import { SkipLink } from "@/components/skip-link";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -30,9 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body>
+        <SkipLink />
         <BootScreen />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <Nav />
+          <SiteHeader />
           {children}
         </ThemeProvider>
       </body>

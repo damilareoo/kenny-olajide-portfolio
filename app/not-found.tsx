@@ -12,7 +12,7 @@ export const metadata = { title: "Not found" };
  */
 export default function NotFound() {
   return (
-    <main className="mx-auto flex min-h-[60svh] w-full max-w-[1240px] flex-col items-center justify-center px-6 text-center">
+    <main id="main" className="mx-auto flex min-h-[60svh] w-full max-w-[1240px] flex-col items-center justify-center px-6 text-center">
       <Label>404</Label>
       <h1 className="text-text-1 mt-4 text-[length:var(--text-xl)] font-medium tracking-[var(--tracking-tight)]">
         Page not found

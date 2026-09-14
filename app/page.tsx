@@ -11,7 +11,7 @@ export default async function Home() {
   const cards = await readAppStore();
 
   return (
-    <main className="mx-auto w-full max-w-[1240px] px-6 pb-32">
+    <main id="main" className="mx-auto w-full max-w-[1240px] px-6 pb-32">
       <section className="py-24 sm:py-32">
         <h1 className="text-text-1 text-[length:var(--text-xl)] font-medium tracking-[var(--tracking-tight)]">
           <RevealLines

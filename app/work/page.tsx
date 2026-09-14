@@ -14,7 +14,7 @@ export default async function WorkIndex() {
   const cards = await readAppStore();
 
   return (
-    <main className="mx-auto w-full max-w-[1240px] px-6 pb-32 pt-16">
+    <main id="main" className="mx-auto w-full max-w-[1240px] px-6 pb-32 pt-16">
       <Label>Work</Label>
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         {work.map((item, i) => (

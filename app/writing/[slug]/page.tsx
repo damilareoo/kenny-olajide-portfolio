@@ -25,7 +25,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!post) notFound();
 
   return (
-    <main className="mx-auto w-full max-w-[760px] px-6 pb-32 pt-16">
+    <main id="main" className="mx-auto w-full max-w-[760px] px-6 pb-32 pt-16">
       <Label>{post.date}</Label>
       {/* Same visibility rule as app/about/page.tsx: a placeholder post says
           so on the page, not only in data/writing.ts's source comment. */}

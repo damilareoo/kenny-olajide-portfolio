@@ -38,7 +38,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
   const card = (await readAppStore())[slug];
 
   return (
-    <main className="mx-auto w-full max-w-[1240px] px-6 pb-32">
+    <main id="main" className="mx-auto w-full max-w-[1240px] px-6 pb-32">
       <CaseHeader slug={item.slug} icon={card.icon} title={item.title} summary={item.summary} />
 
       <Reveal>
