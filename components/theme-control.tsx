@@ -24,6 +24,67 @@ const MODES = [
 type Mode = (typeof MODES)[number]["value"];
 
 /**
+ * Each state's glyph, drawn in `currentColor` so it inherits the segment's
+ * own text colour rather than carrying one of its own — active and inactive
+ * segments already differ by colour (`text-text-1` vs `text-text-3`), and the
+ * glyph should track that, not fight it.
+ *
+ * Inline SVG, not an icon font and not emoji: the Inter-only rule is about
+ * typefaces, and none of these shapes are text. `aria-hidden` on all three —
+ * the button's own label already names the state, so the glyph is decoration
+ * that would otherwise be read twice by a screen reader.
+ *
+ * - Light: a filled disc with short rays — a plain sun.
+ * - System: a circle split vertically, the left half filled — "follows your
+ *   OS" drawn literally, since System is a real state and not an absence.
+ * - Dark: a crescent, cut from a filled circle by masking out an offset
+ *   circle rather than freehanding an arc path.
+ */
+function Glyph({ mode }: { mode: Mode }) {
+  if (mode === "light") {
+    return (
+      <svg
+        viewBox="0 0 12 12"
+        width="12"
+        height="12"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+      >
+        <circle cx="6" cy="6" r="2.25" fill="currentColor" stroke="none" />
+        <line x1="6" y1="0.75" x2="6" y2="1.75" />
+        <line x1="6" y1="10.25" x2="6" y2="11.25" />
+        <line x1="0.75" y1="6" x2="1.75" y2="6" />
+        <line x1="10.25" y1="6" x2="11.25" y2="6" />
+        <line x1="2.4" y1="2.4" x2="3.1" y2="3.1" />
+        <line x1="8.9" y1="8.9" x2="9.6" y2="9.6" />
+        <line x1="8.9" y1="3.1" x2="9.6" y2="2.4" />
+        <line x1="2.4" y1="9.6" x2="3.1" y2="8.9" />
+      </svg>
+    );
+  }
+  if (mode === "system") {
+    return (
+      <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
+        <circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" strokeWidth="1" />
+        <path d="M6 1.5a4.5 4.5 0 0 0 0 9Z" fill="currentColor" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
+      <mask id="theme-glyph-dark-mask">
+        <rect width="12" height="12" fill="white" />
+        <circle cx="7.5" cy="4.5" r="4" fill="black" />
+      </mask>
+      <circle cx="6" cy="6" r="4.5" fill="currentColor" mask="url(#theme-glyph-dark-mask)" />
+    </svg>
+  );
+}
+
+/**
  * A three-state segmented control — Light / System / Dark — replacing the
  * old two-way text toggle.
  *
@@ -91,7 +152,7 @@ export function ThemeControl() {
             role="radio"
             aria-checked={on}
             onClick={(event) => select(m.value, event)}
-            className={`relative z-10 rounded-full px-2.5 py-1 text-[length:var(--text-2xs)] uppercase tracking-[var(--tracking-label)] transition-colors ${
+            className={`relative z-10 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[length:var(--text-2xs)] uppercase tracking-[var(--tracking-label)] transition-colors ${
               on ? "text-text-1" : "text-text-3 hover:text-text-2"
             }`}
           >
@@ -104,6 +165,7 @@ export function ThemeControl() {
                 transition={{ duration: DUR.base, ease: EASE_OUT }}
               />
             )}
+            <Glyph mode={m.value} />
             {m.label}
           </button>
         );
