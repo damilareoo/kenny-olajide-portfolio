@@ -120,3 +120,11 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* The circular reveal is the whole transition. Let the two snapshots sit still
+   underneath it rather than cross-fading as well, which would double the move. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
