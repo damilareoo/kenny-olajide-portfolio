@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
-import { DUR, EASE_OUT, useReducedMotion } from "@/lib/motion";
+import { DUR, EASE_OUT, STAGGER, useReducedMotion } from "@/lib/motion";
 
 /**
  * One block arriving.
@@ -36,9 +36,10 @@ export function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: n
  *
  * Each line needs its own `overflow-hidden` frame — one frame around the
  * whole block would clip the stack rather than each line, and the lines
- * would slide as one object instead of arriving in sequence. 60ms of stagger
- * is enough to read as sequence and short enough that the last line is not
- * still waiting when the eye has moved on.
+ * would slide as one object instead of arriving in sequence. `STAGGER`
+ * (60ms, from lib/motion.ts) between lines is enough to read as sequence and
+ * short enough that the last line is not still waiting when the eye has
+ * moved on.
  *
  * Same JS-animation caveat as `Reveal`: globals.css cannot reach this, so
  * useReducedMotion() gates it directly. Under reduced motion every line still
@@ -60,7 +61,7 @@ export function RevealLines({ lines, className = "" }: { lines: string[]; classN
               className="block"
               initial={{ y: "110%" }}
               animate={{ y: 0 }}
-              transition={{ duration: DUR.staged, ease: EASE_OUT, delay: i * 0.06 }}
+              transition={{ duration: DUR.staged, ease: EASE_OUT, delay: i * STAGGER }}
             >
               {line}
             </motion.span>

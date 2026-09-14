@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "fs";
-import { DUR, EASE_OUT, EASE_INOUT } from "./motion";
+import { DUR, EASE_OUT, EASE_INOUT, STAGGER } from "./motion";
 
 const css = readFileSync("app/globals.css", "utf8");
 
@@ -13,6 +13,11 @@ describe("the motion token set", () => {
 
   it("offers exactly four durations", () => {
     expect(Object.keys(DUR).sort()).toEqual(["base", "entrance", "micro", "staged"]);
+  });
+
+  it("exports STAGGER as a separate, non-DUR timing for staged offsets", () => {
+    expect(typeof STAGGER).toBe("number");
+    expect(Object.keys(DUR)).not.toContain("stagger");
   });
 
   it("mirrors every token into CSS so both languages animate identically", () => {

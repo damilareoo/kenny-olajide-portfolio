@@ -29,11 +29,28 @@ describe("Reveal", () => {
     expect(container.querySelectorAll(".overflow-hidden")).toHaveLength(2);
   });
 
-  it("still renders every line when motion is reduced", () => {
+  /* These two are a pair, and the second is what makes the first mean
+     anything. Asserting only that the text is present would pass even if the
+     reduced branch were deleted outright — motion.span renders its children as
+     real text too. The observable difference is the inline transform that
+     `initial={{ y: "110%" }}` writes: the animated branch has one, the plain
+     span does not. */
+  it("renders plain, untransformed spans when motion is reduced", () => {
     reduced.value = true;
     render(<RevealLines lines={["alpha", "beta"]} />);
-    expect(screen.getByText("alpha")).toBeInTheDocument();
-    expect(screen.getByText("beta")).toBeInTheDocument();
+    for (const word of ["alpha", "beta"]) {
+      const el = screen.getByText(word);
+      expect(el).toBeInTheDocument();
+      expect(el.getAttribute("style") ?? "").not.toMatch(/transform|translate/);
+    }
     reduced.value = false;
+  });
+
+  it("does write a transform when motion is not reduced", () => {
+    reduced.value = false;
+    render(<RevealLines lines={["gamma"]} />);
+    expect(screen.getByText("gamma").getAttribute("style") ?? "").toMatch(
+      /transform|translate/,
+    );
   });
 });

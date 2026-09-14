@@ -28,6 +28,18 @@ export const DUR = {
 } as const;
 
 /**
+ * The gap between one staged item arriving and the next.
+ *
+ * Not a member of DUR, because it is not a duration — nothing lasts 60ms here.
+ * It is the offset between two things that each last `DUR.staged`, and giving
+ * it a name keeps it out of the components: a bare `i * 0.06` in a reveal is a
+ * component hand-rolling a timing, which is the one thing the token set exists
+ * to stop. Long enough to read as sequence, short enough that the last line is
+ * not still arriving after the eye has moved on.
+ */
+export const STAGGER = 0.06;
+
+/**
  * Whether this visitor has asked for less motion.
  *
  * `false` on the server so the prerendered shell matches the common case, and
