@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "fs";
-import { DUR, EASE_OUT, EASE_INOUT, STAGGER } from "./motion";
+import { DUR, EASE_OUT, EASE_INOUT, HOLD, STAGGER } from "./motion";
 
 const css = readFileSync("app/globals.css", "utf8");
 
@@ -46,5 +46,10 @@ describe("the motion token set", () => {
 
   it("holds EASE_INOUT for symmetric moves", () => {
     expect(EASE_INOUT).toEqual([0.65, 0, 0.35, 1]);
+  });
+
+  it("exports HOLD as a separate, non-DUR rest beat", () => {
+    expect(typeof HOLD).toBe("number");
+    expect(Object.keys(DUR)).not.toContain("hold");
   });
 });

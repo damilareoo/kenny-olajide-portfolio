@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useTransform, animate } from "motion/react";
-import { DUR, EASE_OUT, useReducedMotion } from "@/lib/motion";
+import { DUR, EASE_OUT, HOLD, useReducedMotion } from "@/lib/motion";
 import { useMounted } from "@/lib/use-mounted";
 import { site } from "@/data/site";
 
@@ -58,7 +58,7 @@ export function BootScreen() {
         sessionStorage.setItem(BOOT_KEY, "1");
         setDone(true);
       },
-      DUR.entrance * 1000 + 200,
+      (DUR.entrance + HOLD) * 1000,
     );
     return () => {
       controls.stop();
@@ -66,24 +66,33 @@ export function BootScreen() {
     };
   }, [count, skip]);
 
-  if (!mounted || skip) return null;
+  /* Only the `mounted` gate may return null. `AnimatePresence` has to OUTLIVE
+     the thing it animates away: it works by holding a removed child in the
+     tree long enough for `exit` to play, so if the component returns null on
+     `skip` the whole wrapper unmounts in the same commit as its child and no
+     exit frame ever runs — the screen pops instead of wiping. The child is
+     conditional INSIDE the wrapper for exactly that reason. Nothing in jsdom
+     can catch this; it is only visible in a browser. */
+  if (!mounted) return null;
 
   return (
     <AnimatePresence>
-      <motion.div
-        data-testid="boot"
-        aria-hidden="true"
-        className="bg-bg fixed inset-0 z-50 flex items-end justify-between px-6 py-5"
-        exit={{ y: "-100%" }}
-        transition={{ duration: DUR.base, ease: EASE_OUT }}
-      >
-        <span className="text-text-1 text-[length:var(--text-xl)] font-medium tracking-[var(--tracking-tight)]">
-          {site.name}
-        </span>
-        {/* tnum is already on at html level, so this figure does not reflow as
-            it counts. */}
-        <motion.span className="text-text-3 text-[length:var(--text-sm)]">{rounded}</motion.span>
-      </motion.div>
+      {!skip && (
+        <motion.div
+          data-testid="boot"
+          aria-hidden="true"
+          className="bg-bg fixed inset-0 z-50 flex items-end justify-between px-6 py-5"
+          exit={{ y: "-100%" }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
+        >
+          <span className="text-text-1 text-[length:var(--text-xl)] font-medium tracking-[var(--tracking-tight)]">
+            {site.name}
+          </span>
+          {/* tnum is already on at html level, so this figure does not reflow
+              as it counts. */}
+          <motion.span className="text-text-3 text-[length:var(--text-sm)]">{rounded}</motion.span>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 }

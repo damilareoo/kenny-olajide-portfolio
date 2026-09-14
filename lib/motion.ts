@@ -40,6 +40,17 @@ export const DUR = {
 export const STAGGER = 0.06;
 
 /**
+ * How long a finished thing rests before it leaves.
+ *
+ * The boot counter reaches 100 and the screen does not go at once — a beat of
+ * stillness is what stops the exit reading as a cut. Named for the same reason
+ * STAGGER is: `DUR.entrance * 1000 + 200` buries a timing decision in a
+ * component, and the token set exists so that every such decision is visible
+ * in one file.
+ */
+export const HOLD = 0.2;
+
+/**
  * Whether this visitor has asked for less motion.
  *
  * `false` on the server so the prerendered shell matches the common case, and

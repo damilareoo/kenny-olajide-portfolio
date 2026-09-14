@@ -31,6 +31,10 @@ describe("nearestSnap", () => {
     expect(nearestSnap(400, points)).toBe(-0);
     expect(nearestSnap(-5000, points)).toBe(-960);
   });
+
+  it("has nothing to snap to when there are no points", () => {
+    expect(nearestSnap(-500, [])).toBe(0);
+  });
 });
 
 describe("projectedOffset", () => {
