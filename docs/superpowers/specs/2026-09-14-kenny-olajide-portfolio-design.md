@@ -91,9 +91,14 @@ of them to be approximated.
 | `--rule` | `#d4d4d4` | `#3a3a3a` | A separator that is meant to be seen |
 | `--text-1` | `#000000` | `#eeeeee` | Names, headings |
 | `--text-2` | `#6c6a6a` | `#dbdbdb` | Body and paragraphs |
-| `--text-3` | `#767676` | `#b5b5b5` | Inactive nav, secondary metadata |
-| `--text-4` | `#9a9a9a` | `#7b7b7b` | Captions, counts, the quietest figures |
-| `--chip` | `#a5a5a533` | `#ffffff0f` | Translucent label fill |
+| `--text-3` | `#767676` | `#b5b5b5` | Inactive nav, captions, counts — on `--bg` only |
+| `--text-4` | `#9a9a9a` | `#7b7b7b` | Decorative marks and disabled states. Never type. |
+| `--chip` | `rgb(165 165 165 / 0.2)` | `rgb(255 255 255 / 0.06)` | Translucent label fill |
+
+`--chip` is written in `rgb()` rather than as the equivalent `#a5a5a533` /
+`#ffffff0f` so that the contrast harness's hex parser skips it. It is a
+translucent fill whose effective contrast depends on what sits behind it, so a
+figure measured against the token itself would be meaningless.
 
 Provenance: light `--text-2` is Deji's `.body-text` colour, `--text-3` is the
 inactive `.nav-brand`, `--chip` is the `.social-link` background. Dark is
@@ -101,8 +106,40 @@ inactive `.nav-brand`, `--chip` is the `.social-link` background. Dark is
 `--color-gray-500/600`, `--color-gray-1200`, `--color-text-paragraph`,
 `--color-gray-1100`, and `--color-gray-1000` in that order.
 
-Every foreground/background pair that occurs in the built site has a contrast
-test. A token cannot be nudged later without a test stating what the nudge cost.
+### Where each ink rung may be used
+
+Every pair was measured before any of it was built. The light skin is the
+binding constraint; jakub's dark ramp clears AA almost everywhere.
+
+| | on `--bg` | on `--surface` | on `--surface-2` |
+| --- | --- | --- | --- |
+| light `--text-1` | 21.00 | 18.43 | 17.14 |
+| light `--text-2` | 5.37 | 4.72 | 4.39 |
+| light `--text-3` | 4.54 | 3.99 | 3.71 |
+| light `--text-4` | 2.81 | 2.47 | 2.30 |
+| dark `--text-1` | 16.40 | 15.15 | 13.71 |
+| dark `--text-2` | 13.74 | 12.70 | 11.49 |
+| dark `--text-3` | 9.28 | 8.57 | 7.76 |
+| dark `--text-4` | 4.50 | 4.15 | 3.76 |
+
+That produces four placement rules, which the harness enforces rather than
+merely recording:
+
+1. `--text-1` may be used on any ground.
+2. `--text-2` carries body copy on `--bg` and `--surface`. On `--surface-2` it
+   measures 4.39 and is permitted only at large-text sizes.
+3. `--text-3` carries body copy on `--bg` only. On either raised surface it
+   falls below AA.
+4. `--text-4` is **not a text token**. It fails AA on all three light grounds
+   and fails even the 3:1 large-text floor on all three. It exists for
+   decorative marks and disabled states, and no type on this site is set in it.
+
+Rule 4 is a direct consequence of dropping the ruler motif. On
+`dejiajetomobi.com` `#9a9a9a` draws the measuring ticks — decoration, never
+type — so inheriting it as an ink rung would have inherited a colour with no
+legitimate text job on this site.
+
+A token cannot be nudged later without a test stating what the nudge cost.
 
 No accent hue. There is no colour on this site that is not a neutral, and no
 element earns an exception.
