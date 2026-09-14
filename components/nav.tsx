@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { DUR, EASE_OUT, useReducedMotion } from "@/lib/motion";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeControl } from "./theme-control";
 import { site } from "@/data/site";
 
 const SECTIONS = [
@@ -93,7 +93,7 @@ export function Nav({ condensed = false }: { condensed?: boolean }) {
           );
         })}
         <li className="pl-3">
-          <ThemeToggle />
+          <ThemeControl />
         </li>
       </ul>
     </nav>

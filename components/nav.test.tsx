@@ -3,11 +3,13 @@ import { render, screen } from "@testing-library/react";
 import { Nav } from "./nav";
 
 vi.mock("next/navigation", () => ({ usePathname: () => "/work/chessever" }));
-vi.mock("next-themes", () => ({ useTheme: () => ({ resolvedTheme: "light", setTheme: vi.fn() }) }));
+vi.mock("next-themes", () => ({
+  useTheme: () => ({ theme: "light", resolvedTheme: "light", systemTheme: "light", setTheme: vi.fn() }),
+}));
 
-// jsdom has no window.matchMedia; useReducedMotion (and ThemeToggle's own use
+// jsdom has no window.matchMedia; useReducedMotion (and ThemeControl's own use
 // of it) reach it through lib/motion, so it is mocked at that seam rather than
-// polyfilling matchMedia — same pattern as theme-toggle.test.tsx.
+// polyfilling matchMedia — same pattern as theme-control.test.tsx.
 vi.mock("@/lib/motion", async (orig) => ({
   ...(await orig<typeof import("@/lib/motion")>()),
   useReducedMotion: () => false,

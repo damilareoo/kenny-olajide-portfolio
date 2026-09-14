@@ -6,7 +6,7 @@ vi.mock("@/lib/use-mounted", () => ({ useMounted: () => true }));
 
 // jsdom has no window.matchMedia; useReducedMotion reaches it through
 // lib/motion, so it is mocked at that seam rather than polyfilling
-// matchMedia — same pattern as nav.test.tsx and theme-toggle.test.tsx.
+// matchMedia — same pattern as nav.test.tsx and theme-control.test.tsx.
 const reduced = vi.hoisted(() => ({ value: false }));
 vi.mock("@/lib/motion", async (orig) => ({
   ...(await orig<typeof import("@/lib/motion")>()),
