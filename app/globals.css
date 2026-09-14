@@ -77,6 +77,13 @@
   --color-text-3: var(--text-3);
   --color-text-4: var(--text-4);
   --color-chip: var(--chip);
+
+  /* Tailwind's plain transition-* utilities default to 150ms, which is not
+     one of the four named durations. Rebinding them here means a bare
+     transition-colors lands on the token set without every component naming a
+     duration of its own. */
+  --default-transition-duration: var(--dur-micro);
+  --default-transition-timing-function: var(--ease-out);
 }
 
 html {
