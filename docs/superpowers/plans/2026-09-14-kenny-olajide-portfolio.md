@@ -693,9 +693,14 @@ Expected: FAIL — `Cannot find module './motion'`.
 
 - [ ] **Step 4: Write `lib/motion.ts`**
 
-```ts
-"use client";
+Note there is deliberately **no `"use client"`** on this module. It is four
+constants plus one hook, and the directive would turn a constants module into a
+client boundary — any server component that later reads `DUR` would drag one
+along silently. The hook is only ever called from modules that declare
+`"use client"` themselves, and `use-media-query.ts` keeps its own directive, so
+nothing loses its client marking.
 
+```ts
 import { useMediaQuery } from "./use-media-query";
 
 /**
@@ -1291,7 +1296,11 @@ git commit -m "feat: port the App Store client, its proxy route and both listing
 
 **Interfaces:**
 - Consumes: tokens from Tasks 2–3.
-- Produces: `<Label>`, `<Chip>`, `<RecordRow label value href?>`, `<Rule />`.
+- Produces: `<Label>`, `<Chip>`, `<RecordRow label value href?>`.
+
+There is deliberately no `<Rule />` separator component. `RecordRow` draws its
+own `border-b`, so nothing on the site needs one, and a component that is built
+and tested but never rendered is dead code however tidy it looks.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1299,7 +1308,7 @@ git commit -m "feat: port the App Store client, its proxy route and both listing
 ```tsx
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Chip, Label, RecordRow, Rule } from "./ui";
+import { Chip, Label, RecordRow } from "./ui";
 
 describe("primitives", () => {
   it("sets a label in the one micro-label style", () => {
@@ -1316,11 +1325,6 @@ describe("primitives", () => {
   it("links a record row's value out when given an href", () => {
     render(<dl><RecordRow label="Store" value="App Store" href="https://apps.apple.com" /></dl>);
     expect(screen.getByRole("link", { name: "App Store" })).toHaveAttribute("href", "https://apps.apple.com");
-  });
-
-  it("gives a rule no accessible presence — it is decoration", () => {
-    const { container } = render(<Rule />);
-    expect(container.firstChild).toHaveAttribute("aria-hidden", "true");
   });
 
   it("puts a chip on the translucent fill", () => {
@@ -1378,15 +1382,10 @@ export function RecordRow({ label, value, href }: { label: string; value: string
   );
 }
 
-/**
- * A hairline separator. Decoration, so it is hidden from assistive tech.
- *
- * A plain typographic rule and deliberately nothing more — it is not to be
- * developed into ticks, a gauge, or any measuring device.
- */
-export function Rule() {
-  return <hr aria-hidden="true" className="border-rule border-t" />;
-}
+/* No separator component lives here. RecordRow draws its own border-b, which
+   is the only separator the site uses. If one is ever needed standalone, it is
+   a plain typographic rule and nothing more — it is not to be developed into
+   ticks, a gauge, or any measuring device. */
 ```
 
 - [ ] **Step 4: Run the tests and verify they pass**
@@ -2658,7 +2657,7 @@ describe("metadata", () => {
   it("lists every real route in the sitemap", () => {
     const urls = sitemap().map((e) => new URL(e.url).pathname).sort();
     expect(urls).toEqual([
-      "/", "/about", "/work/chessever", "/work/endgame-ai",
+      "/", "/about", "/work", "/work/chessever", "/work/endgame-ai",
       "/writing", "/writing/designing-for-live", "/writing/on-constraint",
     ]);
   });
@@ -2682,8 +2681,11 @@ Expected: FAIL — modules not found.
 
 - [ ] **Step 3: Write the metadata routes**
 
-`app/sitemap.ts` returns `/`, `/about`, `/writing`, one entry per `work` slug and
-one per `posts` slug, each absolute against `site.url`.
+`app/sitemap.ts` returns `/`, `/about`, `/work`, `/writing`, one entry per `work`
+slug and one per `posts` slug, each absolute against `site.url`. `/work` is in
+the list because Task 15 creates that index and Task 9's nav links to it — a
+linked, indexable route the sitemap denied would be a contradiction the crawler
+resolves against us.
 
 `app/robots.ts`:
 ```ts
