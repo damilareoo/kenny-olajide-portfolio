@@ -2,7 +2,7 @@ import { IS_PLACEHOLDER, roles } from "@/data/experience";
 import { elsewhere, site } from "@/data/site";
 import { Label, RecordRow } from "@/components/ui";
 
-export const metadata = { title: "About — Kenny Olajide" };
+export const metadata = { title: "About" };
 
 export default function About() {
   return (

@@ -5,7 +5,7 @@ import { Reveal } from "@/components/reveal";
 import { Label } from "@/components/ui";
 import { STAGGER } from "@/lib/motion";
 
-export const metadata = { title: "Work — Kenny Olajide" };
+export const metadata = { title: "Work" };
 
 /* Cached for six hours by readAppStore (see lib/app-store.ts), so this stays
    a static prerender between reads rather than putting an Apple request on

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Label } from "@/components/ui";
 
-export const metadata = { title: "Not found — Kenny Olajide" };
+export const metadata = { title: "Not found" };
 
 /**
  * A real 404, not a soft one.

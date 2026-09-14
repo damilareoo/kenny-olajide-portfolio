@@ -4,7 +4,7 @@ import { Label } from "@/components/ui";
 import { Reveal } from "@/components/reveal";
 import { STAGGER } from "@/lib/motion";
 
-export const metadata = { title: "Writing — Kenny Olajide" };
+export const metadata = { title: "Writing" };
 
 export default function WritingIndex() {
   const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date));

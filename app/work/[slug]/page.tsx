@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const item = findWork(slug);
-  return item ? { title: `${item.title} — Kenny Olajide`, description: item.summary } : {};
+  return item ? { title: item.title, description: item.summary } : {};
 }
 
 /**
