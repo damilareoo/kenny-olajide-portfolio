@@ -2299,7 +2299,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import type { AppCard } from "@/lib/app-store";
 import type { WorkItem } from "@/data/work";
-import { DUR, EASE_OUT } from "@/lib/motion";
+import { DUR, EASE_OUT, useReducedMotion } from "@/lib/motion";
 import { Label } from "./ui";
 
 /**
@@ -2310,11 +2310,21 @@ import { Label } from "./ui";
  * cross-fading two pages that happen to contain similar things.
  */
 export function WorkCard({ item, card }: { item: WorkItem; card: AppCard }) {
+  /* Withholding the layoutId is how this honours reduced motion. A `layoutId`
+     IS the animation — motion measures the element here and again on the case
+     page and interpolates between them — so there is no duration to shorten
+     and nothing for the globals.css block to reach. Handing it `undefined`
+     means the case page simply renders its header, which is the final frame.
+     The case page must withhold its matching id on the same condition, or one
+     half of the pair animates alone. */
+  const reduced = useReducedMotion();
+  const layout = (name: string) => (reduced ? undefined : `${name}-${item.slug}`);
+
   return (
     <Link href={`/work/${item.slug}`} className="group block">
       <article className="border-border bg-surface rounded-2xl border p-6 transition-colors duration-[var(--dur-micro)] hover:border-text-4">
         <header className="flex items-center gap-4">
-          <motion.div layoutId={`icon-${item.slug}`} transition={{ duration: DUR.base, ease: EASE_OUT }}>
+          <motion.div layoutId={layout("icon")} transition={{ duration: DUR.base, ease: EASE_OUT }}>
             <Image
               src={card.icon}
               alt=""
@@ -2325,7 +2335,7 @@ export function WorkCard({ item, card }: { item: WorkItem; card: AppCard }) {
           </motion.div>
           <div>
             <motion.h2
-              layoutId={`title-${item.slug}`}
+              layoutId={layout("title")}
               transition={{ duration: DUR.base, ease: EASE_OUT }}
               className="text-text-1 text-[length:var(--text-lg)] font-medium tracking-[var(--tracking-tight)]"
             >
