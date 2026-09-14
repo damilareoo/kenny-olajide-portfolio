@@ -2,7 +2,7 @@ export type WorkItem = {
   slug: string;
   title: string;
   year: string;
-  role: string;
+  role?: string;
   /** One sentence for the home card. */
   summary: string;
   /** The case page's opening paragraphs. */
@@ -15,7 +15,7 @@ export const work: WorkItem[] = [
     slug: "endgame-ai",
     title: "Endgame AI",
     year: "2026",
-    role: "Product Design",
+    role: "Product Designer",
     summary:
       "An iOS chess app that turns post-game analysis into something a club player can actually read.",
     body: [

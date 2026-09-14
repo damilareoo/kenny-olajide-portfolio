@@ -40,11 +40,20 @@
   --text-base: clamp(1rem, 0.9792rem + 0.104vw, 1.0625rem);
   --text-lg: clamp(1.375rem, 1.2917rem + 0.42vw, 1.625rem);
   --text-xl: clamp(2.25rem, 1.8333rem + 2.08vw, 3.5rem);
+  /* One step above --text-xl for the home's name, and one between --text-lg and
+     --text-base for a case page's lead paragraph. Same rules as the other six:
+     rem at both clamp ends, a rem-leading preferred value, ramp stops at the
+     measure. */
+  --text-display: clamp(3rem, 2.0833rem + 4.58vw, 5.75rem);
+  --text-lead: clamp(1.125rem, 1.0833rem + 0.21vw, 1.25rem);
 
   /* Optical, not uniform. Large display type closes up; body sits at zero;
      the one place letter-spacing opens is the uppercase micro-label. */
   --tracking-tight: -0.03em;
   --tracking-label: 0.08em;
+  /* Display type closes up further than --tracking-tight: the larger the size,
+     the more air sits between letters at the same tracking. */
+  --tracking-display: -0.045em;
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-micro: 180ms;

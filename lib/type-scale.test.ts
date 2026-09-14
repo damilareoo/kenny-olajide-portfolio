@@ -6,7 +6,7 @@ const root = css.match(/:root\s*\{([^}]*)\}/)![1];
 const step = (name: string) => root.match(new RegExp(`--text-${name}:\\s*([^;]+);`))![1].trim();
 
 const FIXED = ["2xs", "xs", "sm"];
-const FLUID = ["base", "lg", "xl"];
+const FLUID = ["base", "lg", "xl", "display", "lead"];
 
 describe("the type scale", () => {
   it("sets all six steps", () => {

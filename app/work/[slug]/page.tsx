@@ -58,7 +58,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
           <Label>Record</Label>
           <dl className="mt-4">
             <RecordRow label="Year" value={item.year} />
-            <RecordRow label="Role" value={item.role} />
+            {item.role && <RecordRow label="Role" value={item.role} />}
             <RecordRow label="Platform" value={card.genre} />
             {item.collaborators?.map((c) => (
               <RecordRow key={c.name} label={c.role} value={c.name} href={c.href} />

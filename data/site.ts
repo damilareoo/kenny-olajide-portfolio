@@ -1,6 +1,9 @@
 export const site = {
   name: "Kenny Olajide",
   role: "Product Designer",
+  headline: "Product Designer, Content Editor, Writer, Chess lover",
+  education: "University of Ibadan",
+  location: "Nigeria",
   url: "https://kennyolajide.com",
   email: "hello@kennyolajide.com",
   linkedin: "https://linkedin.com/in/kennyolajide",

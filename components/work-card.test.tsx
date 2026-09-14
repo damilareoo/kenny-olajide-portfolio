@@ -70,7 +70,7 @@ describe("WorkCard", () => {
   it("prints the year and the role", () => {
     render(<WorkCard item={item} card={card} />);
     expect(screen.getByText("2025")).toBeInTheDocument();
-    expect(screen.getByText(item.role)).toBeInTheDocument();
+    expect(screen.getByText(item.role!)).toBeInTheDocument();
   });
 });
 

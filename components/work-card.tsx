@@ -49,7 +49,7 @@ export function WorkCard({ item, card }: { item: WorkItem; card: AppCard }) {
             </motion.h2>
             <div className="mt-1 flex gap-3">
               <Label>{item.year}</Label>
-              <Label>{item.role}</Label>
+              {item.role && <Label>{item.role}</Label>}
             </div>
           </div>
         </header>

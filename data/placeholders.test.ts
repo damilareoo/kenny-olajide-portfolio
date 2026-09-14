@@ -5,29 +5,34 @@ import { IS_PLACEHOLDER as writingIsPlaceholder, posts } from "./writing";
 import { work, findWork } from "./work";
 
 describe("content honesty", () => {
-  it("flags both career files as placeholder in code, not only in a comment", () => {
-    expect(experienceIsPlaceholder).toBe(true);
+  it("flags experience as real and writing as still placeholder, in code, not only in a comment", () => {
+    expect(experienceIsPlaceholder).toBe(false);
     expect(writingIsPlaceholder).toBe(true);
   });
 
-  it("says so at the top of each file for whoever edits it next", () => {
-    for (const f of ["data/experience.ts", "data/writing.ts"]) {
-      expect(readFileSync(f, "utf8").slice(0, 600)).toMatch(/PLACEHOLDER/);
-    }
+  it("says so at the top of the writing file for whoever edits it next", () => {
+    expect(readFileSync("data/writing.ts", "utf8").slice(0, 600)).toMatch(/PLACEHOLDER/);
   });
 
-  it("never files the unverified ZoomInfo employers as fact", () => {
-    // Search surfaced SmallChess, Forward Chess, Chessable and Telebu from a
-    // scrape. None of it is confirmed, so none of it ships.
+  it("never files the one still-uncorroborated ZoomInfo employer as fact", () => {
+    // Forward Chess, Telebu and Chessable are now verified against Kenny's own
+    // LinkedIn and appear legitimately in data/experience.ts. SmallChess is
+    // still an unconfirmed scrape fragment and does not ship.
     const text = readFileSync("data/experience.ts", "utf8");
-    for (const name of ["SmallChess", "Forward Chess", "Chessable", "Telebu"]) {
-      expect(text, `${name} must not appear`).not.toContain(name);
-    }
+    expect(text, "SmallChess must not appear").not.toContain("SmallChess");
   });
 
-  it("marks every placeholder role and post visibly", () => {
-    for (const r of roles) expect(r.placeholder).toBe(true);
+  it("marks every placeholder post visibly", () => {
     for (const p of posts) expect(p.placeholder).toBe(true);
+  });
+
+  it("gives every real role its full record", () => {
+    for (const r of roles) {
+      expect(r.role).toBeTruthy();
+      expect(r.company).toBeTruthy();
+      expect(r.from).toBeTruthy();
+      expect(r.to).toBeTruthy();
+    }
   });
 });
 
@@ -48,5 +53,10 @@ describe("the work", () => {
       expect(w.role).toBeTruthy();
       expect(w.summary.length).toBeGreaterThan(40);
     }
+  });
+
+  it("gives both selected pieces a real, owner-confirmed role", () => {
+    expect(findWork("endgame-ai")?.role).toBe("Product Designer");
+    expect(findWork("chessever")?.role).toBe("0–1 Product Experience");
   });
 });
