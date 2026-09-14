@@ -739,6 +739,18 @@ export const DUR = {
 } as const;
 
 /**
+ * The gap between one staged item arriving and the next.
+ *
+ * Not a member of DUR, because it is not a duration — nothing lasts 60ms here.
+ * It is the offset between two things that each last `DUR.staged`, and giving
+ * it a name keeps it out of the components: a bare `i * 0.06` in a reveal is a
+ * component hand-rolling a timing, which is the one thing the token set exists
+ * to stop. Long enough to read as sequence, short enough that the last line is
+ * not still arriving after the eye has moved on.
+ */
+export const STAGGER = 0.06;
+
+/**
  * Whether this visitor has asked for less motion.
  *
  * `false` on the server so the prerendered shell matches the common case, and
@@ -1601,12 +1613,29 @@ describe("Reveal", () => {
     expect(container.querySelectorAll(".overflow-hidden")).toHaveLength(2);
   });
 
-  it("still renders every line when motion is reduced", () => {
+  /* These two are a pair, and the second is what makes the first mean
+     anything. Asserting only that the text is present would pass even if the
+     reduced branch were deleted outright — motion.span renders its children as
+     real text too. The observable difference is the inline transform that
+     `initial={{ y: "110%" }}` writes: the animated branch has one, the plain
+     span does not. */
+  it("renders plain, untransformed spans when motion is reduced", () => {
     reduced.value = true;
     render(<RevealLines lines={["alpha", "beta"]} />);
-    expect(screen.getByText("alpha")).toBeInTheDocument();
-    expect(screen.getByText("beta")).toBeInTheDocument();
+    for (const word of ["alpha", "beta"]) {
+      const el = screen.getByText(word);
+      expect(el).toBeInTheDocument();
+      expect(el.getAttribute("style") ?? "").not.toMatch(/transform|translate/);
+    }
     reduced.value = false;
+  });
+
+  it("does write a transform when motion is not reduced", () => {
+    reduced.value = false;
+    render(<RevealLines lines={["gamma"]} />);
+    expect(screen.getByText("gamma").getAttribute("style") ?? "").toMatch(
+      /transform|translate/,
+    );
   });
 });
 ```
@@ -1623,7 +1652,7 @@ Expected: FAIL — module not found.
 
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
-import { DUR, EASE_OUT, useReducedMotion } from "@/lib/motion";
+import { DUR, EASE_OUT, STAGGER, useReducedMotion } from "@/lib/motion";
 
 /**
  * One block arriving.
@@ -1671,7 +1700,7 @@ export function RevealLines({ lines, className = "" }: { lines: string[]; classN
               className="block"
               initial={{ y: "110%" }}
               animate={{ y: 0 }}
-              transition={{ duration: DUR.staged, ease: EASE_OUT, delay: i * 0.06 }}
+              transition={{ duration: DUR.staged, ease: EASE_OUT, delay: i * STAGGER }}
             >
               {line}
             </motion.span>
