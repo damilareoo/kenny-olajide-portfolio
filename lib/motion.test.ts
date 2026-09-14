@@ -34,10 +34,20 @@ describe("the motion token set", () => {
 
   it("collapses to the final frame under reduced motion, not to a faster one", () => {
     expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);
-    const block = css.match(/@media \(prefers-reduced-motion: reduce\)\s*\{([\s\S]*?)\n\}/)![1];
-    expect(block).toMatch(/animation-duration:\s*0\.01ms/);
-    expect(block).toMatch(/transition-duration:\s*0\.01ms/);
-    expect(block).toMatch(/animation-iteration-count:\s*1/);
+
+    /* There is more than one reduced-motion block now — components that drive
+       their own animations (e.g. the work-card fan) carry their own guards —
+       so match the GLOBAL one by the universal selector it resets rather than
+       by being first in the file. */
+    const global = css.match(/@media \(prefers-reduced-motion: reduce\)\s*\{\s*\*,[\s\S]*?\n\}/);
+    expect(global, "no global reduced-motion block found").not.toBeNull();
+    expect(global![0]).toMatch(/animation-duration:\s*0\.01ms/);
+    expect(global![0]).toMatch(/transition-duration:\s*0\.01ms/);
+    expect(global![0]).toMatch(/animation-iteration-count:\s*1/);
+  });
+
+  it("stops the work-card fan for reduced-motion visitors", () => {
+    expect(css).toMatch(/\.group:hover \.fan > \*\s*\{\s*transform:\s*none/);
   });
 
   it("keeps the ruler motif out of the stylesheet entirely", () => {

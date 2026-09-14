@@ -107,6 +107,32 @@ html {
   }
 }
 
+@layer utilities {
+  /* The stack spreads from the bottom edge, so the tops splay and the bases
+     stay put — a hand of cards, not four rectangles rotating about their
+     middles. `--i` is set per child in work-card.tsx; the -2.25deg centres the
+     fan so the group leans evenly rather than drifting right. */
+  .fan > * {
+    transform-origin: bottom center;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .group:hover .fan > * {
+    transform: rotate(calc(var(--i) * 1.5deg - 2.25deg))
+               translateY(calc(var(--i) * -2px));
+  }
+
+  /* The hover fan is decoration on a card whose content is already complete,
+     so under reduced motion it does not happen at all. This is a second,
+     independent @media block rather than folding into the global one below:
+     that block is a CSS-declared animation blanket keyed on `*`, pinned by
+     lib/motion.test.ts to exactly four declarations, and is not the place to
+     grow a selector-specific rule for one component. */
+  @media (prefers-reduced-motion: reduce) {
+    .group:hover .fan > * { transform: none; }
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--text-2);
