@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { IS_PLACEHOLDER, posts } from "@/data/writing";
 import { Label } from "@/components/ui";
+import { Reveal } from "@/components/reveal";
+import { STAGGER } from "@/lib/motion";
 
 export const metadata = { title: "Writing — Kenny Olajide" };
 
@@ -18,15 +20,17 @@ export default function WritingIndex() {
         </p>
       )}
       <ul className="mt-8 space-y-10">
-        {sorted.map((post) => (
+        {sorted.map((post, i) => (
           <li key={post.slug} className="border-border border-b pb-10 last:border-none last:pb-0">
-            <Link href={`/writing/${post.slug}`} className="group block">
-              <Label>{post.date}</Label>
-              <h2 className="text-text-1 mt-2 text-[length:var(--text-lg)] font-medium tracking-[var(--tracking-tight)] group-hover:text-text-2">
-                {post.title}
-              </h2>
-              <p className="text-text-2 mt-2 text-[length:var(--text-base)]">{post.excerpt}</p>
-            </Link>
+            <Reveal delay={i * STAGGER}>
+              <Link href={`/writing/${post.slug}`} className="group block">
+                <Label>{post.date}</Label>
+                <h2 className="text-text-1 mt-2 text-[length:var(--text-lg)] font-medium tracking-[var(--tracking-tight)] group-hover:text-text-2">
+                  {post.title}
+                </h2>
+                <p className="text-text-2 mt-2 text-[length:var(--text-base)]">{post.excerpt}</p>
+              </Link>
+            </Reveal>
           </li>
         ))}
       </ul>
