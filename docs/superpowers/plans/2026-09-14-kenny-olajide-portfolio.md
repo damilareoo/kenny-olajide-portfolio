@@ -751,6 +751,17 @@ export const DUR = {
 export const STAGGER = 0.06;
 
 /**
+ * How long a finished thing rests before it leaves.
+ *
+ * The boot counter reaches 100 and the screen does not go at once — a beat of
+ * stillness is what stops the exit reading as a cut. Named for the same reason
+ * STAGGER is: `DUR.entrance * 1000 + 200` buries a timing decision in a
+ * component, and the token set exists so that every such decision is visible
+ * in one file.
+ */
+export const HOLD = 0.2;
+
+/**
  * Whether this visitor has asked for less motion.
  *
  * `false` on the server so the prerendered shell matches the common case, and
@@ -1783,7 +1794,7 @@ Expected: FAIL — module not found.
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useTransform, animate } from "motion/react";
-import { DUR, EASE_OUT, useReducedMotion } from "@/lib/motion";
+import { DUR, EASE_OUT, HOLD, useReducedMotion } from "@/lib/motion";
 import { useMounted } from "@/lib/use-mounted";
 import { site } from "@/data/site";
 
@@ -1822,17 +1833,25 @@ export function BootScreen() {
     const timer = setTimeout(() => {
       sessionStorage.setItem(BOOT_KEY, "1");
       setDone(true);
-    }, DUR.entrance * 1000 + 200);
+    }, (DUR.entrance + HOLD) * 1000);
     return () => {
       controls.stop();
       clearTimeout(timer);
     };
   }, [count, done, reduced]);
 
-  if (!mounted || done) return null;
+  /* Only the `mounted` gate may return null. `AnimatePresence` has to OUTLIVE
+     the thing it animates away: it works by holding a removed child in the
+     tree long enough for `exit` to play, so if the component returns null on
+     `done` the whole wrapper unmounts in the same commit as its child and no
+     exit frame ever runs — the screen pops instead of wiping. The child is
+     conditional INSIDE the wrapper for exactly that reason. Nothing in jsdom
+     can catch this; it is only visible in a browser. */
+  if (!mounted) return null;
 
   return (
     <AnimatePresence>
+      {!done && (
       <motion.div
         data-testid="boot"
         aria-hidden="true"
@@ -1847,6 +1866,7 @@ export function BootScreen() {
             it counts. */}
         <motion.span className="text-text-3 text-[length:var(--text-sm)]">{rounded}</motion.span>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 }
