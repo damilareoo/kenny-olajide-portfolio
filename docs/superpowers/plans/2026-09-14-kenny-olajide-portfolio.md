@@ -176,19 +176,26 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 import "@testing-library/jest-dom/vitest";
 ```
 
-`eslint.config.mjs`:
-```js
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+`eslint.config.mjs` — import the flat configs directly. **Do not use
+`FlatCompat`.** `eslint-config-next` 16 ships native flat config arrays at
+`eslint-config-next/core-web-vitals` and `eslint-config-next/typescript`;
+routing them through the eslintrc compatibility bridge makes the validator
+`JSON.stringify` a config whose `plugins.react` closes a cycle, and lint dies
+with `TypeError: Converting circular structure to JSON` before running a single
+rule. The bridge exists for configs that have no flat build. This one does.
 
-const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta.url)) });
+```js
+import coreWebVitals from "eslint-config-next/core-web-vitals";
+import typescript from "eslint-config-next/typescript";
 
 export default [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  { ignores: [".next/**", "node_modules/**"] },
+  ...coreWebVitals,
+  ...typescript,
+  { ignores: [".next/**", "node_modules/**", "*.tsbuildinfo"] },
 ];
 ```
+
+This also means `@eslint/eslintrc` is **not** a dependency of this project.
 
 `vitest.config.ts`:
 ```ts
