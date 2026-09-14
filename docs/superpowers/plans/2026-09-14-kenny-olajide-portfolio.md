@@ -845,6 +845,7 @@ Expected: FAIL — `Cannot find module './theme-toggle'`.
 "use client";
 
 import { useTheme } from "next-themes";
+import { DUR, EASE_OUT } from "@/lib/motion";
 import { useMounted } from "@/lib/use-mounted";
 
 /**
@@ -874,8 +875,12 @@ export function ThemeToggle() {
       document.documentElement.animate(
         { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
         {
-          duration: 420,
-          easing: "cubic-bezier(0.22, 0.61, 0.36, 1)",
+          /* DUR.base and EASE_OUT, converted into the units the Web Animations
+             API wants — milliseconds and a cubic-bezier() string. Writing the
+             literals here would be a component hand-rolling a timing, which is
+             exactly what the token set exists to prevent. */
+          duration: DUR.base * 1000,
+          easing: `cubic-bezier(${EASE_OUT.join(",")})`,
           pseudoElement: "::view-transition-new(root)",
         },
       );
