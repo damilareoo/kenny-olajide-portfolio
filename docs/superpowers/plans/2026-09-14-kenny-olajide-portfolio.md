@@ -1282,7 +1282,13 @@ describe("the live merge", () => {
     // Two ids in and one row back is a normal answer. A positional match would
     // print one app's rating under the other's name.
     const only = appSnapshots.find((a) => a.slug === "chessever")!;
-    const cards = cardsFrom([{ trackId: Number(only.trackId), averageUserRating: 4.1 }]);
+    /* Both figures, not just the average: `liveCard` takes a live rating only
+       when `userRatingCount` and `averageUserRating` are BOTH numbers, so a row
+       carrying the average alone falls to the floor and this assertion would
+       fail against correct code. */
+    const cards = cardsFrom([
+      { trackId: Number(only.trackId), averageUserRating: 4.1, userRatingCount: 12 },
+    ]);
     expect(cards["chessever"].source).toBe("live");
     expect(cards["chessever"].rating).toBe(4.1);
     expect(cards["endgame-ai"].source).toBe("recorded");
@@ -1413,7 +1419,7 @@ export function RecordRow({ label, value, href }: { label: string; value: string
 - [ ] **Step 4: Run the tests and verify they pass**
 
 Run: `pnpm test components/ui.test.tsx`
-Expected: PASS, 5 tests.
+Expected: PASS, 4 tests.
 
 - [ ] **Step 5: Commit**
 
