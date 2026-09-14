@@ -45,6 +45,12 @@
      the one place letter-spacing opens is the uppercase micro-label. */
   --tracking-tight: -0.03em;
   --tracking-label: 0.08em;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 180ms;
+  --dur-base: 420ms;
+  --dur-staged: 720ms;
+  --dur-entrance: 1200ms;
 }
 
 .dark {
@@ -97,4 +103,20 @@ html {
 body {
   background: var(--bg);
   color: var(--text-2);
+}
+
+/* Reduced motion renders the final frame. It is deliberately not a shortened
+   animation and not a cheaper transition — a visitor who asked for less motion
+   asked for the end state, not for the same move played faster. 0.01ms rather
+   than 0 so that animationend and transitionend still fire and any listener
+   waiting on them is not stranded. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
