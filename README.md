@@ -233,4 +233,19 @@ $ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/writing/nope
 
 ## Deployment
 
-Live: (pending first deploy)
+Live: https://kenny-olajide-portfolio.vercel.app
+
+Repository: https://github.com/damilareoo/kenny-olajide-portfolio (private)
+
+Deployed with `vercel deploy --prod`. Verified live on first deploy: every route
+returns its correct status (including real 404s at `/work/nope` and
+`/writing/nope`), the OG image and icon serve real PNGs, and both case pages
+report `data-source="live"` — Apple's iTunes Lookup API is answering in
+production rather than the committed snapshot standing in for it.
+
+Note on `site.url`. The sitemap and every canonical URL are built from
+`site.url` in `data/site.ts`, which is currently `https://kennyolajide.com` — an
+assumption, not a confirmed domain. The site is served from the Vercel URL
+above. Until the real domain is settled, the sitemap advertises addresses that
+may not resolve. Correcting it is a one-line edit in `data/site.ts`; nothing
+else hardcodes a domain.
