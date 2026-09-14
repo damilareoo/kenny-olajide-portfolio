@@ -27,7 +27,8 @@ Every task's requirements implicitly include this section.
   2. `--text-2` body copy on `--bg` and `--surface`; on `--surface-2` large text only (4.39).
   3. `--text-3` body copy on `--bg` only (3.99 on `--surface`).
   4. `--text-4` is **never type** — decorative marks and disabled states only.
-- **Motion:** every duration and curve comes from `lib/motion.ts`. No component hand-rolls a timing.
+- **Motion:** every duration and curve comes from `lib/motion.ts`. No component hand-rolls a timing. That includes Tailwind's *implicit* timings: a bare `transition-colors` resolves to Tailwind's built-in 150ms, which is not one of the four. `@theme inline` therefore rebinds `--default-transition-duration` to `var(--dur-micro)` and `--default-transition-timing-function` to `var(--ease-out)`, so the plain utilities land on the token set without every component naming a duration.
+- **Reduced motion and JS animation:** the `globals.css` reduced-motion block reaches CSS-declared animations and transitions only. Any Web Animations API call or `motion` animation needs its own `useReducedMotion()` guard in the component — a bare `*` selector matches neither a script-created animation nor a `::view-transition-*` pseudo-element.
 - **Reduced motion:** `prefers-reduced-motion: reduce` renders the *final frame instantly*. Not a shortened animation.
 - **Excluded by instruction:** the ruler / tick-strip / gauge / measuring motif, in any form, anywhere. Hairline separators are ordinary typographic rules and must not be developed into a measuring device.
 - **Content honesty:** nothing about Kenny's career is invented. `data/experience.ts` and `data/writing.ts` ship as placeholders with a file-level comment saying so.
