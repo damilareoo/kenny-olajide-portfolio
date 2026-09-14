@@ -12,6 +12,9 @@ export default function WritingIndex() {
   return (
     <main id="main" className="mx-auto w-full max-w-[760px] px-6 pb-32 pt-16">
       <Label>Writing</Label>
+      <h1 className="text-text-1 mt-2 text-[length:var(--text-xl)] font-medium tracking-[var(--tracking-tight)]">
+        All posts
+      </h1>
       {/* Visible in the page, not only in data/writing.ts's source comment,
           so nobody reads this list believing the posts are real. */}
       {IS_PLACEHOLDER && (
@@ -19,7 +22,7 @@ export default function WritingIndex() {
           Placeholder posts — real writing to be supplied.
         </p>
       )}
-      <ul className="mt-8 space-y-10">
+      <ul className="mt-10 space-y-10">
         {sorted.map((post, i) => (
           <li key={post.slug} className="border-border border-b pb-10 last:border-none last:pb-0">
             <Reveal delay={i * STAGGER}>

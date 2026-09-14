@@ -29,6 +29,25 @@ describe("Reveal", () => {
     expect(container.querySelectorAll(".overflow-hidden")).toHaveLength(2);
   });
 
+  describe("the scale prop", () => {
+    it("defaults off: no scale in the inline style, matching every caller that never opted in", () => {
+      const { container } = render(<Reveal>Frame</Reveal>);
+      expect(container.firstElementChild?.getAttribute("style") ?? "").not.toMatch(/scale/);
+    });
+
+    it("writes a scale transform once a caller opts in", () => {
+      const { container } = render(<Reveal scale>Frame</Reveal>);
+      expect(container.firstElementChild?.getAttribute("style") ?? "").toMatch(/scale/);
+    });
+
+    it("is dropped entirely under reduced motion, same as every other Reveal prop", () => {
+      reduced.value = true;
+      render(<Reveal scale>Final frame</Reveal>);
+      expect(screen.getByText("Final frame")).toBeInTheDocument();
+      reduced.value = false;
+    });
+  });
+
   /* These two are a pair, and the second is what makes the first mean
      anything. Asserting only that the text is present would pass even if the
      reduced branch were deleted outright — motion.span renders its children as

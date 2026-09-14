@@ -73,32 +73,95 @@ export function ShotCarousel({ card }: { card: AppCard }) {
     );
   }
 
+  /* The one place a snap target is turned into motion. Both the drag-end
+     handler and the keyboard path funnel through this, so there is exactly
+     one clamp and one animation call for the whole component rather than two
+     copies that could drift apart. */
+  const goTo = (target: number) =>
+    animate(x, Math.max(bounds.left, Math.min(bounds.right, target)), {
+      duration: DUR.base,
+      ease: EASE_OUT,
+    });
+
+  /* Reused by both the arrow buttons and Left/Right on the keyboard: the
+     current position is snapped to the nearest point first (a drag may have
+     left `x` between two of them), then moved one point over. Home/End skip
+     straight to either end rather than stepping through every point. */
+  const step = (direction: 1 | -1) => {
+    const here = points.indexOf(nearestSnap(x.get(), points));
+    const to = direction === 1 ? Math.min(here + 1, points.length - 1) : Math.max(here - 1, 0);
+    goTo(points[to]);
+  };
+
   return (
-    <div ref={viewport} className="overflow-hidden">
-      <motion.div
-        drag="x"
-        style={{ x, gap: GAP }}
-        className="flex cursor-grab active:cursor-grabbing"
-        dragConstraints={bounds}
-        dragElastic={0.08}
-        /* motion's own inertia would keep animating `x` after release using
-           its own physics, racing the explicit snap animation started below.
-           The snap target already accounts for release velocity (via
-           projectedOffset), so motion's momentum is redundant at best and, at
-           worst, both animations write to `x` in the same frame and visibly
-           fight. Turning it off leaves exactly one animation owning the value
-           after a drag ends. */
-        dragMomentum={false}
-        onDragEnd={(_, info) => {
-          const target = nearestSnap(projectedOffset(x.get(), info.velocity.x), points);
-          animate(x, Math.max(bounds.left, Math.min(bounds.right, target)), {
-            duration: DUR.base,
-            ease: EASE_OUT,
-          });
-        }}
-      >
-        {shots}
-      </motion.div>
+    <div>
+      <div ref={viewport} className="overflow-hidden">
+        <motion.div
+          drag="x"
+          style={{ x, gap: GAP }}
+          className="flex cursor-grab active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-text-1"
+          dragConstraints={bounds}
+          dragElastic={0.08}
+          /* motion's own inertia would keep animating `x` after release using
+             its own physics, racing the explicit snap animation started below.
+             The snap target already accounts for release velocity (via
+             projectedOffset), so motion's momentum is redundant at best and, at
+             worst, both animations write to `x` in the same frame and visibly
+             fight. Turning it off leaves exactly one animation owning the value
+             after a drag ends. */
+          dragMomentum={false}
+          onDragEnd={(_, info) => {
+            goTo(nearestSnap(projectedOffset(x.get(), info.velocity.x), points));
+          }}
+          /* The keyboard path the pointer-only drag never had. Every decision
+             still comes from lib/carousel.ts — this is the same arithmetic
+             the drag uses (points, bounds), reached a second way. */
+          tabIndex={0}
+          role="group"
+          aria-label={`${card.name} screenshots, ${card.shots.length} of them. Use the left and right arrow keys.`}
+          onKeyDown={(e) => {
+            const to =
+              e.key === "ArrowRight" ? "next"
+              : e.key === "ArrowLeft" ? "prev"
+              : e.key === "Home" ? "home"
+              : e.key === "End" ? "end"
+              : null;
+            if (to === null) return;
+            e.preventDefault();
+            if (to === "home") goTo(points[0]);
+            else if (to === "end") goTo(points[points.length - 1]);
+            else step(to === "next" ? 1 : -1);
+          }}
+        >
+          {shots}
+        </motion.div>
+      </div>
+
+      {/* Visible previous/next for pointer users who never think to drag.
+          Not rendered under reduced motion — that branch above is a plain
+          native scroller and needs no buttons of its own. */}
+      <div className="mt-4 flex gap-2">
+        <button
+          type="button"
+          onClick={() => step(-1)}
+          aria-label={`Previous ${card.name} screenshot`}
+          className="border-border text-text-2 hover:text-text-1 hover:border-text-4 flex size-9 items-center justify-center rounded-full border transition-colors"
+        >
+          <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M7.5 2.5 3 6l4.5 3.5" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={() => step(1)}
+          aria-label={`Next ${card.name} screenshot`}
+          className="border-border text-text-2 hover:text-text-1 hover:border-text-4 flex size-9 items-center justify-center rounded-full border transition-colors"
+        >
+          <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4.5 2.5 9 6l-4.5 3.5" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }

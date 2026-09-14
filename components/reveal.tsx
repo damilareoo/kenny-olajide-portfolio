@@ -14,15 +14,30 @@ import { DUR, EASE_OUT, STAGGER, useReducedMotion } from "@/lib/motion";
  * motion this returns the final frame with no `motion.div` and no transition
  * at all — not the same move played quickly. Someone who asked for less
  * motion asked for the end state.
+ *
+ * `scale` adds a 0.96 → 1 grow to the same entrance, for a frame arriving
+ * rather than a line of text — the case page's carousel band is the first
+ * caller. It defaults to `false` and, when off, the `initial`/`whileInView`
+ * objects carry no `scale` key at all rather than a no-op `1 → 1`: every
+ * existing caller gets the exact same two objects this always built, so
+ * adding the prop cannot change what they already do.
  */
-export function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
+export function Reveal({
+  children,
+  delay = 0,
+  scale = false,
+}: {
+  children: ReactNode;
+  delay?: number;
+  scale?: boolean;
+}) {
   const reduced = useReducedMotion();
   if (reduced) return <>{children}</>;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 12, ...(scale && { scale: 0.96 }) }}
+      whileInView={{ opacity: 1, y: 0, ...(scale && { scale: 1 }) }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: DUR.staged, ease: EASE_OUT, delay }}
     >

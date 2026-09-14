@@ -52,7 +52,9 @@ export function CaseHeader({
         >
           {title}
         </motion.h1>
-        <p className="text-text-2 mt-2 text-[length:var(--text-base)]">{summary}</p>
+        {/* The lead paragraph, at the large body step — spec §6/§7 — and
+            distinct from the plain --text-base the case body below it uses. */}
+        <p className="text-text-2 mt-2 text-[length:var(--text-lead)]">{summary}</p>
       </div>
     </header>
   );

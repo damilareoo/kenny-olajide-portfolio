@@ -16,7 +16,10 @@ export default async function WorkIndex() {
   return (
     <main id="main" className="mx-auto w-full max-w-[1240px] px-6 pb-32 pt-16">
       <Label>Work</Label>
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <h1 className="text-text-1 mt-2 text-[length:var(--text-xl)] font-medium tracking-[var(--tracking-tight)]">
+        Selected work
+      </h1>
+      <div className="mt-10 grid gap-6 lg:grid-cols-2">
         {work.map((item, i) => (
           <Reveal key={item.slug} delay={i * STAGGER}>
             <WorkCard item={item} card={cards[item.slug]} />

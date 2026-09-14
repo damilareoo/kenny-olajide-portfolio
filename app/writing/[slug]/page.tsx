@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { findPost, IS_PLACEHOLDER, posts } from "@/data/writing";
 import { Label } from "@/components/ui";
+import { Breadcrumb } from "@/components/breadcrumb";
+import { adjacent, Pagination } from "@/components/pagination";
 
 /* Same trap as app/work/[slug]/page.tsx, and pinned by the same kind of test
    (see app/writing/writing-route.test.ts): this route also sits behind
@@ -24,9 +26,23 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = findPost(slug);
   if (!post) notFound();
 
+  const index = posts.findIndex((p) => p.slug === slug);
+  const { prev, next } = adjacent(
+    posts.map((p) => ({ title: p.title, href: `/writing/${p.slug}` })),
+    index,
+  );
+
   return (
     <main id="main" className="mx-auto w-full max-w-[760px] px-6 pb-32 pt-16">
-      <Label>{post.date}</Label>
+      <Breadcrumb
+        trail={[
+          { label: "Writing", href: "/writing" },
+          { label: post.title, href: `/writing/${post.slug}` },
+        ]}
+      />
+      <div className="mt-8">
+        <Label>{post.date}</Label>
+      </div>
       {/* Same visibility rule as app/about/page.tsx: a placeholder post says
           so on the page, not only in data/writing.ts's source comment. */}
       {IS_PLACEHOLDER && (
@@ -44,6 +60,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </p>
         ))}
       </div>
+
+      <Pagination prev={prev} next={next} />
     </main>
   );
 }
