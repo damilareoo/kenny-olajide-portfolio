@@ -65,8 +65,17 @@ export function WorkCard({ item, card }: { item: WorkItem; card: AppCard }) {
             event can desynchronise by a frame or two, which is exactly the
             wobble this effect must not have; one transition on one custom
             property cannot. It also costs no JS on a card that is already
-            rendering eight images. */}
-        <div className="fan mt-6 flex gap-3">
+            rendering eight images.
+
+            `-mr-6 lg:-mr-10` pulls the row past the card's own right edge —
+            first cancelling the article's p-6 padding, then running on past
+            its border — so the composition reads as shots layered over the
+            page rather than shots boxed inside a card. The card was never
+            given its own overflow-hidden, so nothing has to be removed to let
+            this bleed; a page that lays two of these out asymmetrically (see
+            app/page.tsx) is what keeps the bleed from causing a horizontal
+            scrollbar, not a clip here. */}
+        <div className="fan -mr-6 mt-6 flex gap-3 lg:-mr-10">
           {card.shots.slice(0, 4).map((src, i) => (
             <div
               key={src}
