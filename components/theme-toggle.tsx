@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useMounted } from "@/lib/use-mounted";
-import { DUR, EASE_OUT } from "@/lib/motion";
+import { DUR, EASE_OUT, useReducedMotion } from "@/lib/motion";
 
 /* This TypeScript's lib.dom already types document.startViewTransition (it
    ships the View Transitions API as always-present), so no ambient
@@ -23,11 +23,21 @@ import { DUR, EASE_OUT } from "@/lib/motion";
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const mounted = useMounted();
+  const reduced = useReducedMotion();
   const next = resolvedTheme === "dark" ? "light" : "dark";
 
   function toggle(event: React.MouseEvent<HTMLButtonElement>) {
     const run = () => setTheme(next);
-    if (!document.startViewTransition) return run();
+
+    /* Two ways out, and both end at the finished theme.
+
+       The reduced-motion check has to live HERE rather than in CSS. The
+       globals.css block collapses CSS-declared animations, and this is a
+       script-created Element.animate() on a ::view-transition pseudo-element —
+       a bare `*` selector reaches neither. A visitor who asked for less motion
+       would have got the full circle-expand anyway, which is the exact failure
+       that block was written to prevent. */
+    if (reduced || !document.startViewTransition) return run();
 
     const { top, left, width, height } = event.currentTarget.getBoundingClientRect();
     const x = left + width / 2;
