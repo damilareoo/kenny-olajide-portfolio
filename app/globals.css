@@ -1,2 +1,58 @@
 @import "tailwindcss";
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Light is read out of dejiajetomobi.com's shipped stylesheet; dark out of
+   jakub.kr's. Four ink rungs rather than three because that is the number both
+   references actually occupy — collapsing to three would approximate one.
+
+   --text-4 is not a text token. It fails AA on all three light grounds and
+   fails even the 3:1 large-text floor on all three. On Deji's site #9a9a9a
+   draws the measuring ticks, which this site does not have, so the rung
+   arrived here with no legitimate text job. It is kept for decorative marks
+   and disabled states, and lib/contrast.test.ts holds it out of type. */
+:root {
+  --bg: #ffffff;
+  --surface: #f0f0f0;
+  --surface-2: #e8e8e8;
+  --border: #e6e6e6;
+  --rule: #d4d4d4;
+  --text-1: #000000;
+  --text-2: #6c6a6a;
+  --text-3: #767676;
+  --text-4: #9a9a9a;
+  /* rgb() rather than #a5a5a533 so the harness's hex parser skips it: a
+     translucent fill's real contrast depends on what is behind it. */
+  --chip: rgb(165 165 165 / 0.2);
+}
+
+.dark {
+  --bg: #101010;
+  --surface: #191919;
+  --surface-2: #222222;
+  --border: #313131;
+  --rule: #3a3a3a;
+  --text-1: #eeeeee;
+  --text-2: #dbdbdb;
+  --text-3: #b5b5b5;
+  --text-4: #7b7b7b;
+  --chip: rgb(255 255 255 / 0.06);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-rule: var(--rule);
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-text-4: var(--text-4);
+  --color-chip: var(--chip);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-2);
+}
