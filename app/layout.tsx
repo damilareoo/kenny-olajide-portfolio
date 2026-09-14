@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { BootScreen } from "@/components/boot-screen";
 import { Nav } from "@/components/nav";
+import { site } from "@/data/site";
 import "./globals.css";
 
 /* next/font self-hosts this at build time — no request to Google at runtime,
@@ -14,7 +15,16 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = { title: "Kenny Olajide" };
+/* site.url (data/site.ts) is the owner's best guess at the eventual domain,
+   not a confirmed one — read from there rather than hardcoded here so a
+   single edit fixes every surface if it turns out to be wrong. */
+export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
+  title: { default: `${site.name} — ${site.role}`, template: `%s — ${site.name}` },
+  description: "Product designer working on chess software.",
+  openGraph: { type: "website", siteName: site.name, url: site.url },
+  twitter: { card: "summary_large_image" },
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
