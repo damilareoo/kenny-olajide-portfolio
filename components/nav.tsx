@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { DUR, EASE_OUT, useReducedMotion } from "@/lib/motion";
+import { Magnetic } from "./magnetic";
 import { ThemeControl } from "./theme-control";
 import { site } from "@/data/site";
 
@@ -60,13 +61,15 @@ export function Nav({ condensed = false }: { condensed?: boolean }) {
         reduced ? "" : "transition-[padding] duration-[var(--dur-base)] ease-[var(--ease-out)]"
       } ${condensed ? "py-3" : "py-5"}`}
     >
-      <Link
-        href="/"
-        aria-label={condensed ? site.name : undefined}
-        className="text-text-1 text-[length:var(--text-sm)] font-medium"
-      >
-        {condensed ? initials(site.name) : site.name}
-      </Link>
+      <Magnetic>
+        <Link
+          href="/"
+          aria-label={condensed ? site.name : undefined}
+          className="text-text-1 block text-[length:var(--text-sm)] font-medium"
+        >
+          {condensed ? initials(site.name) : site.name}
+        </Link>
+      </Magnetic>
 
       <ul className="flex items-center gap-1">
         {SECTIONS.map(({ href, label }) => {
@@ -80,20 +83,24 @@ export function Nav({ condensed = false }: { condensed?: boolean }) {
                   transition={{ duration: reduced ? 0 : DUR.base, ease: EASE_OUT }}
                 />
               )}
-              <Link
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className={`relative block rounded-full px-3 py-1.5 text-[length:var(--text-sm)] transition-colors ${
-                  active ? "text-text-1" : "text-text-3 hover:text-text-1"
-                }`}
-              >
-                {label}
-              </Link>
+              <Magnetic className="block">
+                <Link
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  className={`relative block rounded-full px-3 py-1.5 text-[length:var(--text-sm)] transition-colors ${
+                    active ? "text-text-1" : "text-text-3 hover:text-text-1"
+                  }`}
+                >
+                  {label}
+                </Link>
+              </Magnetic>
             </li>
           );
         })}
         <li className="pl-3">
-          <ThemeControl />
+          <Magnetic className="block">
+            <ThemeControl />
+          </Magnetic>
         </li>
       </ul>
     </nav>

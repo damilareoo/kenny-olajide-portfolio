@@ -1,4 +1,5 @@
-import { elsewhere, site } from "@/data/site";
+import { elsewhere } from "@/data/site";
+import { CopyEmail } from "@/components/copy-email";
 import { Label } from "@/components/ui";
 
 /**
@@ -27,12 +28,7 @@ export function SiteFooter() {
       <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-10 px-6 py-12 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <Label>Get in touch</Label>
-          <a
-            href={`mailto:${site.email}`}
-            className="text-text-1 hover:text-text-2 mt-2 block text-[length:var(--text-lg)] font-medium tracking-[var(--tracking-tight)] transition-colors"
-          >
-            {site.email}
-          </a>
+          <CopyEmail className="text-text-1 hover:text-text-2 mt-2 block text-[length:var(--text-lg)] font-medium tracking-[var(--tracking-tight)] transition-colors" />
         </div>
 
         <nav aria-label="Elsewhere">
@@ -42,7 +38,7 @@ export function SiteFooter() {
               <li key={e.label}>
                 <a
                   href={e.href}
-                  className="text-text-2 hover:text-text-1 text-[length:var(--text-sm)] transition-colors"
+                  className="link text-text-2 hover:text-text-1 text-[length:var(--text-sm)] transition-colors"
                 >
                   {e.label}
                 </a>

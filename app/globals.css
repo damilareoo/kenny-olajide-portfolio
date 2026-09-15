@@ -117,6 +117,46 @@ html {
 }
 
 @layer utilities {
+  /* A hover underline that DRAWS, from the left edge to the right, rather
+     than appearing all at once.
+
+     `text-decoration` cannot do this — it has no width to animate — so the
+     rule is a background gradient the size of one pixel-tall line, grown from
+     0% to 100% of the element's width. `currentColor` so the line is whatever
+     ink the link already is, in either theme, without a second token.
+
+     On the default duration: `--dur-micro` is what @theme inline binds
+     `--default-transition-duration` to, and a hover underline is feedback
+     rather than motion — it should be finished about when the eye arrives.
+     Focus draws it too, so a keyboard visitor sees the same affordance a
+     mouse visitor does.
+
+     Its own reduced-motion block, for the same reason .fan has one: the
+     global block below is a blanket keyed on `*`, pinned by lib/motion.test.ts
+     to exactly four declarations, and is not the place to grow a
+     selector-specific rule. The final frame of this transition is the drawn
+     underline, so that is what reduced motion gets — instantly, on hover, and
+     never a faster draw. */
+  .link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    padding-bottom: 0.1em;
+    transition: background-size var(--dur-micro) var(--ease-out);
+  }
+
+  .link:hover,
+  .link:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .link { transition: none; }
+  }
+}
+
+@layer utilities {
   /* The stack spreads from the bottom edge, so the tops splay and the bases
      stay put — a hand of cards, not four rectangles rotating about their
      middles. `--i` is set per child in work-card.tsx; the -2.25deg centres the

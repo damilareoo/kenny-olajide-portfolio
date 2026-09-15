@@ -11,9 +11,18 @@ describe("AppStoreMeta", () => {
     expect(screen.getByText("4.7")).toBeInTheDocument();
   });
 
+  /* The count is a CountUp now, so the figure's rendered text is whatever
+     frame the animation is on. The settled value rides on the element as
+     `data-count-up`, which is what this has always meant to assert — that the
+     average is reported over the number of votes it was taken from. */
   it("says how many ratings the average is over", () => {
     render(<AppStoreMeta card={card} />);
-    expect(screen.getByText(/30 ratings/)).toBeInTheDocument();
+    const phrase = screen.getByText(/ratings/);
+    expect(phrase).toHaveTextContent("ratings");
+    expect(phrase.querySelector("[data-count-up]")).toHaveAttribute(
+      "data-count-up",
+      String(card.ratingCount),
+    );
   });
 
   it("links out to the listing", () => {

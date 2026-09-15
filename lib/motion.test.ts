@@ -58,6 +58,29 @@ describe("the motion token set", () => {
     expect(EASE_INOUT).toEqual([0.65, 0, 0.35, 1]);
   });
 
+  /* v1 defined this curve and used it nowhere, and the v2 spec (§8) put it on
+     notice: it is the curve for anything that returns to where it started, and
+     if it ended up unused again it would be deleted. These two are what adopt
+     it — the magnetic release settling back to zero, and the copy-email label
+     reverting to the address. Asserted against the source so the token cannot
+     quietly become dead again. */
+  it("is adopted by the two moves that return to where they started", () => {
+    expect(readFileSync("components/magnetic.tsx", "utf8")).toContain("EASE_INOUT");
+    expect(readFileSync("components/copy-email.tsx", "utf8")).toContain("EASE_INOUT");
+  });
+
+  it("draws the link underline from the left rather than fading one in", () => {
+    const rule = css.match(/\.link \{[\s\S]*?\}/);
+    expect(rule, "no .link rule found").not.toBeNull();
+    expect(rule![0]).toContain("background-size: 0% 1px");
+    expect(rule![0]).toContain("transition: background-size var(--dur-micro) var(--ease-out)");
+    expect(css).toMatch(/\.link:hover,\s*\n?\s*\.link:focus-visible \{\s*\n?\s*background-size: 100% 1px/);
+  });
+
+  it("stops the link underline from transitioning under reduced motion", () => {
+    expect(css).toMatch(/\.link \{ transition: none; \}/);
+  });
+
   it("exports HOLD as a separate, non-DUR rest beat", () => {
     expect(typeof HOLD).toBe("number");
     expect(Object.keys(DUR)).not.toContain("hold");

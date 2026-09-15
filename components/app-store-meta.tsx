@@ -1,4 +1,5 @@
 import type { AppCard } from "@/lib/app-store";
+import { CountUp } from "./count-up";
 import { Chip } from "./ui";
 
 /**
@@ -16,8 +17,11 @@ export function AppStoreMeta({ card }: { card: AppCard }) {
       <span className="text-text-1 text-[length:var(--text-sm)] font-medium">
         {card.rating.toFixed(1)}
       </span>
+      {/* The count animates; the rating beside it does not. A figure with a
+          decimal point counting up reads as a number still loading rather
+          than a rating, and 4.7 is the fact this card exists to state. */}
       <span className="text-text-3 text-[length:var(--text-xs)]">
-        {card.ratingCount} ratings
+        <CountUp value={card.ratingCount} /> ratings
       </span>
       <Chip>{card.genre}</Chip>
       <span className="text-text-3 text-[length:var(--text-xs)]">{card.seller}</span>

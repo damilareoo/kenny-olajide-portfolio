@@ -27,7 +27,7 @@ export function RecordRow({ label, value, href }: { label: string; value: string
       <dt className="label">{label}</dt>
       <dd className="text-text-1 text-[length:var(--text-sm)]">
         {href ? (
-          <a href={href} className="hover:text-text-2 transition-colors underline-offset-4 hover:underline">
+          <a href={href} className="link hover:text-text-2 transition-colors">
             {value}
           </a>
         ) : (
