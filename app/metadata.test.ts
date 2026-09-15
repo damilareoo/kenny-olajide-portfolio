@@ -5,12 +5,11 @@ import robots from "./robots";
 import manifest from "./manifest";
 
 describe("metadata", () => {
-  it("lists every real route in the sitemap", () => {
+  it("lists every real route in the sitemap, and only those", () => {
+    // Three routes, and no others — §1 of the v3 spec. /work and /writing are
+    // gone; a sitemap that still named them would send crawlers at 404s.
     const urls = sitemap().map((e) => new URL(e.url).pathname).sort();
-    expect(urls).toEqual([
-      "/", "/about", "/work", "/work/chessever", "/work/endgame-ai",
-      "/writing", "/writing/designing-for-live", "/writing/on-constraint",
-    ]);
+    expect(urls).toEqual(["/", "/about", "/shots"]);
   });
 
   it("keeps the artwork proxy out of the crawl — it is plumbing", () => {
@@ -18,9 +17,25 @@ describe("metadata", () => {
   });
 
   it("names the app and takes its colours from the two grounds", () => {
+    // Both figures are --bg, one per skin, read off app/globals.css. They moved
+    // with the palette: #ffffff/#101010 was v2's and is not in the new ramp.
     expect(manifest().name).toBe("Kenny Olajide");
-    expect(manifest().background_color).toBe("#ffffff");
-    expect(manifest().theme_color).toBe("#101010");
+    expect(manifest().background_color).toBe("#fcfcfc");
+    expect(manifest().theme_color).toBe("#090909");
+  });
+
+  it("holds the browser-chrome colours to the stylesheet's own grounds", () => {
+    /* app/layout.tsx writes --bg for each skin into `viewport.themeColor` by
+       hand, because a CSS custom property cannot be read from a Next metadata
+       export. That is two literals that can drift from the stylesheet, so this
+       reads both files and compares them. */
+    const css = readFileSync("app/globals.css", "utf8");
+    const layout = readFileSync("app/layout.tsx", "utf8");
+    const bg = (selector: string) =>
+      css.match(new RegExp(`${selector}\\s*\\{[^}]*?--bg:\\s*(#[0-9a-f]{6})`, "s"))![1];
+
+    expect(layout).toContain(`color: "${bg(":root")}"`);
+    expect(layout).toContain(`color: "${bg("\\.dark")}"`);
   });
 });
 
@@ -30,14 +45,7 @@ describe("page titles", () => {
      "About — Kenny Olajide — Kenny Olajide" — which is the first thing a browser
      tab, a search result and a link unfurl show. This shipped once; the
      assertion is here so it cannot ship again. */
-  const routes = [
-    "app/about/page.tsx",
-    "app/work/page.tsx",
-    "app/writing/page.tsx",
-    "app/not-found.tsx",
-    "app/work/[slug]/page.tsx",
-    "app/writing/[slug]/page.tsx",
-  ];
+  const routes = ["app/about/page.tsx", "app/shots/page.tsx", "app/not-found.tsx"];
 
   it("never repeats the site name in a page title", () => {
     for (const route of routes) {

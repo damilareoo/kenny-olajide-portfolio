@@ -25,28 +25,20 @@ if (!window.matchMedia) {
     }) as MediaQueryList;
 }
 
-/* Nor does jsdom implement IntersectionObserver, which is what motion's
-   viewport features (`whileInView`, `onViewportEnter`) construct on mount. A
-   component that counts up when it scrolls into view would otherwise throw on
-   render in every test that renders the page it sits on.
+/* jsdom has no global `CSS` object either, so `CSS.escape` — the standard way
+   to turn a `useId()` value into a safe selector — is missing. `components/product.tsx`
+   reaches for it. Carried across from the source repository's own setup file.
 
-   This stub observes nothing: it records the callback and never calls it, so
-   in a headless run nothing is ever "in view". That is the honest answer for a
-   document with no layout and no scrolling — and it means a test asserting the
-   pre-animation state is asserting what a visitor who has not scrolled there
-   yet actually sees. */
-class NoLayoutIntersectionObserver implements IntersectionObserver {
-  readonly root: Element | Document | null = null;
-  readonly rootMargin: string = "";
-  readonly thresholds: ReadonlyArray<number> = [];
-  observe(): void {}
-  unobserve(): void {}
-  disconnect(): void {}
-  takeRecords(): IntersectionObserverEntry[] {
-    return [];
-  }
-}
-
-if (!window.IntersectionObserver) {
-  window.IntersectionObserver = NoLayoutIntersectionObserver;
+   The IntersectionObserver stub that used to stand here is gone with the
+   components that needed it. It was a no-op that never fired, which was the
+   honest answer for a document with no layout — but the arrival machinery this
+   repo now carries (`lib/reveal.tsx`, `lib/glyph/sweep.ts`) takes the absence of
+   the constructor as its own signal: with no observer to be had, a watched
+   element is reported as already seen rather than left hidden forever. A stub
+   that exists and never fires is the one state that hides content in a
+   headless run, so jsdom is left as it is. */
+if (typeof globalThis.CSS === "undefined") {
+  (globalThis as unknown as { CSS: { escape: (value: string) => string } }).CSS = {
+    escape: (value: string) => value.replace(/([^\w-])/g, "\\$1"),
+  };
 }

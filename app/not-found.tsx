@@ -1,29 +1,26 @@
 import Link from "next/link";
-import { Label } from "@/components/ui";
+import { SectionLabel } from "@/components/ui";
 
 export const metadata = { title: "Not found" };
 
 /**
- * A real 404, not a soft one.
+ * A real 404, not a soft one. It ships with the framework's 404 status code
+ * intact.
  *
- * This is what Next renders for any route `dynamicParams = false` refuses —
- * see app/work/[slug]/page.tsx and app/writing/[slug]/page.tsx — and it ships
- * with the framework's 404 status code intact.
+ * Re-drawn in the new tokens: `--text-1`/`--text-2` became `text-ink`/`text-ink-2`
+ * and the type steps are Tailwind classes off the scale rather than
+ * `text-[length:var(--text-xl)]` literals, which is what the source's own
+ * `@theme inline` block exists to make possible.
  */
 export default function NotFound() {
   return (
-    <main id="main" className="mx-auto flex min-h-[60svh] w-full max-w-[1240px] flex-col items-center justify-center px-6 text-center">
-      <Label>404</Label>
-      <h1 className="text-text-1 mt-4 text-[length:var(--text-xl)] font-medium tracking-[var(--tracking-tight)]">
-        Page not found
-      </h1>
-      <p className="text-text-2 mt-3 text-[length:var(--text-base)]">
+    <main className="mx-auto flex min-h-[60svh] w-full max-w-[1240px] flex-1 flex-col items-center justify-center px-5 text-center sm:px-6">
+      <SectionLabel>404</SectionLabel>
+      <h1 className="mt-4 text-xl font-medium tracking-tight text-ink">Page not found</h1>
+      <p className="mt-3 text-base text-ink-2">
         The page you&rsquo;re looking for doesn&rsquo;t exist.
       </p>
-      <Link
-        href="/"
-        className="text-text-1 mt-8 text-[length:var(--text-sm)] underline underline-offset-4"
-      >
+      <Link href="/" className="mt-8 text-sm text-ink underline underline-offset-4">
         Back home
       </Link>
     </main>

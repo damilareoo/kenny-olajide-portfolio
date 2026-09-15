@@ -1,26 +1,35 @@
-import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { Chip, Label, RecordRow } from "./ui";
+// @vitest-environment jsdom
+import { act } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { RecordRow } from "@/components/ui";
 
-describe("primitives", () => {
-  it("sets a label in the one micro-label style", () => {
-    render(<Label>Selected work</Label>);
-    expect(screen.getByText("Selected work")).toHaveClass("label");
+(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
+let host: HTMLDivElement;
+let root: Root;
+beforeEach(() => { host = document.createElement("div"); document.body.appendChild(host); root = createRoot(host); });
+afterEach(() => { act(() => root.unmount()); host.remove(); });
+const render = (ui: React.ReactElement) => act(() => root.render(ui));
+
+describe("RecordRow", () => {
+  it("puts the label and its value in one grid row", () => {
+    render(<RecordRow label="Year">2025</RecordRow>);
+    const row = host.firstElementChild!;
+    expect(row.className).toContain("grid-cols-[72px_minmax(0,1fr)]");
+    expect(row.textContent).toBe("Year2025");
   });
 
-  it("renders a record row as a term and its definition", () => {
-    render(<dl><RecordRow label="Year" value="2026" /></dl>);
-    expect(screen.getByText("Year").tagName).toBe("DT");
-    expect(screen.getByText("2026").tagName).toBe("DD");
+  it("draws a dotted separator that the last row clears", () => {
+    // The rule is a background image, so it is cleared with bg-none, never a border utility.
+    render(<RecordRow label="Year">2025</RecordRow>);
+    const cls = host.firstElementChild!.className;
+    expect(cls).toContain("rule-b");
+    expect(cls).toContain("last:bg-none");
   });
 
-  it("links a record row's value out when given an href", () => {
-    render(<dl><RecordRow label="Store" value="App Store" href="https://apps.apple.com" /></dl>);
-    expect(screen.getByRole("link", { name: "App Store" })).toHaveAttribute("href", "https://apps.apple.com");
-  });
-
-  it("puts a chip on the translucent fill", () => {
-    render(<Chip>Games</Chip>);
-    expect(screen.getByText("Games").className).toMatch(/bg-chip/);
+  it("renders a value that is markup, not only a string", () => {
+    render(<RecordRow label="Live"><a href="https://example.com">example.com</a></RecordRow>);
+    expect(host.querySelector("a")?.getAttribute("href")).toBe("https://example.com");
   });
 });

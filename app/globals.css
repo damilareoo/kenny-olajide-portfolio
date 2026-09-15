@@ -2,211 +2,344 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Light is read out of dejiajetomobi.com's shipped stylesheet; dark out of
-   jakub.kr's. Four ink rungs rather than three because that is the number both
-   references actually occupy — collapsing to three would approximate one.
+/* A phone held sideways, and the short browser window that measures the same.
+   Height is the scarce axis there, not width: measured at 800×400 the hero band
+   ended 363px down a 400px screen — 91% of the device spent before the first
+   piece of work had begun. These two exist so a short viewport can be given its
+   own arrangement rather than the tall one scrolled. `short` tightens what a
+   short screen spends vertically; `short-wide` is the half of it that may also
+   turn a stacked band into two columns, and it carries the min-width because a
+   340px column is not a column, it is a squeeze. */
+@custom-variant short (@media (max-height: 540px));
+@custom-variant short-wide (@media (max-height: 540px) and (min-width: 600px));
 
-   --text-4 is not a text token. It fails AA on all three light grounds and
-   fails even the 3:1 large-text floor on all three. On Deji's site #9a9a9a
-   draws the measuring ticks, which this site does not have, so the rung
-   arrived here with no legitimate text job. It is kept for decorative marks
-   and disabled states, and lib/contrast.test.ts holds it out of type. */
 :root {
-  --bg: #ffffff;
-  --surface: #f0f0f0;
-  --surface-2: #e8e8e8;
-  --border: #e6e6e6;
-  --rule: #d4d4d4;
-  --text-1: #000000;
-  --text-2: #6c6a6a;
-  --text-3: #767676;
-  --text-4: #9a9a9a;
-  /* rgb() rather than #a5a5a533 so the harness's hex parser skips it: a
-     translucent fill's real contrast depends on what is behind it. */
-  --chip: rgb(165 165 165 / 0.2);
-  /* Six steps. The three small ones are fixed: they carry captions, labels,
-     years and counts — type already at its floor, which gets worse rather than
-     better when it grows with the window. The three large ones are fluid,
-     ramping 320px to 1280px and then stopping, because the page measure stops
-     growing at roughly there and type that keeps growing past the measure is
-     only bigger, not more readable.
+  /* Spacing and radii. These were the density dial's three steps and are now
+     one, at the value it shipped in the middle of — the dial went and the
+     tokens stayed, because every surface reads them and a literal 16px
+     scattered across twenty files is what they were written to prevent.
+     `--type-scale` was the fourth and does not survive: it multiplied the root
+     font size, which is what forced every size on the site into rem. */
+  --pg-gap: 16px;
+  --pad: 20px;
+  --radius-window: 16px;
+  --radius-tile: 12px;
 
-     Both clamp ends are rem, and so is the leading term of every preferred
-     value, so browser text-size and zoom still reach them. A preferred value
-     of pure vw would pin the size to the window and ignore the visitor. */
-  --text-2xs: 0.6875rem;
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: clamp(1rem, 0.9792rem + 0.104vw, 1.0625rem);
-  --text-lg: clamp(1.375rem, 1.2917rem + 0.42vw, 1.625rem);
-  --text-xl: clamp(2.25rem, 1.8333rem + 2.08vw, 3.5rem);
-  /* One step above --text-xl for the home's name, and one between --text-lg and
-     --text-base for a case page's lead paragraph. Same rules as the other six:
-     rem at both clamp ends, a rem-leading preferred value, ramp stops at the
-     measure. */
-  --text-display: clamp(3rem, 2.0833rem + 4.58vw, 5.75rem);
-  --text-lead: clamp(1.125rem, 1.0833rem + 0.21vw, 1.25rem);
+  /* How much of the screen one frame may occupy. 78% leaves the frame, its
+     caption, and the top edge of whatever follows on screen together, so
+     scrolling is always a choice rather than a repair. See `.frame-cap`. */
+  --frame-cap: 78svh;
 
-  /* Optical, not uniform. Large display type closes up; body sits at zero;
-     the one place letter-spacing opens is the uppercase micro-label. */
-  --tracking-tight: -0.03em;
-  --tracking-label: 0.08em;
-  /* Display type closes up further than --tracking-tight: the larger the size,
-     the more air sits between letters at the same tracking. */
-  --tracking-display: -0.045em;
-  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-micro: 180ms;
-  --dur-base: 420ms;
-  --dur-staged: 720ms;
-  --dur-entrance: 1200ms;
+  /* The type scale. Six steps, every one of them used — a reserved seventh for
+     work that might arrive is furniture, which is what the tier vocabulary was.
+
+     Three of them are fluid now, which they could not be while the type dial
+     existed: it multiplied the root font size, so every size on the site had to
+     be a rem for the dial to reach it. The dial is gone and clamp() is
+     available to type for the first time.
+
+     Fluid only where growth is worth something. The three small steps are
+     fixed, because they carry captions, labels, years and counts — type that is
+     already at its floor, and that gets worse rather than better when it grows
+     with the window. The three large steps carry the name, the section titles,
+     the lead lines and the body, and those are the ones a wide column can
+     actually spend room on.
+
+     Every ramp runs 320px to 1280px and then stops. 1280 is not arbitrary: the
+     page's own measure is `max-w-[1240px]` with 24px of gutter, so past roughly
+     there the column stops growing. Type that keeps growing after the measure
+     has stopped is not more readable, it is only bigger, and on a 2560px screen
+     it would be a headline shouting across a column that never widened to take
+     it.
+
+     Both ends of every clamp are rem, and so is the leading term of the
+     preferred value. That is what keeps browser text-size and zoom reaching
+     them — a preferred value of pure vw would pin the size to the window and
+     ignore the visitor entirely, which is the exact failure the dial was a
+     clumsy apology for. lib/type-scale.test.ts holds the shape.
+
+     Nothing is smaller at any width than it was on the fixed scale: each
+     minimum is the value that step used to hold everywhere. */
+  --text-2xs: 0.5625rem;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: clamp(0.9375rem, 0.9167rem + 0.104vw, 1rem);
+  --text-lg: clamp(1.25rem, 1.1667rem + 0.42vw, 1.5rem);
+  --text-xl: clamp(1.875rem, 1.667rem + 1.04vw, 2.5rem);
+
+  /* One cell of a rule, how much of it the dash fills, and what an unlit dot in
+     a field is still worth.
+
+     The rule's fill was `PIXEL_FILL` until the field's pixel became a circle.
+     They were the same number because they meant the same thing, and they
+     stopped meaning it: `PIXEL_FILL` went to 0.82 to repay the area a circle
+     loses to the square it is inscribed in — π/4 of it — and a rule's dash is
+     a square, so it owes no such tax. Sharing the number handed the rules a
+     compensation for a cost they do not pay, and shrank the gap in this 2px
+     pitch from 0.52px to 0.36px, which on a 2× display is a resolvable gap
+     becoming a sub-pixel one. So the rule keeps the hand the pixel had, under
+     its own name, and the field's fill is free to move without dragging it.
+     pixel.test.ts holds that seam open.
+
+     The floor lives here rather than in TypeScript because it is a property of
+     the skin, like a colour, and GlyphCell reads it beside the ink. An unlit
+     dot has to stay present without becoming a wash, and presence costs more
+     ink on a pale ground than on a dark one. This is the light value; `.dark`
+     takes it down. The reasoning is written out in lib/glyph/pixel.ts. */
+  --rule-fill: 0.74;
+  --rule-cell: 2px;
+  --pixel-floor: 0.1;
+
+  /* A grey ramp, one rung brighter than it was.
+
+     Two things were taken from sophia-liu.work and only one of them survived.
+     The hue did not: her neutral is faintly olive, the ramp was rotated to
+     match, the owner looked at it and did not want the cast. What survived is
+     the *ground* — --bg is #fcfcfc exactly, which he asked for by name, and
+     that one value is what moved everything else.
+
+     The old ground sat at #f2f2f2 with the raised surfaces *above* it, and
+     there is no room above #fcfcfc for a frame: #ffffff is already spoken for
+     by --surface, and anything between the two is flatter than the separation
+     test admits. So --surface-2 crossed the ground and became a frame beneath
+     it, landing at almost exactly the luminance --bg used to hold. Read that
+     way nothing in the ramp got lighter or darker: the reading ground climbed
+     one rung and the frame took the rung it left. Every text pair measured
+     against --bg improved; every pair measured against --surface-2 now
+     measures what it used to measure against --bg.
+
+     Taking the hue back out cost none of that. Each grey here was chosen by
+     matching the relative luminance of the warm value it replaces, level for
+     level, so every ratio holds to within 0.02 of what the warm ramp measured
+     — the brightness was doing the work, and the cast was only along for the
+     ride. lib/contrast.test.ts holds all of it, equal channels included. */
+  --bg: #fcfcfc;
+  --surface: #ffffff;
+  --surface-2: #f3f3f3;
+  --border: #dbdbdb;
+  --text-1: #0f0f0f;
+  --text-2: #575757;
+  --text-3: #777777;
+  --fill-strong: #0f0f0f;
+  /* The one hue on the site, and it earns it by carrying a single meaning: a
+     day the goal was missed. Everything around it is a true grey, so this is
+     the only place a channel is allowed to differ from its neighbours. Deeper
+     on the light skin so it holds its weight against a pale ground, brighter
+     on the dark one so it does not go muddy. */
+  --miss: #d92222;
+  /* Pure white, on the strong fill, where the ratio is the whole point and
+     there is nothing above white to spend. */
+  --on-strong: #ffffff;
 }
 
 .dark {
-  --bg: #101010;
-  --surface: #191919;
-  --surface-2: #222222;
-  --border: #313131;
-  --rule: #3a3a3a;
-  --text-1: #eeeeee;
-  --text-2: #dbdbdb;
-  --text-3: #b5b5b5;
-  --text-4: #7b7b7b;
-  --chip: rgb(255 255 255 / 0.06);
+  /* Near-black still reads as a surface, so an unlit dot needs far less here
+     than on the light skin to be present rather than absent. */
+  --pixel-floor: 0.05;
+
+  /* The dark skin moved for the same reason and kept the movement when the
+     hue came back out. The ground went a shade darker and the inks a shade
+     brighter than they were before the second pass, so every dark pair reads
+     at or above what it used to. Matched to luminance the same way the light
+     skin was. */
+  --bg: #090909;
+  --surface: #161616;
+  --surface-2: #1f1f1f;
+  --border: #2e2e2e;
+  --text-1: #f5f5f5;
+  --text-2: #9a9a9a;
+  --text-3: #6c6c6c;
+  --fill-strong: #f5f5f5;
+  --miss: #ff4d4d;
+  --on-strong: #111111;
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
-  --color-border: var(--border);
-  --color-rule: var(--rule);
-  --color-text-1: var(--text-1);
-  --color-text-2: var(--text-2);
-  --color-text-3: var(--text-3);
-  --color-text-4: var(--text-4);
-  --color-chip: var(--chip);
-
-  /* Tailwind's plain transition-* utilities default to 150ms, which is not
-     one of the four named durations. Rebinding them here means a bare
-     transition-colors lands on the token set without every component naming a
-     duration of its own. */
-  --default-transition-duration: var(--dur-micro);
-  --default-transition-timing-function: var(--ease-out);
+  --color-line: var(--border);
+  --color-ink: var(--text-1);
+  --color-ink-2: var(--text-2);
+  --color-ink-3: var(--text-3);
+  --color-strong: var(--fill-strong);
+  --color-miss: var(--miss);
+  --color-on-strong: var(--on-strong);
+  --text-2xs: var(--text-2xs);
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --font-sans: var(--font-suisse), system-ui, sans-serif;
+  --font-mono: var(--font-suisse-mono), ui-monospace, monospace;
 }
 
 html {
-  font-family: var(--font-inter), system-ui, sans-serif;
-  font-optical-sizing: auto;
-  /* tnum so figures do not jitter when a rating or a count changes; ss02 is
-     Inter's "Disambiguation (with zero)"; case fixes punctuation set beside
-     capitals. calt is on by default and is left alone. */
-  font-feature-settings: "tnum" 1, "ss02" 1, "case" 1;
-}
-
-/* The only micro-label on the site. There is no second typeface, so a label
-   and a heading are the same font doing two different jobs. */
-@layer utilities {
-  .label {
-    font-size: var(--text-2xs);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-    font-weight: 500;
-    color: var(--text-3);
-  }
-}
-
-@layer utilities {
-  /* A hover underline that DRAWS, from the left edge to the right, rather
-     than appearing all at once.
-
-     `text-decoration` cannot do this — it has no width to animate — so the
-     rule is a background gradient the size of one pixel-tall line, grown from
-     0% to 100% of the element's width. `currentColor` so the line is whatever
-     ink the link already is, in either theme, without a second token.
-
-     On the default duration: `--dur-micro` is what @theme inline binds
-     `--default-transition-duration` to, and a hover underline is feedback
-     rather than motion — it should be finished about when the eye arrives.
-     Focus draws it too, so a keyboard visitor sees the same affordance a
-     mouse visitor does.
-
-     Its own reduced-motion block, for the same reason .fan has one: the
-     global block below is a blanket keyed on `*`, pinned by lib/motion.test.ts
-     to exactly four declarations, and is not the place to grow a
-     selector-specific rule. The final frame of this transition is the drawn
-     underline, so that is what reduced motion gets — instantly, on hover, and
-     never a faster draw. */
-  .link {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 0% 1px;
-    padding-bottom: 0.1em;
-    transition: background-size var(--dur-micro) var(--ease-out);
-  }
-
-  .link:hover,
-  .link:focus-visible {
-    background-size: 100% 1px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .link { transition: none; }
-  }
-}
-
-@layer utilities {
-  /* The stack spreads from the bottom edge, so the tops splay and the bases
-     stay put — a hand of cards, not four rectangles rotating about their
-     middles. `--i` is set per child in work-card.tsx; the -2.25deg centres the
-     fan so the group leans evenly rather than drifting right. */
-  .fan > * {
-    transform-origin: bottom center;
-    transition: transform var(--dur-base) var(--ease-out);
-  }
-
-  .group:hover .fan > * {
-    transform: rotate(calc(var(--i) * 1.5deg - 2.25deg))
-               translateY(calc(var(--i) * -2px));
-  }
-
-  /* The hover fan is decoration on a card whose content is already complete,
-     so under reduced motion it does not happen at all. This is a second,
-     independent @media block rather than folding into the global one below:
-     that block is a CSS-declared animation blanket keyed on `*`, pinned by
-     lib/motion.test.ts to exactly four declarations, and is not the place to
-     grow a selector-specific rule for one component. */
-  @media (prefers-reduced-motion: reduce) {
-    .group:hover .fan > * { transform: none; }
-  }
+  background: var(--bg);
+  /* No root font size is declared on purpose. The dial used to multiply one
+     here, which meant the site overrode whatever the visitor had set in their
+     browser and then handed them its own three steps instead. With the dial
+     gone the browser's own text size is simply honoured, which is the setting
+     they already had. */
 }
 
 body {
   background: var(--bg);
-  color: var(--text-2);
+  color: var(--text-1);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Reduced motion renders the final frame. It is deliberately not a shortened
-   animation and not a cheaper transition — a visitor who asked for less motion
-   asked for the end state, not for the same move played faster. 0.01ms rather
-   than 0 so that animationend and transitionend still fire and any listener
-   waiting on them is not stranded. */
+::selection {
+  background: var(--text-1);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--text-1);
+  outline-offset: 2px;
+}
+
+/* A border that separates is a mark; a border that contains is an edge. Rules
+   are drawn as pixels on the icon's own pitch, and square rather than round —
+   a dash reads as a rule, and a row of circles reads as a dotted line imitating
+   one. The field's pixel is a circle now and the rule deliberately did not
+   follow it; see `--rule-fill` above for why it kept the old number too.
+   Containment borders — frames, cards, chips, inputs — are untouched and stay
+   hairlines.
+
+   Wrapped in @layer utilities so last:bg-none — itself emitted inside
+   @layer utilities by Tailwind — can win on cascade order instead of
+   losing to an unlayered declaration regardless of specificity. */
+@layer utilities {
+  .rule-b,
+  .rule-t {
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--border) 0,
+      var(--border) calc(var(--rule-cell) * var(--rule-fill)),
+      transparent calc(var(--rule-cell) * var(--rule-fill)),
+      transparent var(--rule-cell)
+    );
+    background-repeat: repeat-x;
+    background-size: 100% calc(var(--rule-cell) * var(--rule-fill));
+  }
+
+  .rule-b {
+    background-position: bottom left;
+  }
+
+  .rule-t {
+    background-position: top left;
+  }
+
+  /* A frame may not be taller than the screen it is read on.
+
+     Frames are sized by width — they take the measure and let height fall out
+     of the aspect ratio — and nothing used to check the result against the
+     viewport. Measured on a 13" MacBook Air (1440x789): a 1400x1000 capture
+     rendered 1240x886, which is 1.12x the viewport, so the whole frame was
+     never visible at once. /shots was worse at 1.15x. On a 1080p screen it
+     "fit" with 51px to spare — no caption, no next section, no signal that
+     the page continued.
+
+     The cap is expressed as a max-width rather than a max-height, because
+     `aspect-ratio` yields to whichever axis is explicitly constrained: cap the
+     height directly and the box keeps the parent's width and simply crops.
+     Capping the width instead — at exactly the width the ratio needs to reach
+     the height cap — keeps the ratio intact and lets the frame shrink whole.
+
+     `--frame-ratio` is the frame's own width/height as a bare number, set
+     inline by whichever component owns the slot. `svh` is the *small* viewport
+     height, so a phone with its browser chrome showing is measured with the
+     chrome present and the frame still fits when the toolbar returns. This is
+     a viewport unit on purpose: the type dial multiplies rem so that type can
+     be resized, and a picture is not type.
+
+     `width: 100%` is load-bearing and not redundant. An auto inline margin is
+     what centres the frame once the cap has narrowed it, but on a grid or flex
+     item auto margins absorb the free space and cancel the default `stretch`,
+     so the item falls back to its content width. Measured, on the shots
+     mosaic: frames that were nowhere near the cap collapsed anyway — an
+     841x601 band item became 525x375 and a 733x412 became 720x405, neither of
+     which the cap should ever have touched. Declaring the width restores the
+     stretch the margin took away; `max-width` then caps it, and the margins
+     only have free space to absorb once it has. */
+  .frame-cap {
+    width: 100%;
+    max-width: calc(var(--frame-cap) * var(--frame-ratio));
+    margin-inline: auto;
+  }
+}
+
+/* Law 4, amended: an element may animate on arrival, once. It is transformed
+   into place rather than animated by a keyframe, so an element that has already
+   arrived holds no running animation — a page at rest is a screenshot of
+   itself. See lib/reveal.tsx. */
+/* Guarded on scripting: with no JS nothing sets data-arrived, so the starting
+   state must never be applied or the page would render blank. */
+@media (scripting: enabled) {
+  .arrive {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 420ms cubic-bezier(0.16, 1, 0.3, 1) var(--arrive-delay, 0ms),
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1) var(--arrive-delay, 0ms);
+  }
+
+  .arrive[data-arrived] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The About timeline's line, which is the same arrival one layer down.
+
+   `.arrive` moves a whole element into place; this draws a hairline along a
+   path. The mechanics are the only difference: `pathLength="1"` on the segment
+   redeclares its length as 1, so an offset of 1 is a line not yet drawn and 0
+   is a line finished, whatever height the row it sits in turned out to be. That
+   matters because the timeline's rows are auto — the type decides where a role
+   ends — so nothing on the chart can be given a pixel coordinate in advance.
+
+   Delay and duration come from the dates. Each segment is handed the month it
+   starts on and the months it lasts, so the wavefront travels the chart at one
+   speed in time rather than one speed in pixels: two roles held at once are
+   drawn at once, and a four-month contract takes less of the arrival than a
+   thirteen-month one.
+
+   Guarded on scripting for the same reason `.arrive` is: with no JS nothing
+   ever sets data-drawn, and a line that starts hidden would stay hidden.
+
+   Reduced motion needs both halves. The blanket rule at the foot of this file
+   takes every duration to 0.01ms, which is not enough on its own — a segment
+   nine hundred milliseconds into the sequence would still sit empty for most of
+   a second before snapping in, which is a worse thing to show someone who asked
+   for less motion than the animation was. Zeroing the delay too is what makes
+   the line simply present: the journey withheld, the information not. */
+@media (scripting: enabled) {
+  .tl-track {
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset var(--tl-draw, 600ms) linear var(--tl-delay, 0ms);
+  }
+
+  [data-drawn] .tl-track {
+    stroke-dashoffset: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
-}
 
-/* The circular reveal is the whole transition. Let the two snapshots sit still
-   underneath it rather than cross-fading as well, which would double the move. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
+  /* The delay the blanket rule above cannot reach. See `.tl-track`. */
+  .tl-track {
+    transition-delay: 0ms !important;
+  }
 }

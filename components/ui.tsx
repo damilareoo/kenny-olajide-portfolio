@@ -1,44 +1,76 @@
 import type { ReactNode } from "react";
 
-/** The site's one micro-label. See the .label utility in globals.css. */
-export function Label({ children }: { children: ReactNode }) {
-  return <span className="label">{children}</span>;
-}
-
-/** A small translucent pill. Deji's .social-link, in this site's tokens. */
-export function Chip({ children }: { children: ReactNode }) {
+export function Chip({
+  variant = "outline",
+  children,
+}: {
+  variant?: "solid" | "outline" | "quiet";
+  children: ReactNode;
+}) {
+  const styles = {
+    solid: "bg-strong text-on-strong",
+    outline: "border border-line text-ink-2",
+    quiet: "bg-surface-2 text-ink-2",
+  }[variant];
   return (
-    <span className="bg-chip rounded text-text-2 px-2 py-1 text-[length:var(--text-xs)]">
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-1 font-mono text-xs uppercase tracking-wider ${styles}`}
+    >
       {children}
     </span>
   );
 }
 
-/**
- * One row of a record: label left, value right.
- *
- * A <dt>/<dd> pair rather than two divs, because that is what this is — the
- * row must sit inside a <dl>. One component for every such row on the site, so
- * three surfaces cannot drift into three slightly different rows.
- */
-export function RecordRow({ label, value, href }: { label: string; value: string; href?: string }) {
+export function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="border-border flex items-baseline justify-between gap-4 border-b py-3">
-      <dt className="label">{label}</dt>
-      <dd className="text-text-1 text-[length:var(--text-sm)]">
-        {href ? (
-          <a href={href} className="link hover:text-text-2 transition-colors">
-            {value}
-          </a>
-        ) : (
-          value
-        )}
-      </dd>
+    <p className="font-mono text-xs uppercase tracking-wider text-ink-3">{children}</p>
+  );
+}
+
+export function Sheet({
+  className = "",
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className={`rounded-2xl border border-line bg-surface ${className}`}>
+      {children}
+    </section>
+  );
+}
+
+export function Meta({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div>
+      <p className="text-sm text-ink-2">{label}</p>
+      <p className="mt-1 text-base font-medium">{value}</p>
     </div>
   );
 }
 
-/* No separator component lives here. RecordRow draws its own border-b, which
-   is the only separator the site uses. If one is ever needed standalone, it is
-   a plain typographic rule and nothing more — it is not to be developed into
-   ticks, a gauge, or any measuring device. */
+/**
+ * A fact, recorded. The site keeps facts in label/value rows on `/about` and
+ * on `/colophon`, and each surface used to draw its own — which is how two
+ * pages saying the same kind of thing ended up looking unrelated. One shape,
+ * the one the majority already used. It outlived the case pages that were its
+ * third caller, because the argument for it never depended on them.
+ */
+export function RecordRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-5 rule-b py-2.5 last:bg-none sm:grid-cols-[96px_minmax(0,1fr)]">
+      <span className="text-xs text-ink-3">{label}</span>
+      <span className="text-sm text-ink">{children}</span>
+    </div>
+  );
+}
+
+/** Discipline tags — the metadata is the aesthetic, so it is never decoration. */
+export function Tags({ items }: { items: readonly string[] }) {
+  return (
+    <span className="font-mono text-2xs uppercase tracking-wider text-ink-3">
+      {items.join(" · ")}
+    </span>
+  );
+}

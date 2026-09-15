@@ -27,12 +27,20 @@ describe("content honesty", () => {
   });
 
   it("gives every real role its full record", () => {
+    /* `from`/`to` became one `period` when the schema moved to the source
+       repository's shape. The record is the same record; the assertion follows
+       the field. `lib/experience.test.ts` is what checks a period parses. */
     for (const r of roles) {
       expect(r.role).toBeTruthy();
       expect(r.company).toBeTruthy();
-      expect(r.from).toBeTruthy();
-      expect(r.to).toBeTruthy();
+      expect(r.period).toBeTruthy();
     }
+  });
+
+  it("never implies a role he still holds", () => {
+    // Both product-design roles have ended. A period written to "Present" is
+    // what would make the site say "Currently", and none of them is.
+    for (const r of roles) expect(r.period).not.toMatch(/present/i);
   });
 });
 
@@ -51,7 +59,7 @@ describe("the work", () => {
       expect(w.title).toBeTruthy();
       expect(w.year).toMatch(/^\d{4}$/);
       expect(w.role).toBeTruthy();
-      expect(w.summary.length).toBeGreaterThan(40);
+      expect(w.oneLiner.length).toBeGreaterThan(40);
     }
   });
 

@@ -10,10 +10,10 @@ export const alt = "Kenny Olajide, product designer";
    identity without any of the page around it.
 
    next/og does not run next/font, so the family here is a system stack, not
-   the Inter binding the rest of the site uses. The figure that matters is the
+   the Geist binding the rest of the site uses. The figure that matters is the
    composition, not the exact face.
 
-   Dark ground (#101010/#eeeeee/#b5b5b5) rather than the light one: this is
+   Dark ground (--bg/--text-1/--text-2 on the dark skin: #090909/#f5f5f5/#9a9a9a) rather than the light one: this is
    almost always seen in a feed, not on the site, and the dark lockup is the
    stronger identity out of context. */
 export default async function Image() {
@@ -26,8 +26,8 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
-          background: "#101010",
-          color: "#eeeeee",
+          background: "#090909",
+          color: "#f5f5f5",
           padding: 72,
           fontSize: 76,
           letterSpacing: "-0.03em",
@@ -35,7 +35,7 @@ export default async function Image() {
         }}
       >
         <div>{site.name}</div>
-        <div style={{ fontSize: 30, color: "#b5b5b5", letterSpacing: 0, marginTop: 12 }}>
+        <div style={{ fontSize: 30, color: "#9a9a9a", letterSpacing: 0, marginTop: 12 }}>
           {site.role}
         </div>
       </div>

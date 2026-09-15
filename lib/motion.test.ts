@@ -4,11 +4,31 @@ import { DUR, EASE_OUT, EASE_INOUT, HOLD, STAGGER } from "./motion";
 
 const css = readFileSync("app/globals.css", "utf8");
 
+/**
+ * What is left of the v2 motion token set, and why it is still here.
+ *
+ * The design language switch took the stylesheet these tokens used to be
+ * mirrored into. The old `app/globals.css` declared `--ease-out`, `--ease-inout`
+ * and four `--dur-*` custom properties so a CSS transition and a `motion`
+ * animation could be given the same figure; the source repository's stylesheet
+ * declares none of them and animates arrivals with its own `.arrive` and
+ * `.tl-track` rules instead. Every assertion about that mirror has gone with
+ * it, rather than being loosened until it passed.
+ *
+ * The tokens themselves stay because `components/easter-egg.tsx` still reads
+ * four of them, and the easter egg belongs to neither design language — it is
+ * Kenny's, it was asked for by name, and its board is simply re-drawn in the
+ * new colours. One consumer is enough to keep a token set; it is not enough to
+ * keep assertions about a stylesheet that no longer exists.
+ */
 describe("the motion token set", () => {
-  it("uses Deji's nav curve verbatim as the primary ease", () => {
-    // dejiajetomobi.com: .active-container{transition:width .42s cubic-bezier(.22,.61,.36,1)}
+  it("holds the primary curve and its duration exactly", () => {
     expect(EASE_OUT).toEqual([0.22, 0.61, 0.36, 1]);
     expect(DUR.base).toBe(0.42);
+  });
+
+  it("holds EASE_INOUT for symmetric moves", () => {
+    expect(EASE_INOUT).toEqual([0.65, 0, 0.35, 1]);
   });
 
   it("offers exactly four durations", () => {
@@ -20,69 +40,45 @@ describe("the motion token set", () => {
     expect(Object.keys(DUR)).not.toContain("stagger");
   });
 
-  it("mirrors every token into CSS so both languages animate identically", () => {
-    expect(css).toContain("--ease-out: cubic-bezier(0.22, 0.61, 0.36, 1)");
-    expect(css).toContain("--ease-inout: cubic-bezier(0.65, 0, 0.35, 1)");
-    expect(css).toContain("--dur-base: 420ms");
+  it("exports HOLD as a separate, non-DUR rest beat", () => {
+    expect(typeof HOLD).toBe("number");
+    expect(Object.keys(DUR)).not.toContain("hold");
   });
 
-  it("agrees between the JS seconds and the CSS milliseconds", () => {
-    for (const [name, seconds] of Object.entries(DUR)) {
-      expect(css, `--dur-${name}`).toContain(`--dur-${name}: ${Math.round(seconds * 1000)}ms`);
+  it("is read by the one surface that still animates in JS", () => {
+    /* The set had ten consumers and has one. If the easter egg ever stops
+       reading these, `lib/motion.ts` is dead and should be deleted rather than
+       kept as furniture — this assertion is what makes that visible. */
+    const egg = readFileSync("components/easter-egg.tsx", "utf8");
+    for (const token of ["DUR", "EASE_OUT", "EASE_INOUT", "useReducedMotion"]) {
+      expect(egg, token).toContain(token);
     }
   });
+});
 
+describe("the stylesheet's own reduced-motion guard", () => {
   it("collapses to the final frame under reduced motion, not to a faster one", () => {
     expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);
 
-    /* There is more than one reduced-motion block now — components that drive
-       their own animations (e.g. the work-card fan) carry their own guards —
-       so match the GLOBAL one by the universal selector it resets rather than
-       by being first in the file. */
     const global = css.match(/@media \(prefers-reduced-motion: reduce\)\s*\{\s*\*,[\s\S]*?\n\}/);
     expect(global, "no global reduced-motion block found").not.toBeNull();
     expect(global![0]).toMatch(/animation-duration:\s*0\.01ms/);
     expect(global![0]).toMatch(/transition-duration:\s*0\.01ms/);
-    expect(global![0]).toMatch(/animation-iteration-count:\s*1/);
   });
 
-  it("stops the work-card fan for reduced-motion visitors", () => {
-    expect(css).toMatch(/\.group:hover \.fan > \*\s*\{\s*transform:\s*none/);
+  it("reaches the one delay the blanket rule cannot", () => {
+    /* The timeline's line is drawn with a transition DELAY taken from the
+       dates, and zeroing durations alone would leave a late segment sitting
+       empty for most of a second before snapping in. See `.tl-track` in
+       app/globals.css. */
+    expect(css).toMatch(/\.tl-track \{\s*transition-delay: 0ms !important;\s*\}/);
   });
 
-  it("keeps the ruler motif out of the stylesheet entirely", () => {
-    expect(css).not.toMatch(/ruler|tick-strip|gauge/i);
-  });
-
-  it("holds EASE_INOUT for symmetric moves", () => {
-    expect(EASE_INOUT).toEqual([0.65, 0, 0.35, 1]);
-  });
-
-  /* v1 defined this curve and used it nowhere, and the v2 spec (§8) put it on
-     notice: it is the curve for anything that returns to where it started, and
-     if it ended up unused again it would be deleted. These two are what adopt
-     it — the magnetic release settling back to zero, and the copy-email label
-     reverting to the address. Asserted against the source so the token cannot
-     quietly become dead again. */
-  it("is adopted by the two moves that return to where they started", () => {
-    expect(readFileSync("components/magnetic.tsx", "utf8")).toContain("EASE_INOUT");
-    expect(readFileSync("components/copy-email.tsx", "utf8")).toContain("EASE_INOUT");
-  });
-
-  it("draws the link underline from the left rather than fading one in", () => {
-    const rule = css.match(/\.link \{[\s\S]*?\}/);
-    expect(rule, "no .link rule found").not.toBeNull();
-    expect(rule![0]).toContain("background-size: 0% 1px");
-    expect(rule![0]).toContain("transition: background-size var(--dur-micro) var(--ease-out)");
-    expect(css).toMatch(/\.link:hover,\s*\n?\s*\.link:focus-visible \{\s*\n?\s*background-size: 100% 1px/);
-  });
-
-  it("stops the link underline from transitioning under reduced motion", () => {
-    expect(css).toMatch(/\.link \{ transition: none; \}/);
-  });
-
-  it("exports HOLD as a separate, non-DUR rest beat", () => {
-    expect(typeof HOLD).toBe("number");
-    expect(Object.keys(DUR)).not.toContain("hold");
+  it("guards both arrival mechanisms on scripting, so a page with no JS still renders", () => {
+    // `.arrive` starts at opacity 0 and `.tl-track` at a full dash offset;
+    // nothing sets `data-arrived` or `data-drawn` without JS, so both starting
+    // states must be withheld when scripting is off or the page ships blank.
+    const guarded = [...css.matchAll(/@media \(scripting: enabled\)\s*\{/g)];
+    expect(guarded.length).toBe(2);
   });
 });
