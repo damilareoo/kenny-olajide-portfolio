@@ -121,9 +121,9 @@ describe("the board", () => {
   });
 
   it("stands the three pieces where the position puts them", () => {
-    expect(square(/^g6, white king$/)).toBeInTheDocument();
-    expect(square(/^b2, white queen$/)).toBeInTheDocument();
-    expect(square(/^h8, black king$/)).toBeInTheDocument();
+    expect(square(/^a6, white king$/)).toBeInTheDocument();
+    expect(square(/^a1, white queen$/)).toBeInTheDocument();
+    expect(square(/^a8, black king$/)).toBeInTheDocument();
   });
 
   it("labels all sixty-four squares in algebraic notation", () => {
@@ -142,62 +142,72 @@ describe("the board", () => {
   });
 
   it("plays the solution and states mate", () => {
-    fireEvent.click(square(/^b2, white queen$/));
-    fireEvent.click(square(/^b8$/));
+    fireEvent.click(square(/^a1, white queen$/));
+    fireEvent.click(square(/^h8$/));
 
     expect(screen.getByText(new RegExp(SOLUTION_SAN))).toBeInTheDocument();
-    expect(square(/^b8, white queen$/)).toBeInTheDocument();
-    expect(square(/^h8, black king$/)).toHaveAttribute("data-mated");
+    expect(square(/^h8, white queen$/)).toBeInTheDocument();
+    expect(square(/^a8, black king$/)).toHaveAttribute("data-mated");
   });
 
   it("refuses any other move and leaves the queen where it was", () => {
-    fireEvent.click(square(/^b2, white queen$/));
-    fireEvent.click(square(/^b7$/));
+    fireEvent.click(square(/^a1, white queen$/));
+    fireEvent.click(square(/^a4$/));
 
     expect(screen.queryByText(new RegExp(SOLUTION_SAN))).toBeNull();
-    // The queen never left b2 — refusing is not moving and moving back.
-    expect(square(/^b2, white queen$/)).toBeInTheDocument();
-    expect(square(/^b7$/)).toHaveAttribute("data-refused");
+    // The queen never left a1 — refusing is not moving and moving back.
+    expect(square(/^a1, white queen$/)).toBeInTheDocument();
+    expect(square(/^a4$/)).toHaveAttribute("data-refused");
   });
 
-  /* Qg7 is also mate here (see lib/chess.ts). The board refuses it because it
-     is not the move the puzzle names — but it must never say it is not mate. */
+  /* Nothing but Qh8 mates in this position — lib/chess.test.ts proves it over
+     every legal white move — so the board COULD say "not mate" here and be
+     telling the truth. It still does not. The wording has to survive whatever
+     position this file is ever pointed at, and the one that shipped here first
+     admitted a second mate: a board saying "not mate" to a real mate would
+     have been a false statement about chess. It also does not lecture. */
   it("never tells the player a move is not mate, only that it is not the move", () => {
-    fireEvent.click(square(/^b2, white queen$/));
-    fireEvent.click(square(/^g7$/));
+    fireEvent.click(square(/^a1, white queen$/));
+    fireEvent.click(square(/^d4$/));
     expect(screen.getByText(/Not the move/)).toBeInTheDocument();
     expect(screen.queryByText(/not mate/i)).toBeNull();
   });
 
   it("says so when the destination is not a queen's square at all", () => {
-    fireEvent.click(square(/^b2, white queen$/));
-    fireEvent.click(square(/^c4$/));
+    fireEvent.click(square(/^a1, white queen$/));
+    fireEvent.click(square(/^b4$/));
     expect(screen.getByText(/A queen cannot go there/)).toBeInTheDocument();
   });
 
   it("does not move a piece nobody picked up", () => {
-    fireEvent.click(square(/^b8$/));
-    expect(square(/^b2, white queen$/)).toBeInTheDocument();
+    fireEvent.click(square(/^h8$/));
+    expect(square(/^a1, white queen$/)).toBeInTheDocument();
     expect(screen.queryByText(new RegExp(SOLUTION_SAN))).toBeNull();
   });
 
   it("moves a square cursor with the arrow keys", () => {
     const dialog = screen.getByRole("dialog");
-    expect(square(/^b2, white queen$/)).toHaveAttribute("tabindex", "0");
+    expect(square(/^a1, white queen$/)).toHaveAttribute("tabindex", "0");
 
     fireEvent.keyDown(dialog, { key: "ArrowUp" });
-    expect(square(/^b3$/)).toHaveAttribute("tabindex", "0");
-    expect(square(/^b2, white queen$/)).toHaveAttribute("tabindex", "-1");
+    expect(square(/^a2$/)).toHaveAttribute("tabindex", "0");
+    expect(square(/^a1, white queen$/)).toHaveAttribute("tabindex", "-1");
 
     fireEvent.keyDown(dialog, { key: "ArrowRight" });
-    expect(square(/^c3$/)).toHaveAttribute("tabindex", "0");
+    expect(square(/^b2$/)).toHaveAttribute("tabindex", "0");
   });
 
   it("keeps the cursor on the board at its edges", () => {
     const dialog = screen.getByRole("dialog");
+    // The cursor starts on a1, the bottom-left corner: walk it off two edges
+    // and then off the two opposite ones.
     for (let i = 0; i < 10; i += 1) fireEvent.keyDown(dialog, { key: "ArrowLeft" });
     for (let i = 0; i < 10; i += 1) fireEvent.keyDown(dialog, { key: "ArrowDown" });
-    expect(square(/^a1$/)).toHaveAttribute("tabindex", "0");
+    expect(square(/^a1, white queen$/)).toHaveAttribute("tabindex", "0");
+
+    for (let i = 0; i < 10; i += 1) fireEvent.keyDown(dialog, { key: "ArrowRight" });
+    for (let i = 0; i < 10; i += 1) fireEvent.keyDown(dialog, { key: "ArrowUp" });
+    expect(square(/^h8$/)).toHaveAttribute("tabindex", "0");
   });
 
   it("closes on Escape", () => {
@@ -217,14 +227,14 @@ describe("the board", () => {
   });
 
   it("comes back to the starting position after it is closed and reopened", () => {
-    fireEvent.click(square(/^b2, white queen$/));
-    fireEvent.click(square(/^b8$/));
+    fireEvent.click(square(/^a1, white queen$/));
+    fireEvent.click(square(/^h8$/));
     expect(screen.getByText(new RegExp(SOLUTION_SAN))).toBeInTheDocument();
 
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     typeTrigger();
 
-    expect(square(/^b2, white queen$/)).toBeInTheDocument();
+    expect(square(/^a1, white queen$/)).toBeInTheDocument();
     expect(screen.queryByText(new RegExp(SOLUTION_SAN))).toBeNull();
   });
 });
@@ -240,20 +250,20 @@ describe("when the visitor has asked for less motion", () => {
   it("refuses with an instant state rather than a shake", () => {
     render(<EasterEgg />);
     typeTrigger();
-    fireEvent.click(square(/^b2, white queen$/));
-    fireEvent.click(square(/^b7$/));
+    fireEvent.click(square(/^a1, white queen$/));
+    fireEvent.click(square(/^a4$/));
 
     // The marked square and the line below the board are the whole rejection,
     // and they are there whether or not anything is allowed to move.
-    expect(square(/^b7$/)).toHaveAttribute("data-refused");
+    expect(square(/^a4$/)).toHaveAttribute("data-refused");
     expect(screen.getByText(/Not the move/)).toBeInTheDocument();
   });
 
   it("still plays the solution", () => {
     render(<EasterEgg />);
     typeTrigger();
-    fireEvent.click(square(/^b2, white queen$/));
-    fireEvent.click(square(/^b8$/));
+    fireEvent.click(square(/^a1, white queen$/));
+    fireEvent.click(square(/^h8$/));
     expect(screen.getByText(new RegExp(SOLUTION_SAN))).toBeInTheDocument();
   });
 });

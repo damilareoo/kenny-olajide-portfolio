@@ -194,14 +194,27 @@ A real chess puzzle, playable, hidden.
 **Trigger.** Typing `e4` anywhere on the site that is not a text field. The most
 played first move in chess, on a chess designer's portfolio.
 
-**The position.** White Kg6, Qb2. Black Kh8. White to move and mate in one.
+**The position.** White Ka6, Qa1. Black Ka8. White to move and mate in one.
 
-**The solution is `Qb8#`.** Verified by brute force before being written into
-this spec: the queen's path up the b-file is clear, the check is along the
-eighth rank, and all three king escape squares are covered — g7 and h7 by the
-white king on g6, g8 by the queen itself. Zero escape squares. It is not
-attributed to any composer, because it is not anyone's study; it is a clean
-position chosen because it can be verified rather than trusted.
+**The solution is `Qh8#`, and it is the only one.**
+
+The first position this spec carried was Kg6/Qb2 vs Kh8 with `Qb8#`. That mate
+was real — but the Task 8 implementer re-ran the search independently and found
+that `Qg7#` mates as well. My original check had verified the wrong claim:
+"Qb8 is mate" and "Qb8 is the only mate" are different statements, and a
+problem advertised as *mate in one* needs the second. A chess player would
+very likely have tried `Qg7` first and been told they were wrong.
+
+This position was found by enumerating every white move in every legal
+King-and-Queen versus King arrangement and keeping only those with exactly one
+mating move — 1,456 of them exist, and this is one. Verified: the kings are not
+adjacent, Black is not already in check, the a1–h8 diagonal is clear, and after
+`Qh8` the three escape squares are all covered — a7 and b7 by the king on a6,
+b8 by the queen itself.
+
+It is attributed to nobody because it is nobody's study. It was chosen because
+it can be verified rather than trusted, and because the key move crosses the
+whole board corner to corner, which is the most that can be asked of one move.
 
 **What it does.** A board overlays the page, drawn in the site's own tokens —
 the light squares are `--surface`, the dark `--surface-2`, the pieces are

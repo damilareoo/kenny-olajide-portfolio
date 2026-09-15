@@ -50,10 +50,14 @@ type Status = "idle" | "refused" | "impossible" | "mate";
 
 const MESSAGE: Record<Status, string> = {
   idle: "White to move. Mate in one.",
-  /* "Not the move" — never "not mate". lib/chess.ts records why: Qg7 also
-     mates here, and a board on a chess player's portfolio telling him a mate
-     is not a mate would be a false statement about chess. This one says only
-     that it is not the move the puzzle is looking for, which is true. */
+  /* "Not the move" — never "not mate", even though in THIS position nothing
+     else mates and the stronger line would now be true. Two reasons it stays.
+     It is the honest sentence under either position: the first one shipped
+     here admitted a second mate with Qg7, and a board that had been telling
+     players it was "not mate" would have been making a false statement about
+     chess on a chess player's portfolio. And it does not lecture — a player
+     who tried a reasonable move is told what the puzzle wants, not what he
+     got wrong. lib/chess.ts carries the full history. */
   refused: "Not the move. The queen goes back.",
   impossible: "A queen cannot go there.",
   mate: `Mate. ${SOLUTION_SAN}`,
