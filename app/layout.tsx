@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { BootScreen } from "@/components/boot-screen";
+import { EasterEgg } from "@/components/easter-egg";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SkipLink } from "@/components/skip-link";
@@ -38,6 +39,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SiteHeader />
           {children}
           <SiteFooter />
+          {/* Inside ThemeProvider so the board is drawn in whichever theme is
+              on. Last in the tree because it is the last thing that should
+              ever take focus, and it takes none until someone types e4. */}
+          <EasterEgg />
         </ThemeProvider>
       </body>
     </html>
