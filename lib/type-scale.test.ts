@@ -30,7 +30,7 @@ const GOVERNED = [
      scale. */
   "components/footer-line.tsx",
   "components/product.tsx",
-  "components/shots-field.tsx",
+  "components/shots-wall.tsx",
   /* The App Store card. Every size on it is a step — the listing name at
      `base`, the seller, genre and rating figure at `2xs`, the control at `xs`
      — and that is the only reason a card carrying somebody else's product

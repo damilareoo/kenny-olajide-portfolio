@@ -1,17 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "fs";
 import { IS_PLACEHOLDER as experienceIsPlaceholder, roles } from "./experience";
-import { IS_PLACEHOLDER as writingIsPlaceholder, posts } from "./writing";
 import { work, findWork } from "./work";
 
 describe("content honesty", () => {
-  it("flags experience as real and writing as still placeholder, in code, not only in a comment", () => {
+  /* The writing surface went with the routes it served — §1 of the v3 spec is
+     three routes and no others — so the flag that guarded it went with the
+     file. Experience is the one content set with a flag left to check, and it
+     is false because the roles are real, read off his own LinkedIn. */
+  it("flags experience as real in code, not only in a comment", () => {
     expect(experienceIsPlaceholder).toBe(false);
-    expect(writingIsPlaceholder).toBe(true);
-  });
-
-  it("says so at the top of the writing file for whoever edits it next", () => {
-    expect(readFileSync("data/writing.ts", "utf8").slice(0, 600)).toMatch(/PLACEHOLDER/);
   });
 
   it("never files the one still-uncorroborated ZoomInfo employer as fact", () => {
@@ -20,10 +18,6 @@ describe("content honesty", () => {
     // still an unconfirmed scrape fragment and does not ship.
     const text = readFileSync("data/experience.ts", "utf8");
     expect(text, "SmallChess must not appear").not.toContain("SmallChess");
-  });
-
-  it("marks every placeholder post visibly", () => {
-    for (const p of posts) expect(p.placeholder).toBe(true);
   });
 
   it("gives every real role its full record", () => {

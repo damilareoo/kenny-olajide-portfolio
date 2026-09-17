@@ -1,30 +1,67 @@
 import type { Metadata } from "next";
-import { ShotsField } from "@/components/shots-field";
+import { FooterLine } from "@/components/footer-line";
+import { GlyphText } from "@/components/glyph-text";
+import { ShotsWall } from "@/components/shots-wall";
 import { SiteNav } from "@/components/site-nav";
 import { feedAssets } from "@/data/assets.generated";
+import { groupShots } from "@/lib/shots";
 
 export const metadata: Metadata = {
   title: "Shots",
-  description: "Screens from the two iOS products Kenny designed.",
+  description: "Screens from the two iOS chess products Kenny designed.",
 };
 
 /**
- * Stage A placeholder, and the one route that is close to finished: the feed
- * is the source's `ShotsField` over this repo's own fourteen App Store
- * screenshots. Stage B owns the titles the frames carry in their alt text —
- * `scripts/manifest.mjs` derives them from the filenames today, which is
- * accurate and plain rather than written.
+ * Fourteen screens, from two listings, filed under the product they came from.
+ *
+ * The frames are real: pulled from the two App Store listings at 1290px, eight
+ * from Endgame AI and six from ChessEver. They are the products' own design
+ * work, which is what a shots page on a product designer's site should hold and
+ * the reason nothing here is captioned as an art direction exercise.
+ *
+ * Why this is a grouped gallery rather than the source's masonry feed is
+ * written where the decision lives — `components/shots-wall.tsx`.
  */
 export default function ShotsPage() {
-  // Newest first, and undated frames sort last rather than pretending to a date.
-  const shots = [...feedAssets].sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+  const { groups, unfiled } = groupShots(feedAssets);
+  const total = String(feedAssets.length).padStart(2, "0");
 
   return (
-    <main className="mx-auto w-full max-w-[1320px] px-5 py-4 pb-28 sm:px-6">
+    <main className="mx-auto w-full max-w-[1320px] px-5 py-4 pb-20 sm:px-6">
       <SiteNav current="/shots" />
-      <div className="mt-8 short:mt-4">
-        <ShotsField shots={shots} />
-      </div>
+
+      {/* One line of orientation, because a wall of phone screens with no
+          preamble does not say whether it is a portfolio, a press kit or a
+          gallery. `short:mt-4` for the reason the home's header carries it: a
+          landscape phone has no vertical room to spend on a margin. */}
+      <header className="mt-10 pb-8 short:mt-4 short:pb-4">
+        <h1 className="text-xl font-bold tracking-tight">Shots</h1>
+        <p className="mt-2 flex max-w-[52ch] items-baseline gap-2 text-base leading-relaxed text-ink-2">
+          <span className="sr-only">{total}</span>
+          <GlyphText text={total} size="0.5rem" className="shrink-0 text-ink-3" aria-hidden />
+          <span>
+            screens from the two iOS products, taken from their App Store
+            listings.
+          </span>
+        </p>
+      </header>
+
+      <ShotsWall groups={groups} />
+
+      {/* A frame the manifest found and `groupShots` could not place. It should
+          never appear — `lib/shots.test.ts` asserts the committed manifest has
+          none — and if it does, it is a file somebody dropped in without the
+          naming the join depends on. Saying so on the page beats swallowing it. */}
+      {unfiled.length > 0 && (
+        <p className="mt-16 font-mono text-2xs uppercase tracking-wider text-ink-3">
+          {unfiled.length} frame{unfiled.length === 1 ? "" : "s"} not filed under a
+          product
+        </p>
+      )}
+
+      <footer className="mt-20">
+        <FooterLine />
+      </footer>
     </main>
   );
 }

@@ -32,7 +32,7 @@ than no pulse.
 `kenny-olajide-portfolio.vercel.app`. This is a replacement of what is inside,
 not a new project.
 
-## 2. Typeface — the one deliberate divergence from 1:1
+## 2. Typeface — the first deliberate divergence from 1:1
 
 The source is set in **Suisse Int'l**, a commercial typeface from Swiss
 Typefaces whose licence is per-site. Copying its six woff2 files into a second
@@ -43,9 +43,10 @@ The owner chose a free near-match. The site is set in **Geist** and **Geist
 Mono** — a neo-grotesque with proportions close to Suisse, free under the SIL
 Open Font Licence.
 
-This is the only place the site knowingly departs from 1:1, it is recorded
-here, and it is a one-file swap: replacing the font binding restores Suisse if
-a licence is ever obtained.
+This was the only place the site knowingly departed from 1:1 when this
+document was written. §5 records the second, found in implementation. It is a
+one-file swap: replacing the font binding restores Suisse if a licence is ever
+obtained.
 
 ## 3. What gets carried across from the source
 
@@ -67,8 +68,8 @@ Verbatim where it can be, adapted only where Kenny's facts differ.
   — Kenny's two pieces are both iOS apps, which is exactly the case the source
   built that card for.
 - **`/about`'s shape** — the record, the role ladder, the portrait.
-- **`/shots`** — the masonry feed, its column-fill arithmetic in
-  `lib/shots-layout.ts`, and its tested bucketing.
+- **`/shots`** — the frame, the panel sweep and the label language. Not the
+  masonry feed: see §5, which is the second divergence and says why.
 
 ## 4. Kenny's information, in the source's schemas
 
@@ -102,16 +103,43 @@ designed fallback, not a gap.
 sentence reads "Most recently a product designer at Endgame AI". Nothing on the
 site may imply he is currently employed anywhere.
 
-## 5. `/shots`
+## 5. `/shots` — the second deliberate divergence
 
 Fourteen real screenshots, pulled from the two App Store listings at 1290px:
 eight from Endgame AI, six from ChessEver. They are the products' own design
 work, which is what a shots page on a product designer's site should hold.
 
-The source's feed is built for artwork of mixed aspect ratios and buckets by
-measured cell height. These are all 1284×2778 portrait, so the fill is uniform
-— correct, but worth knowing it is not exercising the bucketing the way mixed
-art would.
+This document originally said the route carried the source's masonry feed and
+its column-fill arithmetic in `lib/shots-layout.ts`, and flagged that fourteen
+uniform 1284x2778 frames would not exercise its bucketing the way mixed art
+would. That flag understated the problem, which implementation made plain.
+
+The source's feed alternates a full-measure frame with a drifted pair of seven
+and five tracks, and it is right for artwork of a dozen different aspect
+ratios. A portrait phone screenshot at full measure is 2700px tall, so every
+frame — whichever track it is given — is clamped to the same width by
+`--frame-cap`. The alternation survives as a rhythm whose two halves are
+indistinguishable, and the reader pays for a composition doing its work
+invisibly.
+
+So `/shots` is a grouped uniform gallery instead: one grid, one frame size,
+headed per product with the count and a link to the listing. The owner's
+instruction that decided it is the plainest sentence available — *"keep a view
+that is intuitive for shots page"* — and a wall of fourteen phone screens from
+two products with nothing saying which is which is not that.
+
+What is kept is everything that is the design language rather than the layout:
+`components/frame.tsx` draws the slot, `components/panel-field.tsx` runs the
+dot-matrix sweep that dissolves each photograph in, and the labels are the same
+mono the record rows use. What is deleted is `components/shots-field.tsx` and
+`lib/shots-layout.ts` with its tests — dead code once nothing renders it, and
+the repository does not keep a tested arrangement nothing uses in order to
+claim a fidelity it is not exercising.
+
+The grouping is derived, not declared. `lib/shots.ts` joins each frame's
+filename prefix against `data/work.ts`'s slugs, returns anything it cannot
+place rather than guessing, and `lib/shots.test.ts` asserts the committed
+manifest leaves nothing unplaced.
 
 ## 6. What survives from v1 and v2
 

@@ -40,17 +40,17 @@ import type { Role } from "@/data/experience";
 export function RoleList({ roles }: { roles: readonly Role[] }) {
   return (
     <ul role="list">
-      {roles.map((role) => (
-        <li key={role.company} className="rule-b last:bg-none">
-          <a
-            href={role.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            /* Wraps rather than truncates. At 320px the company, its title and
-               its dates do not fit on one line and the dates drop to their own
-               — which is a row that wrapped, not a row that broke. */
-            className="group flex flex-wrap items-baseline gap-x-2 gap-y-1 py-2.5 text-sm"
-          >
+      {roles.map((role) => {
+        /* Four of the six companies have no URL recorded, and a row wrapped in
+           `<a href={undefined}>` is a link that does not link: focusable,
+           announced as a link, and going nowhere. So the row is an anchor only
+           when there is an anchor to be, and the out-arrow — which is a promise
+           that the row leaves the site — appears on exactly the rows that keep
+           it. Everything else about the two is identical, which is why the body
+           is written once. */
+        const linked = Boolean(role.url);
+        const body = (
+          <>
             <span className="flex items-center" style={{ height: MARK_HEIGHT }}>
               <CompanyMark role={role} />
             </span>
@@ -58,18 +58,37 @@ export function RoleList({ roles }: { roles: readonly Role[] }) {
             <span className="italic text-ink-2 transition-colors group-hover:text-ink">
               {role.role}
             </span>
-            <GlyphIcon
-              name="arrow-out"
-              size="0.4375rem"
-              className="shrink-0 text-ink-3 transition-colors group-hover:text-ink"
-            />
+            {linked && (
+              <GlyphIcon
+                name="arrow-out"
+                size="0.4375rem"
+                className="shrink-0 text-ink-3 transition-colors group-hover:text-ink"
+              />
+            )}
             <span className="ml-auto font-mono text-2xs uppercase tracking-wider text-ink-3">
               {role.period}
               {role.engagement && ` · ${role.engagement}`}
             </span>
-          </a>
-        </li>
-      ))}
+          </>
+        );
+
+        /* Wraps rather than truncates. At 320px the company, its title and its
+           dates do not fit on one line and the dates drop to their own — which
+           is a row that wrapped, not a row that broke. */
+        const row = "group flex flex-wrap items-baseline gap-x-2 gap-y-1 py-2.5 text-sm";
+
+        return (
+          <li key={role.company} className="rule-b last:bg-none">
+            {linked ? (
+              <a href={role.url} target="_blank" rel="noopener noreferrer" className={row}>
+                {body}
+              </a>
+            ) : (
+              <div className={row}>{body}</div>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }

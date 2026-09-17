@@ -1,251 +1,151 @@
 # Kenny Olajide — Portfolio
 
-A single-person portfolio for Kenny Olajide, product designer. Endgame.ai and
-ChessEver are the two selected pieces, shown the way the App Store shows them:
-real icon, real screens, live rating, live seller, all read from Apple's
-public lookup endpoint. The voice is Kenny's, first person singular.
+A single-person portfolio for Kenny Olajide, product designer. Endgame AI and
+ChessEver are the two pieces, shown the way the App Store shows them: real
+icon, real screens, live rating, live seller, read from Apple's public lookup
+endpoint with a committed snapshot as the floor.
 
-This is a new repository with its own deployment. It is not a fork of
-`portfolio-v2` and not an edit of the earlier joint Kenny-and-Damilare page.
+Live at `https://kenny-olajide-portfolio.vercel.app`.
 
-## Placeholder content — read this before trusting anything career-shaped
+## What this is a port of
 
-Two data files in this repository are stand-ins, not facts:
+The design language is `portfolio-v2` — Damilare Osofisan's own portfolio —
+carried across 1:1 and tailored to Kenny's information. The spec for that
+switch, including everything it deliberately cut, is
+`docs/superpowers/specs/2026-09-15-v3-design-language-switch.md`.
 
-- `data/experience.ts` and `data/writing.ts` both export `IS_PLACEHOLDER = true`,
-  and every record in both files carries its own `placeholder: true` flag.
-- **Kenny's real career history is not known to this repository.** LinkedIn
-  answers HTTP 999 to automated fetches, so his profile could not be read.
-- A web search surfaced fragments from a ZoomInfo scrape. Those employer names
-  were deliberately **not** used anywhere in the shipped data —
-  `data/placeholders.test.ts` asserts they never appear in `data/experience.ts`.
-- The placeholder records are shaped exactly like real ones (same fields, same
-  types), so replacing them is a content edit, never a structural one.
-- `data/site.ts`'s `url` and `email` are unconfirmed assumptions, not verified
-  facts about Kenny.
-- The hero line in `app/page.tsx` ("Kenny Olajide is a product designer
-  working on chess software for people who play it.") is unapproved
-  placeholder copy.
+Three routes, and no others: `/`, `/about`, `/shots`.
 
-None of this blocks development — routes, metadata, OG images, and loading
-states around the placeholder content are real and finished. Only the words
-inside them are stand-ins.
+Two deliberate departures from 1:1, both recorded in the spec:
+
+1. **The typeface.** The source is set in Suisse Int'l, whose licence is
+   per-site. This is set in **Geist** and **Geist Mono** — a neo-grotesque with
+   close proportions, free under the SIL Open Font Licence. It is a one-file
+   swap if a licence is ever obtained.
+2. **The shots layout.** The source's twelve-track masonry feed is built for
+   artwork of mixed aspect ratios. Every frame here is a 1284×2778 phone
+   screenshot, so the feed was replaced with a grouped uniform gallery. The
+   reasoning is written at the top of `components/shots-wall.tsx`.
+
+## Content honesty
+
+Nothing about Kenny's career is invented here.
+
+- `data/experience.ts` holds six roles, five of them read from
+  `linkedin.com/in/kenny-olajide-b5476216a` on 2026-09-14. The sixth — Endgame
+  AI — has dates supplied by the owner directly and a **title inferred** from
+  his headline and the identical title he held immediately before; his profile
+  carries no Endgame entry. That provenance is recorded in the file itself.
+- `SmallChess`, an unconfirmed employer name from a ZoomInfo scrape, does not
+  ship. `data/placeholders.test.ts` asserts it never appears.
+- Both product-design roles have **ended**. Nothing on the site may imply he is
+  currently employed anywhere, and the copy is derived from the dates rather
+  than written, so it cannot drift: `lib/experience.ts`'s `standing()` chooses
+  the tense.
+- `data/site.ts`'s `url` and `email` are still unconfirmed assumptions.
+
+## Photographs — what to send
+
+`public/portrait/kenny.png` is a **stand-in**, taken from Kenny's LinkedIn
+photo. It is labelled as one everywhere it appears. It is also, right now, the
+favicon, the home-screen icon and the OG share card, all derived from that one
+file by `lib/portrait-file.ts` — so replacing it replaces all of them at once.
+
+Three files would finish the site. In order of what they change:
+
+| Slot | What it is | Shape | Where it lands |
+| --- | --- | --- | --- |
+| 1. Portrait | Head and shoulders, him looking at the camera, plain background. This is the one the icons crop, so the head must survive being 32px wide. | Square, 1200px or larger, PNG or JPG | `public/portrait/kenny.png` — replaces the stand-in |
+| 2. At the board | Playing or teaching. The five years of it are the reason he is credible on chess software, and the site says so in words with nothing to show for it. | Square, 1200px or larger | `/about`, first empty slot |
+| 3. At work | Screen, desk or studio. Any context that is clearly design work rather than a portrait. | Square, 1200px or larger | `/about`, second empty slot |
+
+Black and white is not required — the portrait is painted as a dot field in the
+site's own ink by `components/portrait.tsx`, and the two smaller slots are
+rendered through the same panel treatment as every other photograph on the
+site. Colour files are fine; they are read for luminance.
+
+Until they arrive, the two empty slots print the brief above on the page. That
+is deliberate: an empty frame that says what belongs in it is honest, and a
+slot padded out with an App Store screenshot would be the site pretending
+product work is photography.
 
 ## Running it
 
 ```
 pnpm install
 pnpm dev      # local dev server
-pnpm test     # vitest — 92 tests across 18 files, all passing
+pnpm test     # vitest — 315 tests across 33 files
 pnpm lint     # eslint, flat config
 pnpm build    # production build
+pnpm manifest # regenerate data/assets.generated.ts after adding files to public/shots
 ```
 
 Package manager is `pnpm` only — never `npm` or `yarn`.
 
-## The colour system
+## The design system
 
-Two skins, neutrals only, no accent hue. Light is read out of
-`dejiajetomobi.com`'s shipped stylesheet; dark out of `jakub.kr`'s. Both were
-read directly from the CSS that ships on those sites, not sampled from
-screenshots or guessed. Provenance: light `--text-2` is Deji's `.body-text`
-colour, `--text-3` is his inactive `.nav-brand`, `--chip` is his
-`.social-link` background; dark comes from jakub.kr's `--color-gray-background`,
-`--color-gray-100/200`, `--color-gray-500/600`, `--color-gray-1200`,
-`--color-text-paragraph`, `--color-gray-1100`, and `--color-gray-1000`, in that
-order.
+Monochrome, two skins, no accent hue. The ramp is the source's, carried across
+whole: `--bg #fcfcfc` through `--text-1 #0f0f0f` on the light skin, `--bg
+#090909` through `--text-1 #f5f5f5` on the dark. Every token lives in
+`app/globals.css`.
 
-All ten tokens, read from `app/globals.css`:
+Measured contrast, asserted in `lib/contrast.test.ts` rather than assumed:
 
-| Token | Light | Dark | Role |
-| --- | --- | --- | --- |
-| `--bg` | `#ffffff` | `#101010` | The page ground |
-| `--surface` | `#f0f0f0` | `#191919` | A raised card |
-| `--surface-2` | `#e8e8e8` | `#222222` | A pill, an active state |
-| `--border` | `#e6e6e6` | `#313131` | A hairline between things |
-| `--rule` | `#d4d4d4` | `#3a3a3a` | A separator that is meant to be seen |
-| `--text-1` | `#000000` | `#eeeeee` | Names, headings |
-| `--text-2` | `#6c6a6a` | `#dbdbdb` | Body and paragraphs |
-| `--text-3` | `#767676` | `#b5b5b5` | Inactive nav, captions, counts |
-| `--text-4` | `#9a9a9a` | `#7b7b7b` | Decorative marks and disabled states — never type |
-| `--chip` | `rgb(165 165 165 / 0.2)` | `rgb(255 255 255 / 0.06)` | Translucent label fill |
+| Ink | Light on `--bg` | Dark on `--bg` |
+| --- | --- | --- |
+| `--text-1` | 18.68 | 18.26 |
+| `--text-2` | 7.04 | 7.08 |
+| `--text-3` | 4.37 | 3.79 |
 
-`--chip` is written in `rgb()` rather than as the equivalent hex-with-alpha so
-that the contrast harness's hex parser skips it — it is a translucent fill,
-and its effective contrast depends on what sits behind it, so a figure
-measured against the token alone would be meaningless.
+`--text-3` is **under AA on the light skin** and that is a pinned, tested fact
+rather than an oversight. It is the quiet ink — labels, years, captions — and
+never body copy. Pushing it to 4.5 would flatten the three-step ink ramp the
+"genuinely distinct" test guards. Its floor is 3:1, held on all six
+ground/skin combinations.
 
-### Ink placement rules
+## Type
 
-Every pair was measured before any of it was built. The light skin is the
-binding constraint — jakub's dark ramp clears AA almost everywhere.
-
-- **`--text-1`** may be used on any ground: 21.00 on `--bg`, and it stays well
-  clear of AA on both raised surfaces too.
-- **`--text-2`** measures 5.37 on `--bg` and carries body copy there and on
-  `--surface`. On `--surface-2` it measures 4.39, so it is permitted only at
-  large-text sizes there.
-- **`--text-3`** measures 4.54 on `--bg` and carries body copy on `--bg`
-  only. It measures 3.99 on `--surface`, below AA, so on either raised
-  surface it is restricted to inactive nav, captions, and counts, never body
-  copy.
-- **`--text-4`** measures 2.81 on `--bg` and fails AA on all three light
-  grounds — it fails even the 3:1 large-text floor on all three. It is **not
-  a text token**: decorative marks and disabled states only, no type on this
-  site is set in it.
-
-`lib/contrast.test.ts` enforces all four rules, including pinning the
-failures (`--text-3` on `--surface`, `--text-4` everywhere) as explicit
-assertions. A token cannot be nudged later without a test stating what the
-nudge cost.
-
-## Typography
-
-Inter only, via `next/font/google`, self-hosted at build time. No second
-typeface anywhere — a label and a heading are the same font doing two
-different jobs.
-
-Six-step scale: `--text-2xs`, `--text-xs`, `--text-sm` are fixed pixel-to-rem
-values, and `--text-base`, `--text-lg`, `--text-xl` are fluid `clamp()`
-values ramping 320px to 1280px and stopping. The three small steps are fixed
-because they carry captions, labels, years and counts — type already at its
-floor, which gets worse rather than better when it grows with the window.
-The three large steps stop growing at roughly the point the page's measure
-stops growing, past which bigger is not more readable. Both ends of every
-clamp are written in `rem`, and so is the leading term of the preferred
-value, so browser text-size and zoom still reach them — a preferred value in
-pure `vw` would pin the size to the window and ignore the visitor's own
-setting entirely.
-
-OpenType features: `tnum` on every figure so ratings, years, and counts don't
-jitter when they change; `ss02` (Inter's "Disambiguation (with zero)") for
-the I/l/1 collision and the slashed zero; `case` for punctuation set beside
-capitals. `cv05` is deliberately absent — it would duplicate work `ss02`
-already does.
+Six fluid steps, every one used. `lib/type-scale.test.ts` asserts no surface
+smuggles in an arbitrary font size, and lists the files it governs.
 
 ## Motion
 
-Every animation resolves to the token set in `lib/motion.ts`: `EASE_OUT`
-(`cubic-bezier(0.22, 0.61, 0.36, 1)`), `EASE_INOUT`
-(`cubic-bezier(0.65, 0, 0.35, 1)`), four durations (`DUR.micro` 180ms,
-`DUR.base` 420ms, `DUR.staged` 720ms, `DUR.entrance` 1200ms), `STAGGER`
-(60ms, the offset between staged items arriving), and `HOLD` (200ms, how
-long a finished thing rests before it leaves). Nothing hand-rolls a duration
-or a curve, including Tailwind's implicit ones — `@theme inline` in
-`app/globals.css` rebinds `--default-transition-duration` and
-`--default-transition-timing-function` so a bare `transition-colors` lands
-on the token set too.
+One rule, and it has been broken once per iteration of this project, so it is
+written here as well as in the code:
 
-`EASE_OUT` at `DUR.base` is borrowed verbatim from `dejiajetomobi.com`'s nav
-pill transition — `width .42s cubic-bezier(.22,.61,.36,1)` — the number
-carried over intact rather than eyeballed into something close.
+> The `prefers-reduced-motion` block in `app/globals.css` reaches
+> **CSS-declared animations only**. Anything driven by `motion`, by the Web
+> Animations API, or by `requestAnimationFrame` needs its own
+> `useReducedMotion()` guard. A bare `*` selector matches neither a
+> script-created animation nor a `::view-transition-*` pseudo-element.
 
-Two rules cost real debugging time to arrive at:
+Two corollaries that cost real defects: `AnimatePresence` must outlive the
+element it animates away, and a `layoutId` **is** the animation — guard it by
+withholding the id from **both** halves of a pair.
 
-- The `globals.css` reduced-motion block reaches CSS-declared animations and
-  transitions only. Anything driven by the `motion` library or the Web
-  Animations API (the theme toggle's View Transitions circle, for example)
-  needs its own `useReducedMotion()` guard in the component — a bare `*`
-  selector matches neither a script-created animation nor a
-  `::view-transition-*` pseudo-element.
-- A `layoutId` **is** the animation, not a setting on top of one. The guard
-  for reduced motion therefore withholds the id itself rather than shortening
-  a duration, and both halves of a shared-element pair (the work card's icon
-  and the case header's icon, for instance) must withhold on the same
-  condition — otherwise one half animates while the other snaps, which reads
-  as broken rather than as reduced.
+## The easter egg
 
-`AnimatePresence` must outlive the element it animates away — it has to wrap
-the point in the tree where the element is conditionally rendered, not sit
-below it, or the exit animation never gets a chance to run.
+Type `e4` anywhere that is not a text field. A real chess position appears:
+White Ka6, Qa1 against Black Ka8, White to move and mate in one. The answer is
+`Qh8#` and it is the **only** mate — the position was found by enumerating
+every King-and-Queen versus King arrangement and keeping only those with
+exactly one mating move. `lib/chess.test.ts` carries the checker that proves it.
 
-## The App Store integration
-
-`lib/app-store.ts` reads Apple's public iTunes Lookup API
-(`https://itunes.apple.com/lookup`) — no key, no auth — once every six hours
-(`REVALIDATE_SECONDS = 21_600`), matching rows back to apps by `trackId`
-rather than by position. Every field is merged individually over a committed
-snapshot in `data/app-store.ts`, with assets under `public/apps/`: a rating
-with no vote count, or an empty `screenshotUrls` array from a listing
-mid-deploy, falls back to the recorded figure rather than printing a hole.
-Every failure mode — refused connection, non-OK response, unparseable body,
-a network-less build — ends at the same recorded floor.
-
-A literal App Store embed is impossible: `apps.apple.com` sends
-`x-frame-options: DENY` and `frame-ancestors 'none'`, so there is no iframe
-to build and no widget to borrow. The card is drawn from the lookup JSON
-instead, in the site's own type and ink.
-
-The `data-source` attribute on `AppStoreMeta`'s root element (`"live"` or
-`"recorded"`) is not printed anywhere in the UI. It exists so the degraded
-path can be verified — point the lookup at a host that won't answer, load
-the page, read the attribute — rather than argued about.
-
-## What was ported from `/Users/v/portfolio-v2`, and why
-
-Six things, and nothing else:
-
-- `lib/app-store.ts` — the iTunes Lookup client, its six-hour revalidation
-  reasoning, and the live/recorded merge.
-- `data/app-store.ts` — the committed snapshot floor for both listings, with
-  measured per-app screenshot ratios.
-- The artwork proxy route (`app/api/app-store/art/[...src]/route.ts`) — keeps
-  Apple's CDN behind a same-origin proxy rather than in the image
-  optimiser's allowlist, so no component gets blanket permission to load
-  from `mzstatic.com`.
-- `public/apps/*` — real icons and screenshots already downloaded from the
-  live payload.
-- `lib/contrast.ts` — the harness that holds every token pair to a measured
-  ratio.
-- `lib/use-media-query.ts`, `lib/use-mounted.ts` — two hooks that read
-  external browser state (a media query, "have I hydrated yet") through
-  `useSyncExternalStore` rather than a `useState` + `useEffect` mounted flag.
-  Deliberately: a `useEffect` that sets state after mount is a state write
-  after paint, which either tears the frame or forces a second render; reading
-  the same fact through `useSyncExternalStore` gets the server snapshot right
-  on first paint and corrects it on hydration with no such write.
-
-No component, no token value, and no typeface crosses over.
-
-## The soft-404 trap, and its fix
-
-`portfolio-v2` shipped a soft-404 that this project deliberately avoids
-repeating: a case-page route sits behind a root `app/loading.tsx`, so Next
-serves a prerendered shell and commits HTTP 200 before the page's body
-streams in. If `notFound()` is only reached during that later render, the
-status has already been sent and can never change to 404 — the page renders
-"not found" content on a `200`.
-
-The fix is `export const dynamicParams = false` on both dynamic routes
-(`app/work/[slug]/page.tsx` and `app/writing/[slug]/page.tsx`), which moves
-the decision to the router instead of the render: an unlisted slug is
-rejected before the loading shell is ever served.
-
-Verified against a production build:
-
-```
-$ pnpm build && pnpm start &
-$ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/work/nope
-404
-$ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/writing/nope
-404
-```
+No move generator ships. `lib/chess.ts` holds the position and the one correct
+move; the test file holds the search that validated them.
 
 ## Deployment
 
-Live: https://kenny-olajide-portfolio.vercel.app
+Vercel, project `kenny-olajide-portfolio`, from `main`.
 
-Repository: https://github.com/damilareoo/kenny-olajide-portfolio (private)
+```
+pnpm build
+vercel deploy --prod
+```
 
-Deployed with `vercel deploy --prod`. Verified live on first deploy: every route
-returns its correct status (including real 404s at `/work/nope` and
-`/writing/nope`), the OG image and icon serve real PNGs, and both case pages
-report `data-source="live"` — Apple's iTunes Lookup API is answering in
-production rather than the committed snapshot standing in for it.
-
-Note on `site.url`. The sitemap and every canonical URL are built from
-`site.url` in `data/site.ts`, which is currently `https://kennyolajide.com` — an
-assumption, not a confirmed domain. The site is served from the Vercel URL
-above. Until the real domain is settled, the sitemap advertises addresses that
-may not resolve. Correcting it is a one-line edit in `data/site.ts`; nothing
-else hardcodes a domain.
+The App Store lookup is unauthenticated and needs no key. It revalidates every
+six hours; when it cannot be reached the cards fall back to the snapshot in
+`data/app-store.ts`, which is a real reading one interval old rather than a
+placeholder. `components/app-store-card.tsx` marks which it drew with
+`data-source="live"` or `data-source="recorded"`, so the degraded path can be
+verified on a live page.

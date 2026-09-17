@@ -4,23 +4,25 @@ import { useEffect, useRef, useState } from "react";
 import { BAND, CEIL, paintPanel, type Panel } from "@/lib/glyph/panel";
 import { autoLevel, centreMidtone, unsharp } from "@/lib/glyph/tone";
 
-const FILE = { src: "/about/portrait.png", width: 621, height: 1104 };
+const FILE = { src: "/portrait/kenny.png", width: 800, height: 800 };
 
 /**
  * The two ends of the window this field is sampled through, as fractions of the
  * file's width, each against the grid it was measured at.
  *
- * A `cover` crop of a 9:16 file into a column near square takes the whole width
- * and a band of the height — his whole torso, the table, the chairs behind him
- * and most of a restaurant. At the cell count a column this size gives, a
- * figure that small is a texture rather than a person: measured against the
- * crop these replace, the head goes from about a quarter of the frame's width
- * to about three-quarters of it, which is the difference between a cap, an ear
- * and a jaw that resolve and a dark shape that does not. Everything the wider
- * crop bought — the table, the mural, the room — was competing for emitters
- * with the only thing the picture is of.
+ * The file this reads is already a crop: an 800-square portrait, circle-masked,
+ * head and shoulders filling most of the frame. So the window is wide — there
+ * is no room in it to go looking for the subject, because the subject is all
+ * there is. At 0.78 of the width a 4:5 column takes a 624 by 780 band, which is
+ * very nearly the whole circle with the masked corners falling outside it.
+ *
+ * It still closes a little as the grid coarsens, for the reason the ramp exists
+ * at all: beside the words this gets a column around 150 cells across and above
+ * them on a phone a band around 80, and the same window resolved into half as
+ * many cells is a coarser picture, not a smaller one. The first thing a coarser
+ * picture loses is the face.
  */
-const CROP = { near: { cols: 80, zoom: 0.33 }, far: { cols: 150, zoom: 0.4 } };
+const CROP = { near: { cols: 80, zoom: 0.72 }, far: { cols: 150, zoom: 0.82 } };
 
 /**
  * The crop the grid can actually carry, as a fraction of the file's width.
@@ -65,13 +67,14 @@ const PITCH = 4.5;
 /**
  * Where that window sits in the file, as fractions of its width and height.
  *
- * On the cap rather than on the face. He is in profile looking down and to the
- * left, so a window centred on the face puts the brim out of frame at the top
- * and the shoulder out at the bottom — and the brim is the strongest edge in
- * the photograph, the one line a reader has to see before any of the rest of it
- * is a head.
+ * Just left of centre and just above it. He is seated slightly to the left of
+ * the circle with the wall and a framed print filling the right of it, so a
+ * window centred on the file gives a third of its cells to a picture on a wall.
+ * Lifted on the vertical for the same reason: the shirt is the largest dark
+ * mass in the photograph and, read inverted, the largest lit one — centred, it
+ * takes the bottom half of the field and the head shares what is left.
  */
-const FOCUS = { x: 0.47, y: 0.4 };
+const FOCUS = { x: 0.44, y: 0.44 };
 
 /**
  * What the panel's own ceiling costs a picture that stays.
@@ -100,7 +103,7 @@ const UNCAP = 1 / CEIL;
  * `EDGE` below, and this is only what puts the result across the whole ramp
  * afterwards.
  */
-const GAIN = 1.45;
+const GAIN = 1.25;
 
 /**
  * How much of the local difference `unsharp` adds back, and at what size.
@@ -117,7 +120,7 @@ const GAIN = 1.45;
  * the width of the screen rather than staying the same picture drawn finer.
  * The divisor is the grid the amount was judged against.
  */
-const EDGE = { amount: 0.9, per: 55 };
+const EDGE = { amount: 0.7, per: 55 };
 
 /**
  * Luminance to ink, inverted: a dark pixel lights an emitter.
@@ -139,18 +142,48 @@ const EDGE = { amount: 0.9, per: 55 };
  * the page's own, so a lit emitter is dark on the light skin and light on the
  * dark one, and the figure is what is lit either way.
  */
-function readInverted(pixels: Uint8ClampedArray, count: number): Float32Array {
+function readInverted(
+  pixels: Uint8ClampedArray,
+  count: number,
+): { values: Float32Array; opaque: Uint8Array } {
   const raw = new Float32Array(count);
+  const opaque = new Uint8Array(count);
+  let sum = 0;
+  let seen = 0;
   for (let i = 0; i < count; i++) {
     const p = i * 4;
-    raw[i] = 1 - (0.299 * pixels[p] + 0.587 * pixels[p + 1] + 0.114 * pixels[p + 2]) / 255;
+    /* A transparent pixel is not a dark pixel, and the difference is the whole
+       picture. The file is circle-masked with transparent corners; read as RGB
+       those corners are zeroes, which inverted is full ink, which would square
+       the portrait off inside four solid blocks of emitters. */
+    if (pixels[p + 3] < 128) continue;
+    opaque[i] = 1;
+    const value = 1 - (0.299 * pixels[p] + 0.587 * pixels[p + 1] + 0.114 * pixels[p + 2]) / 255;
+    raw[i] = value;
+    sum += value;
+    seen++;
   }
-  return autoLevel(raw);
+
+  /* The masked cells are filled with the mean of the real ones before levelling
+     and zeroed after it. They have to hold *something* while `autoLevel` and
+     `centreMidtone` run, because both read the whole frame to find its extent
+     and its middle — and a fifth of the array sitting at zero would stretch the
+     ramp to accommodate a value that is not in the photograph. The mean is the
+     one fill that moves neither statistic. `contrast` takes the mask and puts
+     them back to nothing. */
+  const mean = seen > 0 ? sum / seen : 0;
+  for (let i = 0; i < count; i++) if (opaque[i] === 0) raw[i] = mean;
+
+  return { values: autoLevel(raw), opaque };
 }
 
-function contrast(values: Float32Array): Float32Array {
+function contrast(values: Float32Array, opaque: Uint8Array): Float32Array {
   const out = new Float32Array(values.length);
   for (let i = 0; i < values.length; i++) {
+    /* Outside the mask, unlit — see `readInverted`. `unsharp` will have bled a
+       little of the fill across the boundary by now, and this is what stops
+       that halo becoming a ring of dots around the circle. */
+    if (opaque[i] === 0) continue;
     const pushed = (values[i] - 0.5) * GAIN + 0.5;
     out[i] = (pushed < 0 ? 0 : pushed > 1 ? 1 : pushed) * UNCAP;
   }
@@ -252,9 +285,10 @@ export function Portrait({ className = "" }: { className?: string }) {
          local difference, global range — each correction taking the frame the
          one before it left, and the local one done while the values still carry
          the picture rather than the ink. */
-      const levelled = centreMidtone(readInverted(pixels, cols * rows));
+      const { values: read, opaque } = readInverted(pixels, cols * rows);
+      const levelled = centreMidtone(read);
       const radius = Math.max(1, Math.round(cols / EDGE.per));
-      const values = contrast(unsharp(levelled, cols, rows, radius, EDGE.amount));
+      const values = contrast(unsharp(levelled, cols, rows, radius, EDGE.amount), opaque);
       panelRef.current = { cols, rows, values };
       setReady(true);
     };
@@ -335,7 +369,7 @@ export function Portrait({ className = "" }: { className?: string }) {
       /* The picture is the page's, and what a reader who cannot see it is owed
          is what is in it — not how it was drawn. */
       role="img"
-      aria-label="Damilare in a camouflage cap and a dark polo shirt, in profile looking down at his phone, drawn as a field of dots."
+      aria-label="Kenny Olajide, smiling, in glasses and a chess-award T-shirt, drawn as a field of dots. A stand-in photograph, pending a real portrait."
     >
       <canvas ref={canvasRef} className="block" />
     </div>
