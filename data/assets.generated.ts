@@ -112,57 +112,85 @@ export const feedAssets: Asset[] = [
     "src": "/shots/endgame-ai-09.png",
     "title": "Endgame ai 09",
     "date": null,
-    "width": 210,
-    "height": 429
+    "width": 786,
+    "height": 1704
   },
   {
     "src": "/shots/endgame-ai-10.png",
     "title": "Endgame ai 10",
     "date": null,
-    "width": 210,
-    "height": 426
+    "width": 786,
+    "height": 1704
   },
   {
     "src": "/shots/endgame-ai-11.png",
     "title": "Endgame ai 11",
     "date": null,
-    "width": 210,
-    "height": 426
+    "width": 1572,
+    "height": 3408
   },
   {
     "src": "/shots/endgame-ai-12.png",
     "title": "Endgame ai 12",
     "date": null,
-    "width": 210,
-    "height": 454
+    "width": 786,
+    "height": 1704
   },
   {
     "src": "/shots/endgame-ai-13.png",
     "title": "Endgame ai 13",
     "date": null,
-    "width": 210,
-    "height": 454
+    "width": 1572,
+    "height": 3408
   },
   {
     "src": "/shots/endgame-ai-14.png",
     "title": "Endgame ai 14",
     "date": null,
-    "width": 210,
-    "height": 454
+    "width": 1572,
+    "height": 3408
   },
   {
     "src": "/shots/endgame-ai-15.png",
     "title": "Endgame ai 15",
     "date": null,
-    "width": 210,
-    "height": 454
+    "width": 786,
+    "height": 1704
   },
   {
     "src": "/shots/endgame-ai-16.png",
     "title": "Endgame ai 16",
     "date": null,
-    "width": 210,
-    "height": 454
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "src": "/shots/endgame-ai-17.png",
+    "title": "Endgame ai 17",
+    "date": null,
+    "width": 786,
+    "height": 1704
+  },
+  {
+    "src": "/shots/endgame-ai-18.png",
+    "title": "Endgame ai 18",
+    "date": null,
+    "width": 3450,
+    "height": 1120
+  },
+  {
+    "src": "/shots/endgame-ai-19.png",
+    "title": "Endgame ai 19",
+    "date": null,
+    "width": 3456,
+    "height": 1032
+  },
+  {
+    "src": "/shots/endgame-ai-20.png",
+    "title": "Endgame ai 20",
+    "date": null,
+    "width": 2920,
+    "height": 2448
   }
 ];
 

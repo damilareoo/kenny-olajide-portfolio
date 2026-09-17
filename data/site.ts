@@ -16,7 +16,9 @@ export const site = {
      one line that changes. `data/site.test.ts` holds it to a host that answers
      so the same mistake cannot land twice. */
   url: "https://kenny-olajide-portfolio.vercel.app",
-  email: "hello@kennyolajide.com",
+  /* Supplied by the owner on 2026-09-17, replacing the unconfirmed
+     hello@kennyolajide.com assumption the README used to flag. */
+  email: "olajidekenny56@gmail.com",
   /* The real vanity URL. "/in/kennyolajide" — the one in the original brief —
      301s to LinkedIn's own 404 page; it is not his profile and never was.
      Verified in a browser on 2026-09-14, which is also where his role history

@@ -47,7 +47,8 @@ Nothing about Kenny's career is invented here.
   currently employed anywhere, and the copy is derived from the dates rather
   than written, so it cannot drift: `lib/experience.ts`'s `standing()` chooses
   the tense.
-- `data/site.ts`'s `email` is still an unconfirmed assumption.
+- `data/site.ts`'s `email` was an unconfirmed assumption until the owner
+  supplied `olajidekenny56@gmail.com` on 2026-09-17.
 - **Company marks are quotations.** Each is the company's own artwork, taken
   from the icon it publishes itself, on 2026-09-17. Nothing was redrawn or
   recoloured — which is why they keep their own colours on a site that
@@ -59,15 +60,27 @@ Nothing about Kenny's career is invented here.
 
 ## The shots
 
-Twenty-two screens, filed under the product each came from by
+Twenty-six frames, filed under the product each came from by
 `lib/shots.ts` — the join is the filename prefix against `data/work.ts`'s
 slug, so `pnpm manifest` after dropping a file in is the whole workflow.
 
-Sixteen Endgame AI and six ChessEver. The first eight of each came off the App
-Store listings at 1290px. The later eight Endgame frames were cut from a
-contact sheet the owner supplied and are **210px wide** — they sit beside
-frames six times sharper, and higher-resolution exports would be a visible
-improvement. Drop them in over the same filenames and re-run `pnpm manifest`.
+Twenty Endgame AI and six ChessEver. The first eight of each came off the App
+Store listings at 1290px. The other twelve Endgame frames were supplied by the
+owner on 2026-09-17 at full resolution: nine screens of the blindfold-wagering
+flow — the bet sheet in two states, games against the Rookie Rook and GM
+Niemann bots in the light and dark themes, the win and loss sheets, the
+leaderboard, and the player profile — and three pieces of product artwork: two
+strips of board themes and the avatar set. Note the screens are the app's
+current orange-accent build; the committed listing snapshot
+(`data/app-store.ts`, recorded 2026-09-10) holds its earlier purple-accent
+screens. Both are the product's own artwork at different versions.
+
+The wall gives every phone screen one uniform 9:19.5 slot and crops the few
+percent the exports differ by. The artwork isn't phone-shaped, so it keeps its
+own aspect and runs wide — a theme strip forced into a portrait box would show
+one board where it should show eight. Same grid, same panel sweep, same
+labels: the owner's instruction was that everything lives on `/shots` in the
+same treatment.
 
 ## Photographs — what to send
 

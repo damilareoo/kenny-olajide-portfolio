@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * Fourteen screens, from two listings, filed under the product they came from.
+ * Twenty-six frames, from two listings and the owner's 2026-09-17 bundle,
+ * filed under the product they came from.
  *
  * The frames are real: pulled from the two App Store listings at 1290px, eight
  * from Endgame AI and six from ChessEver. They are the products' own design
