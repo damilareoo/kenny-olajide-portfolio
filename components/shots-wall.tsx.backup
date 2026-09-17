@@ -1,7 +1,9 @@
 import { Frame } from "@/components/frame";
+import { GlyphIcon } from "@/components/glyph-icon";
 import { GlyphText } from "@/components/glyph-text";
 import { PanelField } from "@/components/panel-field";
 import type { ShotGroup } from "@/lib/shots";
+import { appSnapshots } from "@/data/app-store";
 
 /**
  * The shots, grouped by product, on one uniform grid.
@@ -30,8 +32,9 @@ import type { ShotGroup } from "@/lib/shots";
  * same sweep, same labels — the owner's instruction was that everything
  * lives on this page in the same treatment.
  *
- * Everything else is the source's and unchanged: `Frame` draws the slot and
- * `PanelField` runs the dot-matrix sweep that dissolves each photograph in.
+ * Everything else is the source's and unchanged: `Frame` draws the slot,
+ * `PanelField` runs the dot-matrix sweep that dissolves each photograph in, and
+ * the labels are the same mono the record rows use.
  */
 /**
  * One shape for every frame on the wall.
@@ -55,9 +58,34 @@ export function ShotsWall({ groups }: { groups: ShotGroup[] }) {
   return (
     <div className="space-y-16">
       {groups.map((group) => {
+        const snapshot = appSnapshots.find((app) => app.slug === group.item.slug);
+        const count = String(group.shots.length).padStart(2, "0");
 
         return (
           <section key={group.item.slug}>
+            {/* The same three-part row the home's masthead and its featured
+                count draw: a name, a rule, and the count in the matrix's own
+                numerals with the digits spoken for a screen reader. */}
+            <div className="rule-b flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 pb-2">
+              <h2 className="text-sm text-ink">{group.item.title}</h2>
+              <div className="flex items-baseline gap-4">
+                {snapshot && (
+                  <a
+                    href={snapshot.storeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-wider text-ink-3 transition-colors hover:text-ink"
+                  >
+                    App Store
+                    <GlyphIcon name="arrow-out" size="0.4375rem" />
+                  </a>
+                )}
+                <span className="flex items-baseline gap-1.5">
+                  <span className="sr-only">{count} screens</span>
+                  <GlyphText text={count} size="0.5rem" className="text-ink-3" aria-hidden />
+                </span>
+              </div>
+            </div>
 
             {/* `revision` is the group's own length: each group runs its own
                 sweep, so a frame is only ever dissolved by the field it stands

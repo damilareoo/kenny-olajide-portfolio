@@ -113,6 +113,7 @@ export default function AboutPage() {
                   </Fragment>
                 ))}
               </Field>
+              <Field label="Studied">{site.education}</Field>
               <Field label="Based in">{site.location}</Field>
             </dl>
           </Block>
