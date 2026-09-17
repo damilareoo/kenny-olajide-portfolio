@@ -107,6 +107,62 @@ export const feedAssets: Asset[] = [
     "date": null,
     "height": 2803,
     "width": 1290
+  },
+  {
+    "src": "/shots/endgame-ai-09.jpg",
+    "title": "Endgame ai 09",
+    "date": null,
+    "height": 429,
+    "width": 210
+  },
+  {
+    "src": "/shots/endgame-ai-10.jpg",
+    "title": "Endgame ai 10",
+    "date": null,
+    "height": 426,
+    "width": 210
+  },
+  {
+    "src": "/shots/endgame-ai-11.jpg",
+    "title": "Endgame ai 11",
+    "date": null,
+    "height": 426,
+    "width": 210
+  },
+  {
+    "src": "/shots/endgame-ai-12.jpg",
+    "title": "Endgame ai 12",
+    "date": null,
+    "height": 454,
+    "width": 210
+  },
+  {
+    "src": "/shots/endgame-ai-13.jpg",
+    "title": "Endgame ai 13",
+    "date": null,
+    "height": 454,
+    "width": 210
+  },
+  {
+    "src": "/shots/endgame-ai-14.jpg",
+    "title": "Endgame ai 14",
+    "date": null,
+    "height": 454,
+    "width": 210
+  },
+  {
+    "src": "/shots/endgame-ai-15.jpg",
+    "title": "Endgame ai 15",
+    "date": null,
+    "height": 454,
+    "width": 210
+  },
+  {
+    "src": "/shots/endgame-ai-16.jpg",
+    "title": "Endgame ai 16",
+    "date": null,
+    "height": 454,
+    "width": 210
   }
 ];
 

@@ -137,9 +137,6 @@ export const work: WorkItem[] = [
       "Endgame AI ships on the App Store as a games app from Endgame Chess Inc. The product's problem is not analysis — engines have been superhuman for thirty years — it is that engine output is written for engines.",
       "The design work is the translation layer: what a blunder cost, in a sentence, at the moment it happened.",
     ],
-    collaborators: [
-      { name: "Damilare Osofisan", role: "Product Design", url: "https://www.damilareoo.xyz" },
-    ],
   },
   {
     slug: "chessever",
@@ -152,9 +149,6 @@ export const work: WorkItem[] = [
     intro: [
       "ChessEver follows professional tournaments in real time — live commentary, player analytics, tournament tracking — across web and mobile.",
       "It was designed from scratch on both platforms, which meant settling what a board, a clock and a move list are on this product before any screen could be drawn.",
-    ],
-    collaborators: [
-      { name: "Damilare Osofisan", role: "Product Design", url: "https://www.damilareoo.xyz" },
     ],
   },
 ];

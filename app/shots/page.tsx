@@ -39,10 +39,7 @@ export default function ShotsPage() {
         <p className="mt-2 flex max-w-[52ch] items-baseline gap-2 text-base leading-relaxed text-ink-2">
           <span className="sr-only">{total}</span>
           <GlyphText text={total} size="0.5rem" className="shrink-0 text-ink-3" aria-hidden />
-          <span>
-            screens from the two iOS products, taken from their App Store
-            listings.
-          </span>
+          <span>screens from two iOS chess products.</span>
         </p>
       </header>
 

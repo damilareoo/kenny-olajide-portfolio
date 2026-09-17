@@ -23,9 +23,14 @@ Two deliberate departures from 1:1, both recorded in the spec:
    close proportions, free under the SIL Open Font Licence. It is a one-file
    swap if a licence is ever obtained.
 2. **The shots layout.** The source's twelve-track masonry feed is built for
-   artwork of mixed aspect ratios. Every frame here is a 1284×2778 phone
-   screenshot, so the feed was replaced with a grouped uniform gallery. The
-   reasoning is written at the top of `components/shots-wall.tsx`.
+   artwork of mixed aspect ratios. Every frame here is a portrait phone
+   screenshot, so the feed was replaced with a grouped uniform gallery — one
+   shape for every slot, headed per product. The reasoning is at the top of
+   `components/shots-wall.tsx`.
+3. **The portrait.** The source paints photographs as a dot-matrix field. The
+   owner's call is that a face is the one image on a site that has to be read
+   as itself, so `/about` prints the photograph. Every other picture still
+   arrives through the panel sweep.
 
 ## Content honesty
 
@@ -42,7 +47,27 @@ Nothing about Kenny's career is invented here.
   currently employed anywhere, and the copy is derived from the dates rather
   than written, so it cannot drift: `lib/experience.ts`'s `standing()` chooses
   the tense.
-- `data/site.ts`'s `url` and `email` are still unconfirmed assumptions.
+- `data/site.ts`'s `email` is still an unconfirmed assumption.
+- **Company marks are quotations.** Each is the company's own artwork, taken
+  from the icon it publishes itself, on 2026-09-17. Nothing was redrawn or
+  recoloured — which is why they keep their own colours on a site that
+  otherwise spends none. `data/experience.ts` records each source.
+- **Grand Cortex Centre has no mark.** It has no site that answers and no
+  artwork this repository could obtain, so `CompanyMark` sets it in the site's
+  own mono. That is the designed fallback, not a gap. If Kenny has the logo,
+  drop it at `public/companies/grand-cortex.png` and add a `mark` to its role.
+
+## The shots
+
+Twenty-two screens, filed under the product each came from by
+`lib/shots.ts` — the join is the filename prefix against `data/work.ts`'s
+slug, so `pnpm manifest` after dropping a file in is the whole workflow.
+
+Sixteen Endgame AI and six ChessEver. The first eight of each came off the App
+Store listings at 1290px. The later eight Endgame frames were cut from a
+contact sheet the owner supplied and are **210px wide** — they sit beside
+frames six times sharper, and higher-resolution exports would be a visible
+improvement. Drop them in over the same filenames and re-run `pnpm manifest`.
 
 ## Photographs — what to send
 
@@ -74,7 +99,7 @@ product work is photography.
 ```
 pnpm install
 pnpm dev      # local dev server
-pnpm test     # vitest — 315 tests across 33 files
+pnpm test     # vitest — 316 tests across 33 files
 pnpm lint     # eslint, flat config
 pnpm build    # production build
 pnpm manifest # regenerate data/assets.generated.ts after adding files to public/shots

@@ -146,10 +146,9 @@ export const roles: Role[] = [
     url: "https://endgame.ai",
     period: "Apr 2026 — Aug 2026",
     /* The company's own Open Graph plate, carried across from the source
-       repository along with the measurements that crop it. Kenny's two most
-       recent employers are the two this site holds artwork for; the older four
-       have none, and `CompanyMark` sets those in the site's own mono, which is
-       the designed fallback rather than a gap. */
+       repository along with the measurements that crop it. It is the only
+       wordmark on the list; every other company's artwork is a square symbol
+       and takes the lockup treatment. See `components/company-marks.tsx`. */
     logo: "/companies/endgame.png",
     mark: {
       kind: "wordmark",
@@ -173,20 +172,36 @@ export const roles: Role[] = [
   {
     role: "Content Editor",
     company: "Forward Chess",
+    url: "https://forwardchess.com",
     period: "Mar 2024 — Apr 2024",
     note: "Chess e-book conversions and imports, edited to publication standard.",
+    /* Each company's own artwork, taken from the icon it publishes itself —
+       forwardchess.com/images/favicon/apple-icon-180x180.png,
+       chessable.com/img/fav/apple-touch-icon.png and the hexagon cropped out of
+       telebu.com/images/TeleBu-Logo.png — on 2026-09-17. They are quotations of
+       somebody else's mark, which is why they keep their own colours on a site
+       that otherwise spends none. Nothing was redrawn, recoloured or invented;
+       a company with no artwork is set in the site's own mono instead. */
+    logo: "/companies/forward-chess.png",
+    mark: { kind: "symbol", box: [180, 180] },
   },
   {
     role: "Content Editor",
     company: "Telebu Communications",
+    url: "https://www.telebu.com",
     period: "Nov 2022 — May 2023",
     note: "Owned the editing lifecycle from substantive edit to proofread, against the brand's voice.",
+    logo: "/companies/telebu.png",
+    mark: { kind: "symbol", box: [180, 180] },
   },
   {
     role: "Technical Content Editor",
     company: "Chessable",
+    url: "https://www.chessable.com",
     period: "Feb 2021 — Jun 2022",
     note: "Imported and improved chess courses, coordinated beta tests, implemented quality control.",
+    logo: "/companies/chessable.png",
+    mark: { kind: "symbol", box: [180, 180] },
   },
   {
     role: "Chess & Scrabble Instructor",
@@ -198,5 +213,9 @@ export const roles: Role[] = [
        that is a reading rather than a transcription, and it is written down
        here so it is not mistaken for one. */
     period: "May 2017 — Dec 2022",
+    /* The one company on the list with no artwork. It has no site that
+       answers and no mark this repository could obtain, so `CompanyMark` sets
+       it in the site's own mono — the designed fallback, not a gap. A logo
+       drawn here to fill the column would be a mark the company does not have. */
   },
 ];

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
 import { FooterLine } from "@/components/footer-line";
 import { GlyphText } from "@/components/glyph-text";
-import { Portrait } from "@/components/portrait";
+import Image from "next/image";
 import { RoleList } from "@/components/role-list";
 import { SiteNav } from "@/components/site-nav";
 import { roles } from "@/data/experience";
@@ -70,15 +70,14 @@ export default function AboutPage() {
           <Block index={0} label="Practice">
             {/* First person, and a greeting rather than a title card. A record
                 of a person written in the third person about himself is a CV. */}
-            <h1 className="max-w-[52ch] text-base leading-relaxed text-ink">
-              Hey &mdash; I&rsquo;m {site.name}, a product designer working on
-              chess software. I taught the game for five years and edited it for
-              two more before I drew a single screen of it, which is why I tend
-              to argue about what a move list is before I argue about what it
-              looks like.
+            <h1 className="max-w-[46ch] text-lg font-medium leading-snug tracking-tight text-ink">
+              Hey &mdash; I&rsquo;m {site.name}. I design chess software.
             </h1>
+            <p className="mt-3 max-w-[46ch] text-base leading-relaxed text-ink-2">
+              Five years teaching the game, two editing it, then designing it.
+            </p>
             {now.roles.length > 0 && (
-              <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-ink-2">
+              <p className="mt-3 max-w-[46ch] text-base leading-relaxed text-ink-2">
                 {now.open ? "Currently " : "Most recently "}
                 {now.roles.map((role, i) => (
                   <Fragment key={role.company}>
@@ -88,7 +87,7 @@ export default function AboutPage() {
                     {role.url ? <Out href={role.url}>{role.company}</Out> : role.company}
                   </Fragment>
                 ))}
-                . Studied at {site.education}.
+.
               </p>
             )}
           </Block>
@@ -114,6 +113,7 @@ export default function AboutPage() {
                   </Fragment>
                 ))}
               </Field>
+              <Field label="Studied">{site.education}</Field>
               <Field label="Based in">{site.location}</Field>
             </dl>
           </Block>
@@ -125,13 +125,28 @@ export default function AboutPage() {
             the reading order and the property has nothing to do. */}
         <div className="order-first flex min-w-0 flex-col gap-4 lg:order-none">
           <figure className="m-0">
-            {/* Painted in the matrix rather than resolved into a photograph:
-                the field is the picture and it stays. See
-                `components/portrait.tsx`. A 4:5 box at every width, so the
-                crop is the same crop on a phone and on a desktop. */}
-            <Portrait className="aspect-[4/5] w-full" />
+            {/* The photograph, as a photograph. It was painted as a field of
+                dots — the treatment every other picture on the source site
+                arrives through — and the owner's call is that a portrait is
+                not the place for it: a face is the one image on a site that
+                has to be read as itself.
+
+                Square, because the file is: it is an 800-square circle-masked
+                portrait, and a 4:5 box would letterbox a fifth of the column
+                in nothing. The two slots beneath it are square for the same
+                reason, so the picture column is one rhythm rather than three
+                shapes. The mask does the work a border-radius would. */}
+            <Image
+              src="/portrait/kenny.png"
+              alt="Kenny Olajide"
+              width={800}
+              height={800}
+              sizes="(min-width: 1024px) 28rem, 92vw"
+              priority
+              className="aspect-square w-full object-contain"
+            />
             <figcaption className="mt-2 font-mono text-2xs uppercase tracking-wider text-ink-3">
-              Stand-in &mdash; from his LinkedIn, pending a real portrait
+              Stand-in, pending a real portrait
             </figcaption>
           </figure>
 

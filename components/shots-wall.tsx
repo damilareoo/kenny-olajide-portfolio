@@ -28,6 +28,20 @@ import { appSnapshots } from "@/data/app-store";
  * `PanelField` runs the dot-matrix sweep that dissolves each photograph in, and
  * the labels are the same mono the record rows use.
  */
+/**
+ * One shape for every frame on the wall.
+ *
+ * The screens do not all arrive at one size — the App Store exports are
+ * 1290x2803 and 1284x2778, and the later additions came off a contact sheet at
+ * 210 wide — and their ratios differ by up to seven percent. Laid out at their
+ * own ratios that difference is a grid whose rows do not line up, which is the
+ * one thing a gallery of identical phone screens must not look like. So every
+ * slot is the same portrait box and the picture is cropped into it: at this
+ * margin the crop is about three percent off each side of the widest frames,
+ * which is inside the padding a phone screenshot already carries.
+ */
+const SHOT_RATIO = "9 / 19.5";
+
 export function ShotsWall({ groups }: { groups: ShotGroup[] }) {
   return (
     <div className="space-y-16">
@@ -37,9 +51,9 @@ export function ShotsWall({ groups }: { groups: ShotGroup[] }) {
 
         return (
           <section key={group.item.slug}>
-            {/* The same header the home puts over its featured count: a name,
-                a rule, and the count drawn in the matrix's own numerals with
-                the digits spoken separately for a screen reader. */}
+            {/* The same three-part row the home's masthead and its featured
+                count draw: a name, a rule, and the count in the matrix's own
+                numerals with the digits spoken for a screen reader. */}
             <div className="rule-b flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 pb-2">
               <h2 className="text-sm text-ink">{group.item.title}</h2>
               <div className="flex items-baseline gap-4">
@@ -75,12 +89,10 @@ export function ShotsWall({ groups }: { groups: ShotGroup[] }) {
                 <Frame
                   key={shot.src}
                   src={shot.src}
-                  /* What a reader who cannot see it is owed: which product, and
-                     where in the listing it sits. Naming the screen's contents
-                     would be writing captions for artwork nobody here made. */
-                  alt={`${group.item.title}, App Store screen ${i + 1} of ${group.shots.length}`}
-                  width={shot.width}
-                  height={shot.height}
+                  /* What a reader who cannot see it is owed: which product,
+                     and where in the sequence it sits. */
+                  alt={`${group.item.title}, screen ${i + 1} of ${group.shots.length}`}
+                  ratio={SHOT_RATIO}
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 46vw"
                   panel
                 />

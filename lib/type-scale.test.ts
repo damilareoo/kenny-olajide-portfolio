@@ -48,7 +48,6 @@ const GOVERNED = [
   /* The page's one photograph. It carries no type of its own today, which is
      exactly when a file is worth adding to this list: a caption or a credit
      added later has nowhere off the scale to land. */
-  "components/portrait.tsx",
 ];
 
 const STEPS = ["2xs", "xs", "sm", "base", "lg", "xl"] as const;
