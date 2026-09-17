@@ -147,5 +147,5 @@ The App Store lookup is unauthenticated and needs no key. It revalidates every
 six hours; when it cannot be reached the cards fall back to the snapshot in
 `data/app-store.ts`, which is a real reading one interval old rather than a
 placeholder. `components/app-store-card.tsx` marks which it drew with
-`data-source="live"` or `data-source="recorded"`, so the degraded path can be
+`data-store="live"` or `data-store="recorded"`, so the degraded path can be
 verified on a live page.

@@ -40,9 +40,11 @@ const mono = Geist_Mono({
   display: "swap",
 });
 
-/* site.url (data/site.ts) is the owner's best guess at the eventual domain,
-   not a confirmed one — read from there rather than hardcoded here so a
-   single edit fixes every surface if it turns out to be wrong. */
+/* site.url (data/site.ts) is the live deployment, and it is read from there
+   rather than hardcoded here so one edit moves every absolute URL the site
+   emits when a custom domain arrives. It must be a host that answers: an
+   og:image resolved against a domain with no DNS is a share card no scraper
+   can fetch, which is what shipped until 2026-09-17. */
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: `${site.name} — ${site.role}`, template: `%s — ${site.name}` },
