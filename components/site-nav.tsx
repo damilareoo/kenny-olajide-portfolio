@@ -76,7 +76,8 @@ export function SiteNav({ current }: { current?: string }) {
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-controls="site-menu"
-            className="pressable inline-flex items-center gap-2 rounded-[4px] px-1.5 py-1 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
+            aria-label="Open menu"
+            className="pressable inline-flex shrink-0 items-center gap-2 rounded-full border border-line px-3.5 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-ink-3"
           >
             Menu
             <Plus />
@@ -146,8 +147,10 @@ export function SiteNav({ current }: { current?: string }) {
                   />
                   <span
                     aria-hidden
-                    className={`text-xl font-medium tracking-tight transition-colors ${
-                      active ? "text-ink" : "text-ink-2 group-hover:text-ink"
+                    className={`text-xl font-medium tracking-tight transition-[color,transform] duration-200 ease-out hover:translate-x-1 ${
+                      active
+                        ? "text-ink underline decoration-line underline-offset-8"
+                        : "text-ink-2 group-hover:text-ink"
                     }`}
                   >
                     {route.label}
@@ -187,7 +190,7 @@ export function SiteNav({ current }: { current?: string }) {
  */
 function Plus({ open = false }: { open?: boolean }) {
   return (
-    <span aria-hidden className="relative inline-block size-2.5 shrink-0">
+    <span aria-hidden className="relative inline-block size-3 shrink-0">
       <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current" />
       <span
         className={`absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current transition-transform duration-200 ease-out ${
