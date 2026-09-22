@@ -79,8 +79,10 @@ screens. Both are the product's own artwork at different versions.
 
 The ChessEver set is the onboarding flow as designed — splash, region,
 follow, welcome-back, board, games, swipe tip, player — exported at 886px
-with the device frame baked in, shown as-is at each file's own aspect so
-nothing is cropped.
+with the device frame baked in. The frame is cropped out of every file at the
+same box (the exports share one Figma frame: ring at 6–13px, screen 37px
+inside it), leaving 786×1704 screens shown as-is at each file's own aspect
+so nothing is cropped.
 
 The wall is one cohesive grid with no headings and no labels: every picture
 at its own aspect, in the work's own order. Which product a frame came from

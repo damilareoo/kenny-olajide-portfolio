@@ -14,57 +14,57 @@ export const feedAssets: Asset[] = [
     "src": "/shots/chessever-01.jpg",
     "title": "Chessever 01",
     "date": null,
-    "height": 1792,
-    "width": 886
+    "height": 1704,
+    "width": 786
   },
   {
     "src": "/shots/chessever-02.jpg",
     "title": "Chessever 02",
     "date": null,
-    "height": 1792,
-    "width": 886
+    "height": 1704,
+    "width": 786
   },
   {
     "src": "/shots/chessever-03.jpg",
     "title": "Chessever 03",
     "date": null,
-    "height": 1792,
-    "width": 886
+    "height": 1704,
+    "width": 786
   },
   {
     "src": "/shots/chessever-04.jpg",
     "title": "Chessever 04",
     "date": null,
-    "height": 1792,
-    "width": 886
+    "height": 1704,
+    "width": 786
   },
   {
     "src": "/shots/chessever-05.jpg",
     "title": "Chessever 05",
     "date": null,
-    "height": 1792,
-    "width": 886
+    "height": 1704,
+    "width": 786
   },
   {
     "src": "/shots/chessever-06.jpg",
     "title": "Chessever 06",
     "date": null,
-    "height": 1792,
-    "width": 886
+    "height": 1704,
+    "width": 786
   },
   {
     "src": "/shots/chessever-07.jpg",
     "title": "Chessever 07",
     "date": null,
-    "height": 1792,
-    "width": 886
+    "height": 1704,
+    "width": 786
   },
   {
     "src": "/shots/chessever-08.jpg",
     "title": "Chessever 08",
     "date": null,
-    "height": 1792,
-    "width": 886
+    "height": 1704,
+    "width": 786
   },
   {
     "src": "/shots/endgame-ai-01.jpg",

@@ -1,131 +1,199 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { GlyphText } from "@/components/glyph-text";
 import { site } from "@/data/site";
 
 /**
- * One cohesive bar for every route.
+ * The whole navigation: a wordmark, a Menu control, and a fullscreen menu.
  *
- * Borrowed from emisho.work/about: a `Back[esc]` that answers the keyboard,
- * a centred title on the page you are on, and a close control that returns
- * home. The home itself keeps the mock's row — dot, Shots / About, Contact
- * pill — so the bar is one component, not three arrangements that drift.
+ * Seyi-style — one mark that opens the site, rather than a bar of
+ * destinations. The header is identical on every route: the name on the
+ * left, one control on the right. Everything else — the three routes, the
+ * way out by mail — lives in the overlay.
  *
- * Sticky with the page ground, not a blur: the system spends no backdrop
- * filter anywhere, and a bar that frosts would be the only one.
+ * Motion is CSS only (interruptible, off the main thread): the overlay fades
+ * while the links rise in sequence, 60ms apart. The blanket reduced-motion
+ * rule collapses both to presence. Esc closes; focus rides in to the close
+ * control and back out to the Menu button, and the body stops scrolling
+ * while the menu owns the screen.
  */
-export function SiteNav({ current, title }: { current?: string; title?: string }) {
-  const router = useRouter();
-  const home = current === "/";
+const ROUTES = [
+  { href: "/", label: "Home" },
+  { href: "/shots", label: "Shots" },
+  { href: "/about", label: "About" },
+] as const;
 
-  /* Esc returns home from anywhere. push, not back: a visitor who landed
-     deep from a link has no in-site history, and back() would leave the
-     site rather than land on the home. */
+export function SiteNav({ current }: { current?: string }) {
+  const [open, setOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
+
+  /* Esc closes, unless the keystroke belongs to a field. */
   useEffect(() => {
-    if (home) return;
+    if (!open) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       const target = event.target as HTMLElement | null;
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
-      router.push("/");
+      setOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [home, router]);
+  }, [open ]);
 
-  if (home) {
-    return (
-      <div className="sticky top-0 z-50 -mx-5 bg-bg px-5 py-2 sm:-mx-6 sm:px-6">
-        {/* Sticky like every other bar on the site — september's header never
-            leaves, and neither does this one. Solid ground, no blur: the system
-            spends no backdrop filter anywhere. */}
+  /* The menu owns the screen while it stands: no scroll beneath it, focus
+     inside it, and focus handed back to the control that opened it. */
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButton.current?.focus();
+    /* Copied out: by cleanup time the ref may point elsewhere. */
+    const opener = menuButton.current;
+    return () => {
+      document.body.style.overflow = previous;
+      opener?.focus();
+    };
+  }, [open ]);
+
+  return (
+    <>
+      <div className="sticky top-0 z-40 -mx-5 bg-bg px-5 py-3 sm:-mx-6 sm:px-6">
         <div className="flex items-center justify-between gap-x-3">
-        <div className="flex min-w-0 items-center gap-x-2">
-          {/* The face, not a dot: the one image that reads as himself, held
-              to avatar size. Links home. */}
           <Link
             href="/"
             aria-label="Kenny Olajide — home"
-            aria-current="page"
-            className="pressable block shrink-0"
+            {...(current === "/" ? { "aria-current": "page" } : {})}
+            className="pressable text-base font-bold tracking-tight text-ink"
           >
-            <Image
-              src="/portrait/kenny.png"
-              alt=""
-              width={160}
-              height={160}
-              sizes="32px"
-              priority
-              className="size-8 rounded-full object-cover"
-            />
+            {site.name}
           </Link>
-          <nav className="flex min-w-0 items-center gap-x-0.5" aria-label="Sections">
-            <Link
-              href="/about"
-              className="pressable rounded-[4px] px-2 py-1 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
-            >
-              About
-            </Link>
-            <Link
-              href="/shots"
-              className="pressable rounded-[4px] px-2 py-1 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
-            >
-              Shots
-            </Link>
-          </nav>
-        </div>
-        <a
-          href={`mailto:${site.email}`}
-          className="pressable shrink-0 rounded-full bg-strong px-4 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] text-on-strong"
-        >
-          Connect
-        </a>
+          <button
+            ref={menuButton}
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-expanded={open}
+            aria-controls="site-menu"
+            className="pressable inline-flex items-center gap-2 rounded-[4px] px-1.5 py-1 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
+          >
+            Menu
+            <Plus />
+          </button>
         </div>
       </div>
-    );
-  }
 
+      {/* Kept mounted while closing so the fade has something to leave with;
+          hidden from everyone once shut. */}
+      <div
+        id="site-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        data-open={open || undefined}
+        aria-hidden={!open}
+        className={`menu-overlay fixed inset-0 z-50 flex flex-col bg-bg ${
+          open ? "" : "pointer-events-none"
+        }`}
+      >
+        <div className="mx-auto flex w-full max-w-[1240px] flex-1 flex-col px-5 py-3 sm:px-6">
+          <div className="flex items-center justify-between gap-x-3">
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              tabIndex={open ? undefined : -1}
+              className="pressable text-base font-bold tracking-tight text-ink"
+              aria-label="Kenny Olajide — home"
+            >
+              {site.name}
+            </Link>
+            <button
+              ref={closeButton}
+              type="button"
+              onClick={() => setOpen(false)}
+              tabIndex={open ? undefined : -1}
+              aria-label="Close menu"
+              className="pressable inline-flex items-center gap-2 rounded-[4px] px-1.5 py-1 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
+            >
+              Close
+              <Plus open />
+            </button>
+          </div>
+
+          <nav
+            aria-label="Menu"
+            className="flex flex-1 flex-col justify-center gap-2 py-10"
+          >
+            {ROUTES.map((route, i) => {
+              const active = current === route.href;
+              return (
+                <Link
+                  key={route.href}
+                  href={route.href}
+                  onClick={() => setOpen(false)}
+                  tabIndex={open ? undefined : -1}
+                  aria-current={active ? "page" : undefined}
+                  style={{ transitionDelay: `${i * 60}ms` } as React.CSSProperties}
+                  className="menu-item group flex items-baseline gap-4 py-2"
+                >
+                  <span className="sr-only">{route.label}</span>
+                  <GlyphText
+                    text={String(i + 1).padStart(2, "0")}
+                    size="0.625rem"
+                    className="shrink-0 text-ink-3"
+                    aria-hidden
+                  />
+                  <span
+                    aria-hidden
+                    className={`text-xl font-medium tracking-tight transition-colors ${
+                      active ? "text-ink" : "text-ink-2 group-hover:text-ink"
+                    }`}
+                  >
+                    {route.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div
+            style={{ transitionDelay: `${ROUTES.length * 60}ms` } as React.CSSProperties}
+            className="menu-item flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pb-8"
+          >
+            <p className="max-w-[38ch] text-sm leading-relaxed text-ink-2">
+              Currently open to full-time roles and collaborations.
+            </p>
+            <a
+              href={`mailto:${site.email}`}
+              tabIndex={open ? undefined : -1}
+              className="pressable font-mono text-2xs uppercase tracking-wider text-ink-2 underline decoration-line underline-offset-4 hover:text-ink hover:decoration-ink-3"
+            >
+              {site.email}
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/**
+ * A plus that turns into a close mark.
+ *
+ * Two hairlines, one rotating 90 degrees — transform only, so the morph is
+ * cheap and interruptible. Drawn in currentColor at the text size, so it
+ * sits on the baseline of the label it accompanies.
+ */
+function Plus({ open = false }: { open?: boolean }) {
   return (
-    <div className="sticky top-0 z-50 grid w-full grid-cols-[1fr_auto_1fr] items-center bg-bg py-2">
-      <div className="justify-self-start">
-        <Link
-          href="/"
-          className="pressable inline-flex items-center gap-1 rounded-[4px] px-1.5 py-2 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
-        >
-          <span>Back</span>
-          <span className="text-ink-3">[esc]</span>
-        </Link>
-      </div>
-      {title && (
-        <p className="justify-self-center text-sm font-medium text-ink">{title}</p>
-      )}
-      {/* Connect rides the bar on every page, september-style: one tap away
-          from anywhere, beside the close control. */}
-      <div className="flex items-center gap-x-1 justify-self-end">
-        <a
-          href={`mailto:${site.email}`}
-          className="pressable shrink-0 rounded-full bg-strong px-4 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] text-on-strong"
-        >
-          Connect
-        </a>
-        <Link
-          href="/"
-          aria-label="Close and return home"
-          className="pressable flex size-12 items-center justify-center rounded-[4px] text-ink-2 hover:text-ink"
-        >
-          <svg aria-hidden="true" className="size-5" viewBox="0 0 20 20" fill="none">
-            <path
-              d="M15 5 5.00068 14.9993M14.9993 15 5 5.00071"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="square"
-            />
-          </svg>
-        </Link>
-      </div>
-    </div>
+    <span aria-hidden className="relative inline-block size-2.5 shrink-0">
+      <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current" />
+      <span
+        className={`absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current transition-transform duration-200 ease-out ${
+          open ? "rotate-0" : "rotate-90"
+        }`}
+      />
+    </span>
   );
 }

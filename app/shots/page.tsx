@@ -22,7 +22,7 @@ export default function ShotsPage() {
 
   return (
     <main className="mx-auto w-full max-w-[1320px] px-5 py-4 pb-20 sm:px-6">
-      <SiteNav current="/shots" title="Shots" />
+      <SiteNav current="/shots" />
 
       <header className="mt-10 pb-8 short:mt-4 short:pb-4">
         <h1 className="text-xl font-bold tracking-tight">Shots</h1>

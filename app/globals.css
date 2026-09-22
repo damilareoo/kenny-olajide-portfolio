@@ -350,6 +350,34 @@ body {
   }
 }
 
+/* The menu overlay: a fade for the ground, a rise for each row, staggered
+   by inline delay. CSS only, so a rapid open-close retargets mid-flight
+   instead of restarting. Guarded on scripting like `.arrive`: with no JS the
+   overlay never opens, so its starting state must never apply. */
+@media (scripting: enabled) {
+  .menu-overlay {
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+  }
+
+  .menu-overlay[data-open] {
+    opacity: 1;
+  }
+
+  .menu-item {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 240ms ease-out,
+      transform 240ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .menu-overlay[data-open] .menu-item {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Emil pass: pressable + lift, transform/opacity only, ease-out, <300ms.
    Hover-gated so touch never sees a stuck hover state. */.pressable {
   transition:

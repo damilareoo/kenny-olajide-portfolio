@@ -43,7 +43,7 @@ export default function AboutPage() {
 
   return (
     <main className="mx-auto w-full max-w-[1240px] px-5 pb-14 pt-4 sm:px-6">
-      <SiteNav current="/about" title="About" />
+      <SiteNav current="/about" />
 
       <div className="mx-auto flex w-full max-w-[540px] flex-col gap-16 pt-8">
         {/* The face, in a circle, left-aligned. The file is an 800-square
