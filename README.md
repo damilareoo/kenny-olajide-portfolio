@@ -60,19 +60,19 @@ Nothing about Kenny's career is invented here.
 
 ## The shots
 
-Thirty-seven screens, filed under the product each came from by
+Thirty-four screens, filed under the product each came from by
 `lib/shots.ts` — the join is the filename prefix against `data/work.ts`'s
 slug, so `pnpm manifest` after dropping a file in is the whole workflow.
 
-Twenty-nine Endgame AI and eight ChessEver. The first eight of each came off
-the App Store listings at 1290px. The other twenty-one Endgame frames were
+Twenty-six Endgame AI and eight ChessEver. The first eight of each came off
+the App Store listings at 1290px. The other eighteen Endgame frames were
 supplied by the owner on 2026-09-17 at full resolution: the blindfold-wagering
 flow — the bet sheet, games against the Rookie Rook and GM Niemann bots, the
-win and loss sheets, the leaderboard, and the player profile — the broadcast,
-tournament and puzzle-run screens, and two pieces of product artwork: strips
-of board themes and the avatar set. (The purple puzzle board, `endgame-ai-17`,
-was cut per owner: it is not an Endgame screen. It is filed under
-`~/Downloads/quarantined-shots/` rather than deleted.) Note the screens are
+win and loss sheets, the leaderboard, and the player profile — and the
+broadcast, tournament and puzzle-run screens. (Four cuts per owner, filed under
+`~/Downloads/quarantined-shots/` rather than deleted: the purple puzzle board
+`endgame-ai-17`, which is not an Endgame screen, and the theme strips and
+avatar set `endgame-ai-18` through `20`.) Note the screens are
 the app's current orange-accent build; the committed listing snapshot
 (`data/app-store.ts`, recorded 2026-09-10) holds its earlier purple-accent
 screens. Both are the product's own artwork at different versions.

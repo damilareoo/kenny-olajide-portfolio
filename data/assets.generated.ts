@@ -179,27 +179,6 @@ export const feedAssets: Asset[] = [
     "height": 1704
   },
   {
-    "src": "/shots/endgame-ai-18.png",
-    "title": "Endgame ai 18",
-    "date": null,
-    "width": 3450,
-    "height": 1120
-  },
-  {
-    "src": "/shots/endgame-ai-19.png",
-    "title": "Endgame ai 19",
-    "date": null,
-    "width": 3456,
-    "height": 1032
-  },
-  {
-    "src": "/shots/endgame-ai-20.png",
-    "title": "Endgame ai 20",
-    "date": null,
-    "width": 2920,
-    "height": 2448
-  },
-  {
     "src": "/shots/endgame-ai-21.png",
     "title": "Endgame ai 21",
     "date": null,
