@@ -42,7 +42,7 @@ export default async function Home() {
     <main className="mx-auto w-full max-w-[1240px] px-5 py-4 sm:px-6">
       <SiteNav current="/" />
 
-      <header className="mt-12 short:mt-6">
+      <header className="mt-8 short:mt-6">
         <h1 className="text-xl font-bold tracking-tight">{site.name}</h1>
 
         {/* About excerpt on the home, UX-heavy per owner. No agency claim:
