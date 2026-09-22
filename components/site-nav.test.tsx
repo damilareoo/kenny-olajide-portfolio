@@ -28,10 +28,11 @@ const openMenu = () =>
   });
 
 describe("SiteNav", () => {
-  it("names the site home and marks the current route", () => {
+  it("marks the current route and reaches home through the menu", () => {
     render(<SiteNav current="/shots" />);
-    const home = host.querySelector('a[aria-label="Kenny Olajide — home"]')!;
-    expect(home.getAttribute("href")).toBe("/");
+    openMenu();
+    const home = host.querySelector('a[href="/"]')!;
+    expect(home.textContent).toContain("Home");
     expect(host.querySelector('[aria-current="page"]')!.textContent).toContain("Shots");
   });
 

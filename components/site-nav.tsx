@@ -61,15 +61,9 @@ export function SiteNav({ current }: { current?: string }) {
   return (
     <>
       <div className="sticky top-0 z-40 -mx-5 bg-bg px-5 py-3 sm:-mx-6 sm:px-6">
-        <div className="flex items-center justify-between gap-x-3">
-          <Link
-            href="/"
-            aria-label="Kenny Olajide — home"
-            {...(current === "/" ? { "aria-current": "page" } : {})}
-            className="pressable text-base font-bold tracking-tight text-ink"
-          >
-            {site.name}
-          </Link>
+        {/* No wordmark: the menu owns navigation, and the name lives in the
+            page titles and metadata instead. One control, right-aligned. */}
+        <div className="flex items-center justify-end gap-x-3">
           <button
             ref={menuButton}
             type="button"
@@ -99,16 +93,7 @@ export function SiteNav({ current }: { current?: string }) {
         }`}
       >
         <div className="mx-auto flex w-full max-w-[1240px] flex-1 flex-col px-5 py-3 sm:px-6">
-          <div className="flex items-center justify-between gap-x-3">
-            <Link
-              href="/"
-              onClick={() => setOpen(false)}
-              tabIndex={open ? undefined : -1}
-              className="pressable text-base font-bold tracking-tight text-ink"
-              aria-label="Kenny Olajide — home"
-            >
-              {site.name}
-            </Link>
+          <div className="flex items-center justify-end gap-x-3">
             <button
               ref={closeButton}
               type="button"
@@ -191,10 +176,14 @@ export function SiteNav({ current }: { current?: string }) {
 function Plus({ open = false }: { open?: boolean }) {
   return (
     <span aria-hidden className="relative inline-block size-3 shrink-0">
-      <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current" />
+      <span
+        className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current transition-transform duration-200 ease-out ${
+          open ? "rotate-45" : ""
+        }`}
+      />
       <span
         className={`absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current transition-transform duration-200 ease-out ${
-          open ? "rotate-0" : "rotate-90"
+          open ? "-rotate-45" : ""
         }`}
       />
     </span>
