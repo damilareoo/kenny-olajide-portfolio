@@ -56,7 +56,7 @@ export default function AboutPage() {
             height={200}
             sizes="176px"
             priority
-            circle
+            roundedClassName="rounded-md"
           />
         </div>
 
