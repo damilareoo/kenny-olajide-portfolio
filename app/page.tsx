@@ -43,12 +43,10 @@ export default async function Home() {
       <SiteNav current="/" />
 
       <header className="mt-8 short:mt-6">
-        <h1 className="text-xl font-bold tracking-tight">{site.name}</h1>
-
-        {/* About excerpt on the home, UX-heavy per owner. No agency claim:
-            the verified record is chess teaching, editing, then product
-            design — so the excerpt stays inside that. */}
-        <p className="mt-4 max-w-[52ch] text-base leading-relaxed text-ink-2">
+        {/* No h1 here: the header lockup above is the page's own h1, so the
+            name is printed once. What opens the page is the claim — UX-heavy
+            per owner, no agency invented. */}
+        <p className="max-w-[52ch] text-base leading-relaxed text-ink-2">
           I&rsquo;m a product designer focused on UX, research, and interface
           design — shipping product-ready work from first concept to the App
           Store.

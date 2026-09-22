@@ -28,12 +28,23 @@ const openMenu = () =>
   });
 
 describe("SiteNav", () => {
-  it("marks the current route and reaches home through the menu", () => {
+  it("shares one header row: name left, menu control right", () => {
     render(<SiteNav current="/shots" />);
+    const bar = host.querySelector("div.sticky")!;
+    const row = bar.firstElementChild!;
+    expect(row.className).toContain("justify-between");
+    const name = bar.querySelector('a[aria-label="Kenny Olajide — home"]')!;
+    const menu = bar.querySelector('button[aria-controls="site-menu"]')!;
+    expect(name.compareDocumentPosition(menu) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     openMenu();
-    const home = host.querySelector('a[href="/"]')!;
-    expect(home.textContent).toContain("Home");
     expect(host.querySelector('[aria-current="page"]')!.textContent).toContain("Shots");
+  });
+
+  it("renders the lockup as the page h1 on home, once", () => {
+    render(<SiteNav current="/" />);
+    const h1s = host.querySelectorAll("h1");
+    expect(h1s).toHaveLength(1);
+    expect(h1s[0].textContent).toContain("Kenny Olajide");
   });
 
   it("opens the menu on control and lists every route", () => {

@@ -61,9 +61,31 @@ export function SiteNav({ current }: { current?: string }) {
   return (
     <>
       <div className="sticky top-0 z-40 -mx-5 bg-bg px-5 py-3 sm:-mx-6 sm:px-6">
-        {/* No wordmark: the menu owns navigation, and the name lives in the
-            page titles and metadata instead. One control, right-aligned. */}
-        <div className="flex items-center justify-end gap-x-3">
+        {/* One header row, September-style: the name on the left, one
+            control on the right, shared baseline, every route. */}
+        <div className="flex items-center justify-between gap-x-3">
+          {/* On the home route the lockup is the page's own h1, so the name
+              is never printed twice. Everywhere else it is a plain link. */}
+          {current === "/" ? (
+            <h1 className="text-base font-bold tracking-tight text-ink">
+              <Link
+                href="/"
+                aria-label="Kenny Olajide — home"
+                aria-current="page"
+                className="pressable"
+              >
+                {site.name}
+              </Link>
+            </h1>
+          ) : (
+            <Link
+              href="/"
+              aria-label="Kenny Olajide — home"
+              className="pressable text-base font-bold tracking-tight text-ink"
+            >
+              {site.name}
+            </Link>
+          )}
           <button
             ref={menuButton}
             type="button"
@@ -93,7 +115,16 @@ export function SiteNav({ current }: { current?: string }) {
         }`}
       >
         <div className="mx-auto flex w-full max-w-[1240px] flex-1 flex-col px-5 py-3 sm:px-6">
-          <div className="flex items-center justify-end gap-x-3">
+          <div className="flex items-center justify-between gap-x-3">
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              tabIndex={open ? undefined : -1}
+              className="pressable text-base font-bold tracking-tight text-ink"
+              aria-label="Kenny Olajide — home"
+            >
+              {site.name}
+            </Link>
             <button
               ref={closeButton}
               type="button"
