@@ -52,8 +52,8 @@ export default function AboutPage() {
           <Photo
             src="/portrait/kenny.png"
             alt="Kenny Olajide"
-            width={800}
-            height={800}
+            width={200}
+            height={200}
             sizes="176px"
             priority
             circle

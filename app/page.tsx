@@ -51,28 +51,29 @@ export default async function Home() {
           <Photo
             src="/portrait/kenny.png"
             alt="Kenny Olajide"
-            width={800}
-            height={800}
+            width={200}
+            height={200}
             sizes="144px"
             priority
             roundedClassName="rounded-md"
           />
         </div>
         {/* No h1 here: the header lockup above is the page's own h1, so the
-            name is printed once. What opens the page is the claim — UX-heavy
-            per owner, no agency invented. */}
-        <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-ink-2">
-          I&rsquo;m a product designer focused on UX, research, and interface
-          design — shipping product-ready work from first concept to the App
-          Store.
+            name is printed once. What opens the page is the claim, in the
+            owner's own words. */}
+        <p className="max-w-[34ch] text-lg font-medium leading-snug tracking-tight text-ink">
+          Chess UX designer/ UX Writer and Content Editor
         </p>
         <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-ink-2">
-          Currently open to full-time roles and collaborations,{" "}
+          I design thoughtful digital products from first idea to launch.
+        </p>
+        <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-ink-2">
+          Open to full-time roles and collaborations.{" "}
           <a
             href={`mailto:${site.email}`}
             className="text-ink underline decoration-line underline-offset-4 transition-colors hover:decoration-ink-3"
           >
-            message me.
+            Say hello.
           </a>
         </p>
       </header>

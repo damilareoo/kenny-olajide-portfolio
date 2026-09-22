@@ -18,8 +18,8 @@ import { join } from "node:path";
  */
 export const PORTRAIT_FILE = "public/portrait/kenny.png";
 
-/** 800 square, circle-masked, transparent corners, already black and white. */
-export const PORTRAIT_SIZE = 800;
+/** 200 square, black and white, supplied by the owner on 2026-09-22. */
+export const PORTRAIT_SIZE = 200;
 
 /**
  * The head, as fractions of the file, measured off the image.
@@ -30,10 +30,14 @@ export const PORTRAIT_SIZE = 800;
  * window around the head instead: it is the same photograph, cropped to the one
  * part of it that can survive being that small.
  *
- * The window is square so it can be dropped into a square box without the
- * aspect being decided twice.
+ * Measured 2026-09-22 off the owner-supplied portrait: the face runs roughly
+ * x 88–162, y 52–150 of the 200 square, so the window opens a little wider
+ * to keep the glasses whole.
+ *
+ * The square window can be dropped into a square box without the aspect being
+ * decided twice.
  */
-export const HEAD = { x: 0.02, y: 0, size: 0.6 };
+export const HEAD = { x: 0.38, y: 0.2, size: 0.58 };
 
 /**
  * The file as a data URI.
