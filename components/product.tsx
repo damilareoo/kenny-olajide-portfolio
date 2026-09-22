@@ -287,6 +287,25 @@ export function Product({
                         </p>
                       ))}
                     </div>
+                    {/* Shipped features with somewhere to point, benji-style:
+                        the prose names the work, these say where it lives. */}
+                    {item.features && item.features.length > 0 && (
+                      <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+                        {item.features.map((feature) => (
+                          <li key={feature.href}>
+                            <a
+                              href={feature.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-wider text-ink-2 underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink-3"
+                            >
+                              {feature.label}
+                              <GlyphIcon name="arrow-out" size="0.4375rem" />
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 )}
 
@@ -346,27 +365,6 @@ export function Product({
                   <RecordRow label="Discipline">
                     <Tags items={item.disciplines} />
                   </RecordRow>
-                  {/* The shipped proof, for apps: the live rating with its
-                      count, read from the same lookup as the meta above. A
-                      rating without its count is a decimal, not evidence. */}
-                  {app && app.ratingCount > 0 && (
-                    <RecordRow label="Shipped">
-                      <a
-                        href={app.storeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-ink-2 underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink-3"
-                      >
-                        {app.rating.toFixed(1)} &middot;{" "}
-                        {app.ratingCount.toLocaleString("en-US")} ratings on the App Store{" "}
-                        <GlyphIcon
-                          name="arrow-out"
-                          size="0.5625rem"
-                          className="inline-block align-baseline"
-                        />
-                      </a>
-                    </RecordRow>
-                  )}
                   {item.stack && <RecordRow label="Stack">{item.stack}</RecordRow>}
                   {item.href && (
                     <RecordRow label="Live">

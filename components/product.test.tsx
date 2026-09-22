@@ -304,13 +304,33 @@ describe("Product", () => {
     expect(labelled("Period")).toBeUndefined();
   });
 
-  it("carries the live rating into the fold as shipped proof", () => {
-    render(<Product item={item} assets={[]} index={0} app={app} />);
-    expect(host.textContent).toContain("4.5");
-    expect(host.textContent).toContain("12 ratings on the App Store");
-    const link = host.querySelector(
-      `a[href="${app.storeUrl}"]`,
-    ) as HTMLAnchorElement | null;
-    expect(link).not.toBeNull();
+  /* Shipped features render as outbound links under the Overview — the prose
+     names the work, these say where it lives. */
+  it("links a case's shipped features", () => {
+    render(
+      <Product
+        item={{
+          ...item,
+          intro: ["Shaped how users learn."],
+          features: [
+            { label: "Puzzle Run", href: "https://endgame.ai/puzzle-run" },
+            { label: "Endgame Watch", href: "https://endgame.ai/watch" },
+          ],
+        }}
+        assets={[]}
+        index={0}
+      />,
+    );
+    const run = host.querySelector('a[href="https://endgame.ai/puzzle-run"]')!;
+    expect(run.textContent).toContain("Puzzle Run");
+    expect(run.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(
+      host.querySelector('a[href="https://endgame.ai/watch"]')!.textContent,
+    ).toContain("Endgame Watch");
+  });
+
+  it("prints no feature links for a case with none", () => {
+    render(<Product item={item} assets={[]} index={0} />);
+    expect(host.textContent).not.toContain("Puzzle Run");
   });
 });

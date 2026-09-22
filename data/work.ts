@@ -101,6 +101,12 @@ export type WorkItem = {
   collaborators?: Collaborator[];
   stack?: string;
   /**
+   * Shipped features with somewhere to point. Rendered as outbound links
+   * under the Overview, in the site's own mono treatment — the prose names
+   * the work, these say where it lives.
+   */
+  features?: { label: string; href: string }[];
+  /**
    * The written argument. Both sit inside the entry's fold, in one centred
    * column with the record rows between them — `intro` above, `approach`
    * below. There is no rail: the home is a single column of products, and
@@ -134,8 +140,14 @@ export const work: WorkItem[] = [
     oneLiner:
       "An iOS chess app that turns post-game analysis into something a club player can actually read.",
     intro: [
-      "Endgame AI ships on the App Store as a games app from Endgame Chess Inc. The product's problem is not analysis — engines have been superhuman for thirty years — it is that engine output is written for engines.",
-      "The design work is the translation layer: what a blunder cost, in a sentence, at the moment it happened.",
+      "I helped shape how users learn and progress on Endgame.ai.",
+      "From improving existing experiences to designing new features like Puzzle Run, Endgame Club Feature, Endgame Watch (Broadcast), I focused on reducing friction and making the product feel simpler, clearer, and more rewarding to use while also working on Gamifying the platform across Mobile and Web interfaces.",
+      "My work spanned UX research, user flows, interaction design, wireframing, UI design, and feature development, taking ideas from concept to polished, product-ready experiences.",
+    ],
+    features: [
+      { label: "Puzzle Run", href: "https://endgame.ai/puzzle-run" },
+      { label: "Endgame Club", href: "https://endgame.ai/clubs" },
+      { label: "Endgame Watch", href: "https://endgame.ai/watch" },
     ],
   },
   {
