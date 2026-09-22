@@ -283,29 +283,16 @@ export function Product({
                     <div className="mt-2.5 space-y-3">
                       {item.intro.map((paragraph) => (
                         <p key={paragraph} className="text-sm leading-[1.6] text-ink-2">
-                          {paragraph}
+                          <LinkedText
+                            text={paragraph}
+                            links={(item.features ?? []).map((feature) => ({
+                              match: feature.label,
+                              href: feature.href,
+                            }))}
+                          />
                         </p>
                       ))}
                     </div>
-                    {/* Shipped features with somewhere to point, benji-style:
-                        the prose names the work, these say where it lives. */}
-                    {item.features && item.features.length > 0 && (
-                      <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
-                        {item.features.map((feature) => (
-                          <li key={feature.href}>
-                            <a
-                              href={feature.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-wider text-ink-2 underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink-3"
-                            >
-                              {feature.label}
-                              <GlyphIcon name="arrow-out" size="0.4375rem" />
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
                   </div>
                 )}
 
@@ -450,6 +437,49 @@ function feedPlate(name: string, shots: BareShot[]): CaseBlock[] {
       items: second ? [held(first, 1), held(second, 2)] : [held(first, 1)],
     },
   ];
+}
+
+/**
+ * Prose with its named features linked inline, benji-style.
+ *
+ * Matches are the features' own labels, longest first so "Endgame Watch"
+ * wins over any shorter share. Anything unmatched stays plain text — a
+ * feature list that renames itself never breaks the sentence around it.
+ */
+function LinkedText({
+  text,
+  links,
+}: {
+  text: string;
+  links: { match: string; href: string }[];
+}) {
+  if (links.length === 0) return <>{text}</>;
+  const ordered = [...links].sort((a, b) => b.match.length - a.match.length);
+  const pattern = new RegExp(
+    `(${ordered.map((link) => link.match.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
+    "g",
+  );
+  const parts = text.split(pattern);
+  return (
+    <>
+      {parts.map((part, i) => {
+        const link = ordered.find((entry) => entry.match === part);
+        return link ? (
+          <a
+            key={`${link.href}-${i}`}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink underline decoration-line underline-offset-4 transition-colors hover:decoration-ink-3"
+          >
+            {part}
+          </a>
+        ) : (
+          <Fragment key={i}>{part}</Fragment>
+        );
+      })}
+    </>
+  );
 }
 
 /**

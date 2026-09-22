@@ -59,15 +59,15 @@ export default async function Home() {
           />
         </div>
         {/* No h1 here: the header lockup above is the page's own h1, so the
-            name is printed once. What opens the page is the claim, in the
-            owner's own words. */}
-        <p className="max-w-[34ch] text-base font-bold leading-snug tracking-tight text-ink">
+            name is printed once. Spacing follows the About scale: one open
+            beat after the portrait, then the paragraph rhythm. */}
+        <p className="mt-12 max-w-[34ch] text-base font-bold leading-snug tracking-tight text-ink">
           Chess UX designer/ UX Writer and Content Editor
         </p>
-        <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-ink-2">
+        <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-ink-2">
           I design thoughtful digital products from first idea to launch.
         </p>
-        <p className="mt-3 max-w-[52ch] text-base leading-relaxed text-ink-2">
+        <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-ink-2">
           Open to full-time roles and collaborations.{" "}
           <a
             href={`mailto:${site.email}`}

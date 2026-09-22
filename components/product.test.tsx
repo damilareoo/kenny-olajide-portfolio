@@ -304,14 +304,14 @@ describe("Product", () => {
     expect(labelled("Period")).toBeUndefined();
   });
 
-  /* Shipped features render as outbound links under the Overview — the prose
-     names the work, these say where it lives. */
-  it("links a case's shipped features", () => {
+  /* Shipped features link inline, where the prose names them — no separate
+     list beneath. Benji-style: the sentence carries its own way out. */
+  it("links a case's shipped features inside the prose", () => {
     render(
       <Product
         item={{
           ...item,
-          intro: ["Shaped how users learn."],
+          intro: ["Shaped Puzzle Run and Endgame Watch from concept."],
           features: [
             { label: "Puzzle Run", href: "https://endgame.ai/puzzle-run" },
             { label: "Endgame Watch", href: "https://endgame.ai/watch" },
@@ -322,11 +322,30 @@ describe("Product", () => {
       />,
     );
     const run = host.querySelector('a[href="https://endgame.ai/puzzle-run"]')!;
-    expect(run.textContent).toContain("Puzzle Run");
+    expect(run.textContent).toBe("Puzzle Run");
     expect(run.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(run.closest("p")).not.toBeNull();
     expect(
       host.querySelector('a[href="https://endgame.ai/watch"]')!.textContent,
-    ).toContain("Endgame Watch");
+    ).toBe("Endgame Watch");
+    /* No list below: every feature link lives in a paragraph. */
+    expect(host.querySelectorAll("ul").length).toBe(0);
+  });
+
+  it("leaves prose untouched when nothing matches", () => {
+    render(
+      <Product
+        item={{
+          ...item,
+          intro: ["Shaped how users learn."],
+          features: [{ label: "Puzzle Run", href: "https://endgame.ai/puzzle-run" }],
+        }}
+        assets={[]}
+        index={0}
+      />,
+    );
+    expect(host.querySelector('a[href="https://endgame.ai/puzzle-run"]')).toBeNull();
+    expect(host.textContent).toContain("Shaped how users learn.");
   });
 
   it("prints no feature links for a case with none", () => {
