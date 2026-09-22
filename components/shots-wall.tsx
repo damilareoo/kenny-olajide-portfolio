@@ -5,7 +5,7 @@ import type { ShotGroup } from "@/lib/shots";
  * Every screen on one cohesive wall.
  *
  * No headings, no labels, no containers: a single grid in the work's own
- * order (Endgame AI, then ChessEver), each picture at its own aspect so
+ * order (ChessEver, then Endgame AI), each picture at its own aspect so
  * nothing is cropped. What a reader who cannot see a frame is owed — which
  * product it is, and where it sits — rides in the alt, not on the page.
  */

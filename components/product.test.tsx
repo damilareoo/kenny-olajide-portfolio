@@ -374,4 +374,26 @@ describe("Product", () => {
     );
     expect(linked).toBe(false);
   });
+
+  /* The record credits the collaborator it knows, with the one URL on
+     record. A name with a site renders as a link; without, as text. */
+  it("links the recorded collaborator to his profile", () => {
+    render(
+      <Product
+        item={{
+          ...item,
+          title: "ChessEver",
+          slug: "chessever",
+          collaborators: [
+            { name: "Damilare Osofisan", url: "https://www.linkedin.com/in/damilareoo" },
+          ],
+        }}
+        assets={[]}
+        index={0}
+      />,
+    );
+    const link = host.querySelector('a[href="https://www.linkedin.com/in/damilareoo"]')!;
+    expect(link.textContent).toContain("Damilare Osofisan");
+    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+  });
 });

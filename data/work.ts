@@ -132,6 +132,31 @@ export type WorkItem = {
  */
 export const work: WorkItem[] = [
   {
+    slug: "chessever",
+    title: "ChessEver",
+    year: "2025",
+    role: "0–1 Product Experience",
+    disciplines: ["Product Design"],
+    collaborators: [
+      {
+        name: "Damilare Osofisan",
+        url: "https://www.linkedin.com/in/damilareoo",
+      },
+    ],
+    oneLiner:
+      "Follow professional chess tournaments live, across web and iOS, built from nothing.",
+    intro: [
+      "ChessEver started with a simple idea: make following chess more engaging, structured, and effortless.",
+      "At the time, Follow Chess was the primary platform for following live chess broadcasts, but it was no longer available. ChessEver was born out of an opportunity to bring that experience back — and build something better.",
+      "As the founding designer, I joined when there was no existing product experience to refine. There were no established design systems, user flows, or visual language. The challenge was to figure out what ChessEver should look and feel like, how people should navigate it, and what would make them want to keep coming back.",
+      "I helped shape ChessEver from its earliest ideas to a shipped product.",
+      "Working alongside my co-designer, @Damilare, we owned the design process across the product, working closely with the team to turn ideas into tangible experiences.",
+      "Our work went beyond designing screens. We shaped the product from the ground up — from the logo, colour system, typography, and visual language to the UX, product architecture, features, and interactions.",
+      "We started with almost nothing and worked through the ambiguity of building from scratch: turning conversations into concepts, concepts into prototypes, and prototypes into a functional product.",
+      "Today, ChessEver has evolved from an idea into a shipped platform for following chess — built to make keeping up with the game simpler, more engaging, and more enjoyable.",
+    ],
+  },
+  {
     slug: "endgame-ai",
     title: "Endgame AI",
     year: "2026",
@@ -148,25 +173,6 @@ export const work: WorkItem[] = [
       { label: "Puzzle Run", href: "https://endgame.ai/puzzle-run" },
       { label: "Endgame Club", href: "https://endgame.ai/clubs" },
       { label: "Endgame Watch", href: "https://endgame.ai/watch" },
-    ],
-  },
-  {
-    slug: "chessever",
-    title: "ChessEver",
-    year: "2025",
-    role: "0–1 Product Experience",
-    disciplines: ["Product Design"],
-    oneLiner:
-      "Follow professional chess tournaments live, across web and iOS, built from nothing.",
-    intro: [
-      "ChessEver started with a simple idea: make following chess more engaging, structured, and effortless.",
-      "At the time, Follow Chess was the primary platform for following live chess broadcasts, but it was no longer available. ChessEver was born out of an opportunity to bring that experience back — and build something better.",
-      "As the founding designer, I joined when there was no existing product experience to refine. There were no established design systems, user flows, or visual language. The challenge was to figure out what ChessEver should look and feel like, how people should navigate it, and what would make them want to keep coming back.",
-      "I helped shape ChessEver from its earliest ideas to a shipped product.",
-      "Working alongside my co-designer, @Damilare, we owned the design process across the product, working closely with the team to turn ideas into tangible experiences.",
-      "Our work went beyond designing screens. We shaped the product from the ground up — from the logo, colour system, typography, and visual language to the UX, product architecture, features, and interactions.",
-      "We started with almost nothing and worked through the ambiguity of building from scratch: turning conversations into concepts, concepts into prototypes, and prototypes into a functional product.",
-      "Today, ChessEver has evolved from an idea into a shipped platform for following chess — built to make keeping up with the game simpler, more engaging, and more enjoyable.",
     ],
   },
 ];

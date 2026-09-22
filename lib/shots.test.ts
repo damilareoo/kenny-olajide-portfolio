@@ -11,7 +11,7 @@ describe("groupShots", () => {
 
   it("keeps the work's own order and the manifest's order inside it", () => {
     const { groups } = groupShots(feedAssets);
-    expect(groups.map((g) => g.item.slug)).toEqual(["endgame-ai", "chessever"]);
+    expect(groups.map((g) => g.item.slug)).toEqual(["chessever", "endgame-ai"]);
 
     for (const group of groups) {
       const sources = group.shots.map((s) => s.src);
