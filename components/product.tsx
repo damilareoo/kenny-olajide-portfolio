@@ -16,6 +16,7 @@ import { Reveal } from "@/lib/reveal";
 import type { AppCard } from "@/lib/app-store";
 import type { CaseBlock, CaseMedia, WorkItem } from "@/data/work";
 import type { Asset } from "@/data/assets.generated";
+import { roles } from "@/data/experience";
 
 /**
  * One product, numbered, on the home.
@@ -130,6 +131,10 @@ export function Product({
   const { lede, rest, restAssetOffset } = splitBlocks(blocks, app ? 0 : LEDE_BLOCKS);
   const prose = (item.intro?.length ?? 0) + (item.approach?.length ?? 0) > 0;
   const more = rest.length > 0 || prose;
+  /* The period this piece was worked on, read off the role record by the
+     product's own title. Both titles here are company names, so the join
+     holds; anything it cannot place renders nothing. */
+  const tenure = roles.find((role) => role.company === item.title)?.period;
 
   /* `Reveal`, not a copy of it. The `arrive` class is opacity 0 until something
      sets `data-arrived`, and a hand-rolled version of this — the class copied,
@@ -268,7 +273,7 @@ export function Product({
           <div
             id={panelId}
             data-open={open || undefined}
-            className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out data-[open]:grid-rows-[1fr]"
+            className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] data-[open]:grid-rows-[1fr]"
           >
             <div className="overflow-hidden">
               <div className="pt-8">
@@ -289,6 +294,11 @@ export function Product({
                   {/* First, because it is the coarsest thing anybody asks about
                       a piece of work and because the head no longer says it. */}
                   <RecordRow label="Year">{item.year}</RecordRow>
+                  {/* The engagement behind the piece, derived — never retyped —
+                      from the role record. Matched on the product's own title,
+                      which is the company name for both pieces here; a title
+                      with no row renders no row rather than a guess. */}
+                  {tenure && <RecordRow label="Period">{tenure}</RecordRow>}
                   {item.client && <RecordRow label="Client">{item.client}</RecordRow>}
                   {item.role && <RecordRow label="Role">{item.role}</RecordRow>}
                   {/* Rendered only when there are names. A case with none has
@@ -336,6 +346,27 @@ export function Product({
                   <RecordRow label="Discipline">
                     <Tags items={item.disciplines} />
                   </RecordRow>
+                  {/* The shipped proof, for apps: the live rating with its
+                      count, read from the same lookup as the meta above. A
+                      rating without its count is a decimal, not evidence. */}
+                  {app && app.ratingCount > 0 && (
+                    <RecordRow label="Shipped">
+                      <a
+                        href={app.storeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-ink-2 underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink-3"
+                      >
+                        {app.rating.toFixed(1)} &middot;{" "}
+                        {app.ratingCount.toLocaleString("en-US")} ratings on the App Store{" "}
+                        <GlyphIcon
+                          name="arrow-out"
+                          size="0.5625rem"
+                          className="inline-block align-baseline"
+                        />
+                      </a>
+                    </RecordRow>
+                  )}
                   {item.stack && <RecordRow label="Stack">{item.stack}</RecordRow>}
                   {item.href && (
                     <RecordRow label="Live">

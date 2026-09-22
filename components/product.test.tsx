@@ -257,8 +257,7 @@ describe("Product", () => {
     }
   });
 
-  it("prefers the handed-in feed screens for the bare rail", () => {
-    const feed = [
+  it("prefers the handed-in feed screens for the bare rail", () => {    const feed = [
       { src: "/shots/example-01.jpg", width: 1290, height: 2803 },
       { src: "/shots/example-02.jpg", width: 1290, height: 2803 },
     ];
@@ -281,5 +280,37 @@ describe("Product", () => {
        `/_next/image?url=` — matched by substring, not equality. */
     expect(all.some((src) => src?.includes("example-01"))).toBe(true);
     expect(all.some((src) => src?.includes("%2Fa.jpg"))).toBe(false);
+  });
+
+  /* The fold says when the piece was worked on and that it shipped, both
+     derived — the period from the role record by the product's own title,
+     the shipped proof from the live lookup. A title with no row renders no
+     row rather than a guess. */
+  it("derives the engagement period from the role record", () => {
+    render(
+      <Product
+        item={{ ...item, title: "ChessEver", slug: "chessever" }}
+        assets={[]}
+        index={0}
+        app={app}
+      />,
+    );
+    expect(host.textContent).toContain("Apr 2025 — Mar 2026");
+    expect(labelled("Period")).toBeDefined();
+  });
+
+  it("prints no period for a title the record does not hold", () => {
+    render(<Product item={item} assets={[]} index={0} />);
+    expect(labelled("Period")).toBeUndefined();
+  });
+
+  it("carries the live rating into the fold as shipped proof", () => {
+    render(<Product item={item} assets={[]} index={0} app={app} />);
+    expect(host.textContent).toContain("4.5");
+    expect(host.textContent).toContain("12 ratings on the App Store");
+    const link = host.querySelector(
+      `a[href="${app.storeUrl}"]`,
+    ) as HTMLAnchorElement | null;
+    expect(link).not.toBeNull();
   });
 });
