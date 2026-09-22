@@ -1,5 +1,6 @@
 import { GlyphText } from "@/components/glyph-text";
 import { CopyEmail } from "@/components/copy-email";
+import { Photo } from "@/components/photo";
 import { Product } from "@/components/product";
 import { SiteNav } from "@/components/site-nav";
 import { readAppStore } from "@/lib/app-store";
@@ -43,10 +44,24 @@ export default async function Home() {
       <SiteNav current="/" />
 
       <header className="mt-8 short:mt-6">
+        {/* The face, small and square, above the claim — the layout's own
+            arrangement. Reads `/portrait/kenny.png`, so it follows whatever
+            file is there with no code change. */}
+        <div className="w-36">
+          <Photo
+            src="/portrait/kenny.png"
+            alt="Kenny Olajide"
+            width={800}
+            height={800}
+            sizes="144px"
+            priority
+            roundedClassName="rounded-md"
+          />
+        </div>
         {/* No h1 here: the header lockup above is the page's own h1, so the
             name is printed once. What opens the page is the claim — UX-heavy
             per owner, no agency invented. */}
-        <p className="max-w-[52ch] text-base leading-relaxed text-ink-2">
+        <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-ink-2">
           I&rsquo;m a product designer focused on UX, research, and interface
           design — shipping product-ready work from first concept to the App
           Store.

@@ -20,6 +20,7 @@ export function Photo({
   priority = false,
   caption,
   circle = false,
+  roundedClassName = "rounded-[var(--radius-tile)]",
 }: {
   src: string;
   alt: string;
@@ -30,6 +31,8 @@ export function Photo({
   caption?: string;
   /** Crop to a circle. For a face, and only a face. */
   circle?: boolean;
+  /** Corner treatment for the rectangular case. */
+  roundedClassName?: string;
 }) {
   const [loaded, setLoaded] = useState(false);
 
@@ -37,7 +40,7 @@ export function Photo({
     <figure className="m-0">
       <div
         className={`frame-zoom relative overflow-hidden ${
-          circle ? "rounded-full" : "rounded-[var(--radius-tile)]"
+          circle ? "rounded-full" : roundedClassName
         }`}
       >
         {!loaded && <span aria-hidden className="media-shimmer absolute inset-0" />}
