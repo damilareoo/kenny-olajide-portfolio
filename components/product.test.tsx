@@ -352,4 +352,26 @@ describe("Product", () => {
     render(<Product item={item} assets={[]} index={0} />);
     expect(host.textContent).not.toContain("Puzzle Run");
   });
+
+  /* A name the site cannot link stays text. @Damilare has no URL on record,
+     and a name without a site marked up as a link reads as one that broke. */
+  it("keeps an unlinked co-designer credit as plain text", () => {
+    render(
+      <Product
+        item={{
+          ...item,
+          title: "ChessEver",
+          slug: "chessever",
+          intro: ["Working alongside my co-designer, @Damilare, we owned it."],
+        }}
+        assets={[]}
+        index={0}
+      />,
+    );
+    expect(host.textContent).toContain("@Damilare");
+    const linked = [...host.querySelectorAll("a")].some((a) =>
+      (a.textContent ?? "").includes("@Damilare"),
+    );
+    expect(linked).toBe(false);
+  });
 });

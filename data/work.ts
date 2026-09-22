@@ -159,8 +159,14 @@ export const work: WorkItem[] = [
     oneLiner:
       "Follow professional chess tournaments live, across web and iOS, built from nothing.",
     intro: [
-      "ChessEver follows professional tournaments in real time — live commentary, player analytics, tournament tracking — across web and mobile.",
-      "It was designed from scratch on both platforms, which meant settling what a board, a clock and a move list are on this product before any screen could be drawn.",
+      "ChessEver started with a simple idea: make following chess more engaging, structured, and effortless.",
+      "At the time, Follow Chess was the primary platform for following live chess broadcasts, but it was no longer available. ChessEver was born out of an opportunity to bring that experience back — and build something better.",
+      "As the founding designer, I joined when there was no existing product experience to refine. There were no established design systems, user flows, or visual language. The challenge was to figure out what ChessEver should look and feel like, how people should navigate it, and what would make them want to keep coming back.",
+      "I helped shape ChessEver from its earliest ideas to a shipped product.",
+      "Working alongside my co-designer, @Damilare, we owned the design process across the product, working closely with the team to turn ideas into tangible experiences.",
+      "Our work went beyond designing screens. We shaped the product from the ground up — from the logo, colour system, typography, and visual language to the UX, product architecture, features, and interactions.",
+      "We started with almost nothing and worked through the ambiguity of building from scratch: turning conversations into concepts, concepts into prototypes, and prototypes into a functional product.",
+      "Today, ChessEver has evolved from an idea into a shipped platform for following chess — built to make keeping up with the game simpler, more engaging, and more enjoyable.",
     ],
   },
 ];
