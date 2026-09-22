@@ -14,43 +14,57 @@ export const feedAssets: Asset[] = [
     "src": "/shots/chessever-01.jpg",
     "title": "Chessever 01",
     "date": null,
-    "height": 2778,
-    "width": 1284
+    "height": 1792,
+    "width": 886
   },
   {
     "src": "/shots/chessever-02.jpg",
     "title": "Chessever 02",
     "date": null,
-    "height": 2778,
-    "width": 1284
+    "height": 1792,
+    "width": 886
   },
   {
     "src": "/shots/chessever-03.jpg",
     "title": "Chessever 03",
     "date": null,
-    "height": 2778,
-    "width": 1284
+    "height": 1792,
+    "width": 886
   },
   {
     "src": "/shots/chessever-04.jpg",
     "title": "Chessever 04",
     "date": null,
-    "height": 2778,
-    "width": 1284
+    "height": 1792,
+    "width": 886
   },
   {
     "src": "/shots/chessever-05.jpg",
     "title": "Chessever 05",
     "date": null,
-    "height": 2778,
-    "width": 1284
+    "height": 1792,
+    "width": 886
   },
   {
     "src": "/shots/chessever-06.jpg",
     "title": "Chessever 06",
     "date": null,
-    "height": 2778,
-    "width": 1284
+    "height": 1792,
+    "width": 886
+  },
+  {
+    "src": "/shots/chessever-07.jpg",
+    "title": "Chessever 07",
+    "date": null,
+    "height": 1792,
+    "width": 886
+  },
+  {
+    "src": "/shots/chessever-08.jpg",
+    "title": "Chessever 08",
+    "date": null,
+    "height": 1792,
+    "width": 886
   },
   {
     "src": "/shots/endgame-ai-01.jpg",
@@ -165,13 +179,6 @@ export const feedAssets: Asset[] = [
     "height": 1704
   },
   {
-    "src": "/shots/endgame-ai-17.png",
-    "title": "Endgame ai 17",
-    "date": null,
-    "width": 786,
-    "height": 1704
-  },
-  {
     "src": "/shots/endgame-ai-18.png",
     "title": "Endgame ai 18",
     "date": null,
@@ -191,6 +198,76 @@ export const feedAssets: Asset[] = [
     "date": null,
     "width": 2920,
     "height": 2448
+  },
+  {
+    "src": "/shots/endgame-ai-21.png",
+    "title": "Endgame ai 21",
+    "date": null,
+    "width": 854,
+    "height": 1864
+  },
+  {
+    "src": "/shots/endgame-ai-22.png",
+    "title": "Endgame ai 22",
+    "date": null,
+    "width": 786,
+    "height": 1639
+  },
+  {
+    "src": "/shots/endgame-ai-23.png",
+    "title": "Endgame ai 23",
+    "date": null,
+    "width": 786,
+    "height": 1866
+  },
+  {
+    "src": "/shots/endgame-ai-24.png",
+    "title": "Endgame ai 24",
+    "date": null,
+    "width": 720,
+    "height": 1582
+  },
+  {
+    "src": "/shots/endgame-ai-25.png",
+    "title": "Endgame ai 25",
+    "date": null,
+    "width": 720,
+    "height": 1582
+  },
+  {
+    "src": "/shots/endgame-ai-26.png",
+    "title": "Endgame ai 26",
+    "date": null,
+    "width": 720,
+    "height": 1470
+  },
+  {
+    "src": "/shots/endgame-ai-27.png",
+    "title": "Endgame ai 27",
+    "date": null,
+    "width": 720,
+    "height": 1582
+  },
+  {
+    "src": "/shots/endgame-ai-28.png",
+    "title": "Endgame ai 28",
+    "date": null,
+    "width": 720,
+    "height": 1440
+  },
+  {
+    "src": "/shots/endgame-ai-29.png",
+    "title": "Endgame ai 29",
+    "date": null,
+    "width": 720,
+    "height": 1440
+  },
+  {
+    "src": "/shots/endgame-ai-30.png",
+    "title": "Endgame ai 30",
+    "date": null,
+    "width": 720,
+    "height": 1596
   }
 ];
 

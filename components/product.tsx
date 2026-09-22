@@ -1,7 +1,10 @@
 "use client";
 
 import { Fragment, useId, useState } from "react";
+import Image from "next/image";
 import { AppStoreCard } from "@/components/app-store-card";
+import type { BareShot } from "@/components/bare-shots";
+import { ScreenRail } from "@/components/screen-rail";
 import { CaseReel } from "@/components/case-reel";
 import { GlyphIcon } from "@/components/glyph-icon";
 import { GlyphText } from "@/components/glyph-text";
@@ -11,7 +14,7 @@ import { appReel } from "@/lib/app-reel";
 import { LEDE_BLOCKS, splitBlocks } from "@/lib/case-blocks";
 import { Reveal } from "@/lib/reveal";
 import type { AppCard } from "@/lib/app-store";
-import type { CaseBlock, WorkItem } from "@/data/work";
+import type { CaseBlock, CaseMedia, WorkItem } from "@/data/work";
 import type { Asset } from "@/data/assets.generated";
 
 /**
@@ -43,6 +46,8 @@ export function Product({
   assets,
   index,
   app,
+  bare = false,
+  shots = [],
 }: {
   item: WorkItem;
   assets: Asset[];
@@ -59,6 +64,23 @@ export function Product({
    * question about this entry rather than a switch on its slug.
    */
   app?: AppCard;
+  /**
+   * Screens with no container.
+   *
+   * When true and the entry is an app, the App Store plate and its rail box go
+   * away: a slim meta line (icon, listing name, seller, rating, way through)
+   * and the product's screens on a borderless rail. The live record is kept —
+   * the rating still reads from the lookup — only the chrome leaves.
+   */
+  bare?: boolean;
+  /**
+   * The product's screens for the bare rail, in display order.
+   *
+   * The home hands in the feed group (`public/shots/<slug>-*`); when empty,
+   * the rail falls back to the listing's own shots. Distinct files either
+   * way, so nothing on the rail repeats the tail plate behind the fold.
+   */
+  shots?: BareShot[];
 }) {
   const [open, setOpen] = useState(false);
   /* Sticky, never a toggle. The tail's `PanelField` is keyed to this, and a
@@ -81,7 +103,9 @@ export function Product({
      Art with no blocks authored for it is still worth showing: fall back to one
      full frame per asset, in filename order — as the case page did. */
   const blocks: CaseBlock[] = app
-    ? appReel(app)
+    ? bare && shots.length > 0
+      ? feedPlate(app.name, shots)
+      : appReel(app)
     : item.blocks && item.blocks.length > 0
       ? item.blocks
       : assets.map<CaseBlock>((asset) => ({ kind: "full", alt: asset.title }));
@@ -118,7 +142,7 @@ export function Product({
       as="section"
       id={item.slug}
       index={index}
-      className="min-w-0 rule-t scroll-mt-6 pt-10"
+      className="min-w-0 rule-t scroll-mt-20 pt-10"
     >
       {/* A number and a title, and that is the whole head now.
 
@@ -154,7 +178,19 @@ export function Product({
           tokens, so an app entry and a website entry are still the same kind of
           object on the same page — a rule, a number, a title, a line, a
           picture, a door. */}
-      {app && <AppStoreCard app={app} />}
+      {app && !bare && <AppStoreCard app={app} />}
+      {app && bare && (
+        <>
+          <BareMeta app={app} />
+          <div className="mt-6">
+            <ScreenRail
+              shots={shots.length > 0 ? shots : app.shots.map((src) => ({ src }))}
+              title={item.title}
+              ratio={app.shotRatio}
+            />
+          </div>
+        </>
+      )}
 
       {lede.length > 0 && (
         /* No lead. A full-bleed frame is most of the viewport tall, so 220px of
@@ -211,7 +247,7 @@ export function Product({
             }}
             aria-expanded={open}
             aria-controls={panelId}
-            className="group rule-t mt-8 flex min-h-[2.75rem] w-full items-center justify-between gap-4 py-2 text-left font-mono text-xs uppercase tracking-[0.08em] text-ink transition-opacity hover:opacity-85 active:opacity-70"
+            className="group rule-t mt-8 flex min-h-[2.75rem] w-full items-center justify-between gap-4 py-2 text-left font-mono text-xs uppercase tracking-[0.08em] text-ink transition-opacity hover:opacity-85 active:opacity-70 pressable"
           >
             {/* Never wraps. At 320px the card is 280px and the longer label
                 measures 128px, so the row has room — but a label that wrapped
@@ -356,5 +392,98 @@ export function Product({
         </>
       )}
     </Reveal>
+  );
+}
+
+/**
+ * One plate of the feed's own screens, for the bare fold.
+ *
+ * Same shape as `appReel` — one inset plate of two held phone frames — but
+ * drawn from the feed group the rail above scrolls, not from the listing's
+ * committed shots, so the fold shows the same pictures as the surface. The
+ * rail-above / plate-behind-fold split is the card mode's own settlement:
+ * nothing repeats on one screen, and the plate waits where a reader who
+ * opened the case finds it at reading size.
+ */
+function feedPlate(name: string, shots: BareShot[]): CaseBlock[] {
+  const [first, second] = shots.slice(0, 2);
+  if (!first) return [];
+  const held = (shot: BareShot, n: number): CaseMedia => ({
+    src: shot.src,
+    frame: "phone" as const,
+    ratio:
+      shot.width && shot.height ? `${shot.width} / ${shot.height}` : "9 / 19.5",
+    alt: `${name} — screen ${n}`,
+  });
+  return [
+    {
+      kind: "inset",
+      items: second ? [held(first, 1), held(second, 2)] : [held(first, 1)],
+    },
+  ];
+}
+
+/**
+ * The listing's facts with no plate around them.
+ * Icon, listing name, seller and genre, the live rating as stars with its
+ * figure, and an outlined way through — the record `AppStoreCard` carries,
+ * set as one wrapping row. `data-store` rides along so the live / recorded
+ * fallback stays verifiable on the page.
+ */
+function BareMeta({ app }: { app: AppCard }) {
+  /* Rounded down: a mark is lit or it is not, and down is the only direction
+     the site rounds a claim about its own work. */
+  const lit = Math.floor(app.rating);
+  const rated = app.ratingCount > 0;
+  return (
+    <div data-store={app.source} className="flex flex-wrap items-center gap-x-4 gap-y-3">
+      <Image
+        src={app.icon}
+        alt=""
+        width={512}
+        height={512}
+        sizes="56px"
+        className="size-14 rounded-[22.4%] border border-line object-cover"
+      />
+      <div className="min-w-0">
+        <p className="text-sm font-medium leading-snug tracking-tight">{app.name}</p>
+        <p className="mt-0.5 font-mono text-2xs uppercase tracking-wider text-ink-3">
+          {app.seller} &middot; {app.genre}
+        </p>
+        {rated && (
+          <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="sr-only">
+              {`Rated ${app.rating.toFixed(1)} out of 5, from ${app.ratingCount} ratings`}
+            </span>
+            <span aria-hidden className="flex items-center gap-0.5">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <GlyphIcon
+                  key={i}
+                  name="star"
+                  size="0.625rem"
+                  className={i < lit ? "text-ink" : "text-ink-3"}
+                />
+              ))}
+            </span>
+            <span
+              aria-hidden
+              className="whitespace-nowrap font-mono text-2xs uppercase tracking-wider text-ink-3"
+            >
+              {app.rating.toFixed(1)} &middot; {app.ratingCount.toLocaleString("en-US")} ratings
+            </span>
+          </p>
+        )}
+      </div>
+      <a
+        href={app.storeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${app.name} on the App Store`}
+        className="pressable ml-auto inline-flex min-h-[2.75rem] items-center justify-center gap-2 rounded-[4px] border border-line px-5 font-mono text-xs uppercase tracking-[0.08em] text-ink hover:border-ink-3"
+      >
+        App Store
+        <GlyphIcon name="arrow-out" size="0.5rem" />
+      </a>
+    </div>
   );
 }

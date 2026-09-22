@@ -1,58 +1,131 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { site } from "@/data/site";
 
 /**
- * Three routes, not four. `/colophon` is cut by instruction — see §1 of
- * docs/superpowers/specs/2026-09-15-v3-design-language-switch.md — and the row
- * is the list of surfaces that exist, so it loses the chip with the page.
+ * One cohesive bar for every route.
+ *
+ * Borrowed from emisho.work/about: a `Back[esc]` that answers the keyboard,
+ * a centred title on the page you are on, and a close control that returns
+ * home. The home itself keeps the mock's row — dot, Shots / About, Contact
+ * pill — so the bar is one component, not three arrangements that drift.
+ *
+ * Sticky with the page ground, not a blur: the system spends no backdrop
+ * filter anywhere, and a bar that frosts would be the only one.
  */
-const SURFACES = [
-  { href: "/", label: "Home" },
-  { href: "/shots", label: "Shots" },
-  { href: "/about", label: "About" },
-] as const;
+export function SiteNav({ current, title }: { current?: string; title?: string }) {
+  const router = useRouter();
+  const home = current === "/";
 
-/**
- * Filled chips rather than outlined ones: the inactive surfaces read as raised
- * keys and the current one as the key held down. An outline would make the nav
- * a diagram of itself, which is the thing the reference does not do.
- *
- * The row is the one place on the site that cannot be allowed to set its own
- * width. Four labels plus three theme buttons came to 312px inside a 280px
- * column at 320px wide, and because the chip row could neither wrap nor shrink
- * the theme control was simply pushed 12px past the viewport — every route
- * scrolled sideways on the narrowest phone, from this row alone. So the chips
- * wrap: the keys reflow onto a second line rather than pushing the row past the
- * edge. The tighter phone spacing below keeps that second line from being
- * needed, but the wrap is what makes the row safe at any text size.
- *
- * The theme control that used to sit at the right of this row is not here.
- * `components/theme-control.tsx` is on the owner's do-not-copy list for the v3
- * port, so the site follows the operating system's skin and offers no switch.
- * If that turns out to be a miscut, the control goes back in the `shrink-0`
- * slot this docblock used to describe and nothing else about the row changes.
- */
-export function SiteNav({ current }: { current?: string }) {
-  return (
-    <div className="flex items-center justify-between gap-x-2 sm:gap-x-4">
-      <nav className="flex min-w-0 flex-wrap items-center gap-x-0.5 gap-y-1 sm:gap-x-1">
-        {SURFACES.map((surface) => {
-          const active = current === surface.href;
-          return (
+  /* Esc returns home from anywhere. push, not back: a visitor who landed
+     deep from a link has no in-site history, and back() would leave the
+     site rather than land on the home. */
+  useEffect(() => {
+    if (home) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      const target = event.target as HTMLElement | null;
+      if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+      router.push("/");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [home, router]);
+
+  if (home) {
+    return (
+      <div className="sticky top-0 z-50 -mx-5 bg-bg px-5 py-2 sm:-mx-6 sm:px-6">
+        {/* Sticky like every other bar on the site — september's header never
+            leaves, and neither does this one. Solid ground, no blur: the system
+            spends no backdrop filter anywhere. */}
+        <div className="flex items-center justify-between gap-x-3">
+        <div className="flex min-w-0 items-center gap-x-2">
+          {/* The face, not a dot: the one image that reads as himself, held
+              to avatar size. Links home. */}
+          <Link
+            href="/"
+            aria-label="Kenny Olajide — home"
+            aria-current="page"
+            className="pressable block shrink-0"
+          >
+            <Image
+              src="/portrait/kenny.png"
+              alt=""
+              width={160}
+              height={160}
+              sizes="32px"
+              priority
+              className="size-8 rounded-full object-cover"
+            />
+          </Link>
+          <nav className="flex min-w-0 items-center gap-x-0.5" aria-label="Sections">
             <Link
-              key={surface.href}
-              href={surface.href}
-              aria-current={active ? "page" : undefined}
-              className={`rounded-[4px] px-1.5 py-1 font-mono text-2xs uppercase tracking-[0.08em] transition-colors sm:px-2 ${
-                active
-                  ? "bg-strong text-on-strong"
-                  : "bg-surface-2 text-ink-2 hover:text-ink"
-              }`}
+              href="/about"
+              className="pressable rounded-[4px] px-2 py-1 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
             >
-              {surface.label}
+              About
             </Link>
-          );
-        })}
-      </nav>
+            <Link
+              href="/shots"
+              className="pressable rounded-[4px] px-2 py-1 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
+            >
+              Shots
+            </Link>
+          </nav>
+        </div>
+        <a
+          href={`mailto:${site.email}`}
+          className="pressable shrink-0 rounded-full bg-strong px-4 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] text-on-strong"
+        >
+          Connect
+        </a>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="sticky top-0 z-50 grid w-full grid-cols-[1fr_auto_1fr] items-center bg-bg py-2">
+      <div className="justify-self-start">
+        <Link
+          href="/"
+          className="pressable inline-flex items-center gap-1 rounded-[4px] px-1.5 py-2 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
+        >
+          <span>Back</span>
+          <span className="text-ink-3">[esc]</span>
+        </Link>
+      </div>
+      {title && (
+        <p className="justify-self-center text-sm font-medium text-ink">{title}</p>
+      )}
+      {/* Connect rides the bar on every page, september-style: one tap away
+          from anywhere, beside the close control. */}
+      <div className="flex items-center gap-x-1 justify-self-end">
+        <a
+          href={`mailto:${site.email}`}
+          className="pressable shrink-0 rounded-full bg-strong px-4 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] text-on-strong"
+        >
+          Connect
+        </a>
+        <Link
+          href="/"
+          aria-label="Close and return home"
+          className="pressable flex size-12 items-center justify-center rounded-[4px] text-ink-2 hover:text-ink"
+        >
+          <svg aria-hidden="true" className="size-5" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M15 5 5.00068 14.9993M14.9993 15 5 5.00071"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="square"
+            />
+          </svg>
+        </Link>
+      </div>
     </div>
   );
 }

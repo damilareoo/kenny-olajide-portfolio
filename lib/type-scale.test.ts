@@ -25,12 +25,15 @@ const GOVERNED = [
   "components/frame.tsx",
   "components/case-reel.tsx",
   "components/site-nav.tsx",
-  /* Where the footer's type lives: every surface that carries the quiet line
-     draws it from here, so this is the one file that could put it off the
-     scale. */
-  "components/footer-line.tsx",
   "components/product.tsx",
   "components/shots-wall.tsx",
+  /* The borderless surfaces. BareShots and ScreenRail carry no type of their
+     own today; Photo and CopyEmail set captions and controls at `2xs` — listed
+     so any size added later lands on the scale. */
+  "components/bare-shots.tsx",
+  "components/screen-rail.tsx",
+  "components/photo.tsx",
+  "components/copy-email.tsx",
   /* The App Store card. Every size on it is a step — the listing name at
      `base`, the seller, genre and rating figure at `2xs`, the control at `xs`
      — and that is the only reason a card carrying somebody else's product

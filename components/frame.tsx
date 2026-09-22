@@ -30,6 +30,7 @@ export function Frame({
   sizes = "(min-width: 1024px) 50vw, 92vw",
   preload = false,
   panel = false,
+  fit = "cover",
   className = "",
 }: {
   src?: string;
@@ -64,6 +65,17 @@ export function Frame({
   preload?: boolean;
   /** Arrive as a dot-matrix panel. Only meaningful inside a `PanelField`. */
   panel?: boolean;
+  /**
+   * How the picture meets a slot whose ratio is not its own.
+   *
+   * `cover` is the default and stays the default: artwork composed to its own
+   * frame is better filling the slot than floating in it, and every existing
+   * caller wants that. `contain` is for a slot holding screens of several
+   * device sizes — a user interface cropped is a user interface with a control
+   * missing, and a reader cannot tell a crop from a design decision. The cost
+   * is a small mount either side, which is what `bg-surface-2` is already for.
+   */
+  fit?: "cover" | "contain";
   className?: string;
 }) {
   const aspect = width && height ? `${width} / ${height}` : (ratio ?? "4 / 3");
@@ -97,7 +109,7 @@ export function Frame({
              moving mark would arrive static. Serve those untouched. */
           unoptimized={src.endsWith(".gif")}
           style={position ? { objectPosition: position } : undefined}
-          className={`object-cover ${swept ? "opacity-0" : ""}`}
+          className={`${fit === "contain" ? "object-contain" : "object-cover"} ${swept ? "opacity-0" : ""}`}
         />
       ) : (
         <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-center">

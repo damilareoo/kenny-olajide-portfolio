@@ -60,59 +60,56 @@ Nothing about Kenny's career is invented here.
 
 ## The shots
 
-Twenty-six frames, filed under the product each came from by
+Thirty-seven screens, filed under the product each came from by
 `lib/shots.ts` — the join is the filename prefix against `data/work.ts`'s
 slug, so `pnpm manifest` after dropping a file in is the whole workflow.
 
-Twenty Endgame AI and six ChessEver. The first eight of each came off the App
-Store listings at 1290px. The other twelve Endgame frames were supplied by the
-owner on 2026-09-17 at full resolution: nine screens of the blindfold-wagering
-flow — the bet sheet in two states, games against the Rookie Rook and GM
-Niemann bots in the light and dark themes, the win and loss sheets, the
-leaderboard, and the player profile — and three pieces of product artwork: two
-strips of board themes and the avatar set. Note the screens are the app's
-current orange-accent build; the committed listing snapshot
+Twenty-nine Endgame AI and eight ChessEver. The first eight of each came off
+the App Store listings at 1290px. The other twenty-one Endgame frames were
+supplied by the owner on 2026-09-17 at full resolution: the blindfold-wagering
+flow — the bet sheet, games against the Rookie Rook and GM Niemann bots, the
+win and loss sheets, the leaderboard, and the player profile — the broadcast,
+tournament and puzzle-run screens, and two pieces of product artwork: strips
+of board themes and the avatar set. (The purple puzzle board, `endgame-ai-17`,
+was cut per owner: it is not an Endgame screen. It is filed under
+`~/Downloads/quarantined-shots/` rather than deleted.) Note the screens are
+the app's current orange-accent build; the committed listing snapshot
 (`data/app-store.ts`, recorded 2026-09-10) holds its earlier purple-accent
 screens. Both are the product's own artwork at different versions.
 
-The wall gives every phone screen one uniform 9:19.5 slot and crops the few
-percent the exports differ by. The artwork isn't phone-shaped, so it keeps its
-own aspect and runs wide — a theme strip forced into a portrait box would show
-one board where it should show eight. Same grid, same panel sweep, same
-labels: the owner's instruction was that everything lives on `/shots` in the
-same treatment.
+The ChessEver set is the onboarding flow as designed — splash, region,
+follow, welcome-back, board, games, swipe tip, player — exported at 886px
+with the device frame baked in, shown as-is at each file's own aspect so
+nothing is cropped.
+
+The wall is one cohesive grid with no headings and no labels: every picture
+at its own aspect, in the work's own order. Which product a frame came from
+rides in its alt text, not on the page.
 
 ## Photographs — what to send
 
 `public/portrait/kenny.png` is a **stand-in**, taken from Kenny's LinkedIn
-photo. It is labelled as one everywhere it appears. It is also, right now, the
+photo. That provenance is recorded here and in `app/about/page.tsx`, not on
+the page, per owner. It is also, right now, the
 favicon, the home-screen icon and the OG share card, all derived from that one
 file by `lib/portrait-file.ts` — so replacing it replaces all of them at once.
 
-Three files would finish the site. In order of what they change:
+One file would finish the site: a real portrait — head and shoulders, him
+looking at the camera, plain background, square, 1200px or larger, PNG or JPG
+— at `public/portrait/kenny.png`, replacing the stand-in. This is the one the
+icons crop, so the head must survive being 32px wide.
 
-| Slot | What it is | Shape | Where it lands |
-| --- | --- | --- | --- |
-| 1. Portrait | Head and shoulders, him looking at the camera, plain background. This is the one the icons crop, so the head must survive being 32px wide. | Square, 1200px or larger, PNG or JPG | `public/portrait/kenny.png` — replaces the stand-in |
-| 2. At the board | Playing or teaching. The five years of it are the reason he is credible on chess software, and the site says so in words with nothing to show for it. | Square, 1200px or larger | `/about`, first empty slot |
-| 3. At work | Screen, desk or studio. Any context that is clearly design work rather than a portrait. | Square, 1200px or larger | `/about`, second empty slot |
+Black and white is not required. Colour files are fine.
 
-Black and white is not required — the portrait is painted as a dot field in the
-site's own ink by `components/portrait.tsx`, and the two smaller slots are
-rendered through the same panel treatment as every other photograph on the
-site. Colour files are fine; they are read for luminance.
-
-Until they arrive, the two empty slots print the brief above on the page. That
-is deliberate: an empty frame that says what belongs in it is honest, and a
-slot padded out with an App Store screenshot would be the site pretending
-product work is photography.
+`/about` carries the portrait alone in a circle, with the stand-in captioned
+as one until the real file lands.
 
 ## Running it
 
 ```
 pnpm install
 pnpm dev      # local dev server
-pnpm test     # vitest — 316 tests across 33 files
+pnpm test     # vitest — 319 tests across 33 files
 pnpm lint     # eslint, flat config
 pnpm build    # production build
 pnpm manifest # regenerate data/assets.generated.ts after adding files to public/shots

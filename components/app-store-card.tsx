@@ -217,7 +217,7 @@ export function AppStoreCard({ app }: { app: AppCard }) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${app.name} on the App Store`}
-          className="col-span-2 inline-flex min-h-[2.75rem] items-center justify-center gap-2 rounded-[4px] border border-line px-5 font-mono text-xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-ink-3 sm:col-span-1"
+          className="col-span-2 inline-flex min-h-[2.75rem] items-center justify-center gap-2 rounded-[4px] border border-line px-5 font-mono text-xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-ink-3 sm:col-span-1 pressable"
         >
           App Store
           <GlyphIcon name="arrow-out" size="0.5rem" />
@@ -345,7 +345,7 @@ function RailButton({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className="flex size-7 items-center justify-center rounded-[4px] border border-line text-ink transition-colors hover:border-ink-3 disabled:opacity-40 disabled:hover:border-line"
+      className="flex size-7 items-center justify-center rounded-[4px] border border-line text-ink transition-colors hover:border-ink-3 disabled:opacity-40 disabled:hover:border-line pressable"
     >
       <GlyphIcon name={icon} size="0.75rem" />
     </button>

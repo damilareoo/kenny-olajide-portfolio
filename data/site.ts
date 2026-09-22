@@ -2,8 +2,6 @@ export const site = {
   name: "Kenny Olajide",
   role: "Product Designer",
   headline: "Product Designer, Content Editor, Writer, Chess lover",
-  education: "University of Ibadan",
-  location: "Nigeria",
   /* Where the site actually is, and it has to be the live one: every absolute
      URL the site emits — og:image, twitter:image, the canonical, the sitemap's
      rows, robots' sitemap line — is resolved against this. It was
@@ -30,5 +28,4 @@ export const site = {
    is worse than one that lists none. */
 export const elsewhere = [
   { label: "LinkedIn", handle: "kenny-olajide", href: site.linkedin },
-  { label: "Email", handle: site.email, href: `mailto:${site.email}` },
 ];

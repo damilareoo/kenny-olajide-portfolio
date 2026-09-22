@@ -235,4 +235,51 @@ describe("Product", () => {
       app.shots.length,
     );
   });
+
+  /* Bare mode: the plate and its rail box go away, the live record stays.
+     Same facts (icon, name, seller, stars, way through), set as one wrapping
+     row; the screens scroll on a borderless rail instead of a carousel. */
+  it("renders an app's facts with no card when bare", () => {
+    render(<Product item={item} assets={[]} index={0} app={app} bare />);
+    expect(host.querySelector("[data-store]")).not.toBeNull();
+    expect(host.textContent).toContain("Example LLC");
+    expect(host.textContent).toContain("4.5");
+    // No plate, no boxed rail: the card's tile and its list are gone.
+    expect(host.querySelector("[data-store] ul")).toBeNull();
+  });
+
+  it("scrolls an app's screens on a borderless rail when bare", () => {
+    render(<Product item={item} assets={[]} index={0} app={app} bare />);
+    const rail = host.querySelector("ul[aria-label='Example — screens']")!;
+    expect(rail.querySelectorAll(":scope > li")).toHaveLength(app.shots.length);
+    for (const shot of rail.querySelectorAll("img")) {
+      expect(shot.getAttribute("alt")).toMatch(/Example, screen \d+ of 4/);
+    }
+  });
+
+  it("prefers the handed-in feed screens for the bare rail", () => {
+    const feed = [
+      { src: "/shots/example-01.jpg", width: 1290, height: 2803 },
+      { src: "/shots/example-02.jpg", width: 1290, height: 2803 },
+    ];
+    render(<Product item={item} assets={[]} index={0} app={app} bare shots={feed} />);
+    const rail = host.querySelector("ul[aria-label='Example — screens']")!;
+    expect(rail.querySelectorAll(":scope > li")).toHaveLength(feed.length);
+    expect(rail.querySelector("img")!.getAttribute("src")).toContain("example-01");
+    /* The fold's plate draws the same feed, not the listing's old shots. The
+       plate builds on first open, so the fold is opened before asserting. */
+    const bar = [...host.querySelectorAll("button")].find((b) =>
+      /open case study/i.test(b.textContent ?? ""),
+    )!;
+    act(() => {
+      bar.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    const all = [...host.querySelectorAll("figure img")].map((img) =>
+      img.getAttribute("src"),
+    );
+    /* Next serves local files through its optimizer, so the src is an encoded
+       `/_next/image?url=` — matched by substring, not equality. */
+    expect(all.some((src) => src?.includes("example-01"))).toBe(true);
+    expect(all.some((src) => src?.includes("%2Fa.jpg"))).toBe(false);
+  });
 });

@@ -50,8 +50,7 @@ export default async function Image() {
           {/* The one line of substance, and it is the home's own claim rather
               than a second piece of copy invented for a card nobody edits. */}
           <div style={{ fontSize: 26, color: "#9a9a9a", marginTop: 40, lineHeight: 1.4 }}>
-            Chess software — the screens where a game becomes something you can
-            read.
+            Interfaces, end to end. The last two were chess apps.
           </div>
         </div>
         <img src={portraitDataUri()} alt="" width={380} height={380} />
