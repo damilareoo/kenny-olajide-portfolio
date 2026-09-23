@@ -56,6 +56,17 @@ describe("the motion token set", () => {
   });
 });
 
+describe("the mobile-native baseline", () => {
+  it("kills the tap highlight exactly once, globally", () => {
+    expect(css).toMatch(/-webkit-tap-highlight-color:\s*transparent/);
+  });
+
+  it("fires taps at once and keeps control labels unselectable", () => {
+    expect(css).toMatch(/touch-action:\s*manipulation/);
+    expect(css).toMatch(/-webkit-touch-callout:\s*none/);
+  });
+});
+
 describe("the stylesheet's own reduced-motion guard", () => {
   it("collapses to the final frame under reduced motion, not to a faster one", () => {
     expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);

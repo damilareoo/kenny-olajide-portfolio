@@ -60,7 +60,7 @@ export function SiteNav({ current }: { current?: string }) {
 
   return (
     <>
-      <div className="sticky top-0 z-40 -mx-5 bg-bg px-5 py-3 sm:-mx-6 sm:px-6">
+      <div className="sticky top-0 z-40 -mx-5 bg-bg px-5 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:-mx-6 sm:px-6">
         {/* One header row, September-style: the name on the left, one
             control on the right, shared baseline, every route. */}
         <div className="flex items-center justify-between gap-x-3">
@@ -114,7 +114,7 @@ export function SiteNav({ current }: { current?: string }) {
           open ? "" : "pointer-events-none"
         }`}
       >
-        <div className="mx-auto flex w-full max-w-[1240px] flex-1 flex-col px-5 py-3 sm:px-6">
+        <div className="mx-auto flex w-full max-w-[1240px] flex-1 flex-col overflow-y-auto overscroll-contain px-5 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
           <div className="flex items-center justify-between gap-x-3">
             <Link
               href="/"
@@ -152,7 +152,7 @@ export function SiteNav({ current }: { current?: string }) {
                   tabIndex={open ? undefined : -1}
                   aria-current={active ? "page" : undefined}
                   style={{ transitionDelay: `${i * 60}ms` } as React.CSSProperties}
-                  className="menu-item group flex items-baseline gap-4 py-2"
+                  className="menu-item pressable group flex items-baseline gap-4 py-2"
                 >
                   <span className="sr-only">{route.label}</span>
                   <GlyphText
@@ -178,7 +178,7 @@ export function SiteNav({ current }: { current?: string }) {
 
           <div
             style={{ transitionDelay: `${ROUTES.length * 60}ms` } as React.CSSProperties}
-            className="menu-item flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pb-8"
+            className="menu-item flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pb-[max(2rem,env(safe-area-inset-bottom))]"
           >
             <p className="max-w-[38ch] text-sm leading-relaxed text-ink-2">
               Currently open to full-time roles and collaborations.

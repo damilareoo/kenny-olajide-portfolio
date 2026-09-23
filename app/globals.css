@@ -177,11 +177,33 @@
 
 html {
   background: var(--bg);
+  /* Killed once, globally: iOS and Android paint this flash over any tapped
+     element with a handler, and it fights the press feedback every control
+     below carries instead. */
+  -webkit-tap-highlight-color: transparent;
   /* No root font size is declared on purpose. The dial used to multiply one
      here, which meant the site overrode whatever the visitor had set in their
      browser and then handed them its own three steps instead. With the dial
      gone the browser's own text size is simply honoured, which is the setting
      they already had. */
+}
+
+/* This element never double-tap-zooms, so the browser fires click at once
+   instead of waiting out a second tap that will never come. Controls only —
+   content keeps its default behaviour. */
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+}
+
+/* Control labels are not content: a long-press that selects "Menu" or pops
+   a callout is the browser treating chrome as copy. Body text stays
+   selectable — an email address is exactly what somebody holds to copy. */
+button {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 body {

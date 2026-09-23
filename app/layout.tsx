@@ -54,6 +54,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  /* Edge to edge under the notch; content pads back out with env() where it
+     must. Without the tag every safe-area inset reads 0px. */
+  viewportFit: "cover",
   themeColor: [
     /* --bg on each skin, or the browser chrome sits a shade off the page it
        is framing. Held to app/globals.css by hand: a retune that moves --bg
