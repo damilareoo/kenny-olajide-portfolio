@@ -393,10 +393,10 @@ body {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .lift {
-    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
+  /* A companion to .pressable, never alone: it adds the hover rise and rides
+     .pressable's own transform timing, so the two never fight over the
+     `transition` shorthand. On press, .pressable's scale wins — feedback
+     beats flourish. */
   .lift:hover {
     transform: translateY(-2px);
   }

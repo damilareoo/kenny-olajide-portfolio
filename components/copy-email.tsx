@@ -24,7 +24,7 @@ export function CopyEmail({ email }: { email: string }) {
           window.location.href = `mailto:${email}`;
         }
       }}
-      className="pressable rounded-full bg-surface-2 px-2 py-0.5 font-mono text-2xs uppercase tracking-wider text-ink-2 hover:text-ink"
+      className="pressable lift rounded-full bg-surface-2 px-2 py-0.5 font-mono text-2xs uppercase tracking-wider text-ink-2 hover:text-ink"
       aria-live="polite"
     >
       {copied ? "Copied" : "Copy"}

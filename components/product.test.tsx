@@ -424,4 +424,28 @@ describe("Product", () => {
     expect(host.textContent).toContain("Chess Piece Set Exploration");
     expect(host.textContent).toContain("Hopea is an Indian wood type.");
   });
+
+  /* Live and Play Store rows render only when the record carries them — a
+     row for a link nobody recorded would be a promise to nowhere. */
+  it("links the live product and the Play Store listing", () => {
+    render(
+      <Product
+        item={{
+          ...item,
+          href: "https://example.com",
+          playStore: "https://play.example.com/app",
+        }}
+        assets={[]}
+        index={0}
+      />,
+    );
+    expect(host.querySelector('a[href="https://example.com"]')).not.toBeNull();
+    expect(host.querySelector('a[href="https://play.example.com/app"]')).not.toBeNull();
+  });
+
+  it("prints no store rows for work with nowhere to point", () => {
+    render(<Product item={item} assets={[]} index={0} />);
+    expect(labelled("Live")).toBeUndefined();
+    expect(labelled("Play Store")).toBeUndefined();
+  });
 });

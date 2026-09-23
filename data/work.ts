@@ -100,6 +100,8 @@ export type WorkItem = {
   /** Everyone else on it. See `Collaborator`; an empty list renders nothing. */
   collaborators?: Collaborator[];
   stack?: string;
+  /** The Play Store listing, for Android builds. Rendered beside Live. */
+  playStore?: string;
   /**
    * Shipped features with somewhere to point. Rendered as outbound links
    * under the Overview, in the site's own mono treatment — the prose names
@@ -142,6 +144,7 @@ export const work: WorkItem[] = [
     title: "ChessEver",
     year: "2025",
     role: "0–1 Product Experience",
+    href: "https://chessever.com",
     disciplines: ["Product Design"],
     collaborators: [
       {
@@ -167,6 +170,7 @@ export const work: WorkItem[] = [
     title: "Endgame AI",
     year: "2026",
     role: "Product Designer",
+    href: "https://endgame.ai",
     disciplines: ["Product Design"],
     oneLiner:
       "An iOS chess app that turns post-game analysis into something a club player can actually read.",

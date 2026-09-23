@@ -378,6 +378,23 @@ export function Product({
                       </a>
                     </RecordRow>
                   )}
+                  {item.playStore && (
+                    <RecordRow label="Play Store">
+                      <a
+                        href={item.playStore}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-ink-2 underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink-3"
+                      >
+                        Google Play{" "}
+                        <GlyphIcon
+                          name="arrow-out"
+                          size="0.5625rem"
+                          className="inline-block align-baseline"
+                        />
+                      </a>
+                    </RecordRow>
+                  )}
                 </div>
 
                 {item.approach && item.approach.length > 0 && (
@@ -503,7 +520,7 @@ function BareMeta({ app }: { app: AppCard }) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`${app.name} on the App Store`}
-        className="pressable ml-auto inline-flex min-h-[2.75rem] items-center justify-center gap-2 rounded-[4px] border border-line px-5 font-mono text-xs uppercase tracking-[0.08em] text-ink hover:border-ink-3"
+        className="pressable lift ml-auto inline-flex min-h-[2.75rem] items-center justify-center gap-2 rounded-[4px] border border-line px-5 font-mono text-xs uppercase tracking-[0.08em] text-ink hover:border-ink-3"
       >
         App Store
         <GlyphIcon name="arrow-out" size="0.5rem" />

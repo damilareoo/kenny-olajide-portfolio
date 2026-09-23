@@ -93,7 +93,7 @@ export function SiteNav({ current }: { current?: string }) {
             aria-expanded={open}
             aria-controls="site-menu"
             aria-label="Open menu"
-            className="pressable inline-flex shrink-0 items-center gap-2 rounded-full border border-line px-3.5 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-ink-3"
+            className="pressable lift inline-flex shrink-0 items-center gap-2 rounded-full border border-line px-3.5 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-ink-3"
           >
             Menu
             <Plus />
