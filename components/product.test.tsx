@@ -57,6 +57,31 @@ describe("Product", () => {
     expect(button.textContent).toMatch(/close/i);
   });
 
+  /* The glyph docks to the label rather than the far edge, and the open
+     state draws a close mark instead of a turned chevron. */
+  it("docks the glyph to the label and swaps it open", () => {
+    render(<Product item={item} assets={[]} index={0} />);
+    const button = host.querySelector("button")!;
+    expect(button.className).toContain("justify-start");
+    const box = button.querySelector("span:last-child")!;
+    /* Shut: the matrix chevron, drawn as rects. */
+    expect(box.querySelector("rect")).not.toBeNull();
+    expect(box.querySelector("path")).toBeNull();
+    act(() => { button.dispatchEvent(new MouseEvent("click", { bubbles: true })); });
+    /* Open: the close mark, drawn as strokes. */
+    const paths = [...box.querySelectorAll("path")].map((p) =>
+      p.getAttribute("d"),
+    );
+    expect(paths.some((d) => d && d.includes("M15 5"))).toBe(true);
+  });
+
+  it("stands the first case open when asked", () => {
+    render(<Product item={item} assets={[]} index={0} defaultOpen />);
+    const button = host.querySelector("button")!;
+    expect(button.getAttribute("aria-expanded")).toBe("true");
+    expect(button.textContent).toMatch(/close case study/i);
+  });
+
   /* Dropped when EraSection and EraEntry were merged into this component, and
      the code kept it. aria-expanded on its own says a control opens something
      without saying what: the tail stays in the DOM whether the fold is open or

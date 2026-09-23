@@ -50,6 +50,7 @@ export function Product({
   app,
   bare = false,
   shots = [],
+  defaultOpen = false,
 }: {
   item: WorkItem;
   assets: Asset[];
@@ -83,8 +84,14 @@ export function Product({
    * way, so nothing on the rail repeats the tail plate behind the fold.
    */
   shots?: BareShot[];
+  /**
+   * The first case stands open on load: the page's argument is the work,
+   * and a closed wall of bars makes a first-time reader open every door
+   * before seeing any of it.
+   */
+  defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   /* Sticky, never a toggle. The tail's `PanelField` is keyed to this, and a
      revision that came back down on close rebuilt the sweep while the fold was
      still collapsing: the tail is at full height for most of the 500ms row
@@ -92,7 +99,7 @@ export function Product({
      arrived swept a second time, in full view through the shrinking clip. It
      goes false → true the first time the fold opens and stays there, so the
      sweep is built once and every frame arrives once. */
-  const [everOpened, setEverOpened] = useState(false);
+  const [everOpened, setEverOpened] = useState(defaultOpen);
   const panelId = useId();
   const ordinal = String(index + 1).padStart(2, "0");
 
@@ -242,8 +249,9 @@ export function Product({
               the rule at 0.625rem it read as a mark pointing at something;
               inside a hairline square at the site's own radius, at a touch
               size, it reads as the part you press. The box does not turn — a
-              rotated square is a square — so the rotation stays on the glyph
-              inside it.
+              rotated square is a square — so the glyph swaps instead of
+              spinning: a chevron pointing at the shut fold, a close mark for
+              the open one.
 
               Only opacity moves on the control and only colour on the box, per
               Law 4. Nothing lifts and nothing shadows.
@@ -260,7 +268,7 @@ export function Product({
             }}
             aria-expanded={open}
             aria-controls={panelId}
-            className="group rule-t mt-8 flex min-h-[2.75rem] w-full items-center justify-between gap-4 py-2 text-left font-mono text-xs uppercase tracking-[0.08em] text-ink transition-opacity hover:opacity-85 active:opacity-70 pressable"
+            className="group rule-t mt-8 flex min-h-[2.75rem] w-full items-center justify-start gap-4 py-2 text-left font-mono text-xs uppercase tracking-[0.08em] text-ink transition-opacity hover:opacity-85 active:opacity-70 pressable"
           >
             {/* Never wraps. At 320px the card is 280px and the longer label
                 measures 128px, so the row has room — but a label that wrapped
@@ -270,11 +278,18 @@ export function Product({
               {open ? "Close case study" : "Open case study"}
             </span>
             <span className="flex size-7 shrink-0 items-center justify-center rounded-[4px] border border-line transition-colors group-hover:border-ink-3">
-              <span
-                className={`inline-flex transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-              >
+              {open ? (
+                <svg aria-hidden="true" className="size-3" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M15 5 5.00068 14.9993M14.9993 15 5 5.00071"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="square"
+                  />
+                </svg>
+              ) : (
                 <GlyphIcon name="chevron-down" size="0.75rem" />
-              </span>
+              )}
             </span>
           </button>
 

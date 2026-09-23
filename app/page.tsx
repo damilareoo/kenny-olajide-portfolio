@@ -96,6 +96,7 @@ export default async function Home() {
             app={apps[item.slug]}
             bare
             shots={railShots(item.slug)}
+            defaultOpen={i === 0}
           />
         ))}
       </div>
