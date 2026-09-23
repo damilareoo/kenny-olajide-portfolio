@@ -230,20 +230,24 @@ export const work: WorkItem[] = [
         ],
       },
       {
-        kind: "full",
-        frame: "browser",
-        src: "/work/endgame-ai/web-1.png",
-        alt: "Endgame.ai Play Online lobby on the web",
-        caption: "Play lobby on endgame.ai",
-        ratio: "1000 / 602",
+        kind: "inset",
+        items: [
+          {
+            src: "/work/endgame-ai/web-1.png",
+            alt: "Endgame.ai Play Online lobby on the web",
+            caption: "Play lobby on endgame.ai",
+          },
+        ],
       },
       {
-        kind: "full",
-        frame: "browser",
-        src: "/work/endgame-ai/web-2.png",
-        alt: "Endgame.ai homepage featuring its Netflix partnership",
-        caption: "Homepage with Netflix partnership",
-        ratio: "1440 / 573",
+        kind: "inset",
+        items: [
+          {
+            src: "/work/endgame-ai/web-2.png",
+            alt: "Endgame.ai homepage featuring its Netflix partnership",
+            caption: "Homepage with Netflix partnership",
+          },
+        ],
       },
     ],
   },
