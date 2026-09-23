@@ -290,7 +290,7 @@ export function Product({
                     <SectionLabel>Overview</SectionLabel>
                     <div className="mt-2.5 space-y-3">
                       {item.intro.map((paragraph) => (
-                        <p key={paragraph} className="text-sm leading-[1.6] text-ink-2">
+                        <p key={paragraph} className="text-base leading-relaxed text-ink-2">
                           <LinkedText
                             text={paragraph}
                             links={(item.features ?? []).map((feature) => ({
@@ -385,7 +385,7 @@ export function Product({
                     <SectionLabel>Approach</SectionLabel>
                     <div className="mt-2.5 space-y-3">
                       {item.approach.map((paragraph) => (
-                        <p key={paragraph} className="text-sm leading-[1.6] text-ink-2">
+                        <p key={paragraph} className="text-base leading-relaxed text-ink-2">
                           {paragraph}
                         </p>
                       ))}
