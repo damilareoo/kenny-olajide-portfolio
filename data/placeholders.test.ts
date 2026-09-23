@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { IS_PLACEHOLDER as experienceIsPlaceholder, roles } from "./experience";
 import { work, findWork } from "./work";
 
@@ -60,5 +60,27 @@ describe("the work", () => {
   it("gives both selected pieces a real, owner-confirmed role", () => {
     expect(findWork("endgame-ai")?.role).toBe("Product Designer");
     expect(findWork("chessever")?.role).toBe("0–1 Product Experience");
+  });
+
+  it("points every staged preview image at a committed file", () => {
+    /* Preview slots are staged, not placeholders: a slot with no file is a
+       hole on the page, so every image block in a preview must name art that
+       exists under public/. Text blocks carry the words and need none. */
+    const missing: string[] = [];
+    for (const item of work) {
+      for (const block of item.preview ?? []) {
+        const media =
+          block.kind === "full"
+            ? [block]
+            : block.kind === "pair" || block.kind === "inset"
+              ? block.items
+              : [];
+        for (const frame of media) {
+          if (frame.src && !existsSync(`public${frame.src}`)) missing.push(frame.src);
+          if (!frame.src) missing.push(`(empty slot in ${item.slug})`);
+        }
+      }
+    }
+    expect(missing).toEqual([]);
   });
 });

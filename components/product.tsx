@@ -11,7 +11,8 @@ import { GlyphText } from "@/components/glyph-text";
 import { PanelField } from "@/components/panel-field";
 import { RecordRow, SectionLabel, Tags } from "@/components/ui";
 import { appReel } from "@/lib/app-reel";
-import { LEDE_BLOCKS, splitBlocks } from "@/lib/case-blocks";
+import { LEDE_BLOCKS, TAIL_BLOCKS, splitBlocks } from "@/lib/case-blocks";
+import { LinkedText } from "@/lib/linked-text";
 import { Reveal } from "@/lib/reveal";
 import type { AppCard } from "@/lib/app-store";
 import type { CaseBlock, CaseMedia, WorkItem } from "@/data/work";
@@ -104,8 +105,8 @@ export function Product({
      Art with no blocks authored for it is still worth showing: fall back to one
      full frame per asset, in filename order — as the case page did. */
   const blocks: CaseBlock[] = app
-    ? bare && shots.length > 0
-      ? feedPlate(app.name, shots)
+    ? bare
+      ? [...(shots.length > 0 ? feedPlate(app.name, shots) : appReel(app)), ...(item.preview ?? [])]
       : appReel(app)
     : item.blocks && item.blocks.length > 0
       ? item.blocks
@@ -128,7 +129,14 @@ export function Product({
 
      The frame count is unchanged — card, then two snips, exactly what phase 6
      allows — and so is `LEDE_BLOCKS` for the two entries that are not apps. */
-  const { lede, rest, restAssetOffset } = splitBlocks(blocks, app ? 0 : LEDE_BLOCKS);
+  const { lede, rest, restAssetOffset } = splitBlocks(
+    blocks,
+    app ? 0 : LEDE_BLOCKS,
+    /* Preview slots ride the tail while they exist: the standing bound of
+       one covers the reel, and the preview is extra by definition — staged,
+       then deleted with the slots. */
+    TAIL_BLOCKS + (item.preview?.length ?? 0),
+  );
   const prose = (item.intro?.length ?? 0) + (item.approach?.length ?? 0) > 0;
   const more = rest.length > 0 || prose;
   /* The period this piece was worked on, read off the role record by the
@@ -437,49 +445,6 @@ function feedPlate(name: string, shots: BareShot[]): CaseBlock[] {
       items: second ? [held(first, 1), held(second, 2)] : [held(first, 1)],
     },
   ];
-}
-
-/**
- * Prose with its named features linked inline, benji-style.
- *
- * Matches are the features' own labels, longest first so "Endgame Watch"
- * wins over any shorter share. Anything unmatched stays plain text — a
- * feature list that renames itself never breaks the sentence around it.
- */
-function LinkedText({
-  text,
-  links,
-}: {
-  text: string;
-  links: { match: string; href: string }[];
-}) {
-  if (links.length === 0) return <>{text}</>;
-  const ordered = [...links].sort((a, b) => b.match.length - a.match.length);
-  const pattern = new RegExp(
-    `(${ordered.map((link) => link.match.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
-    "g",
-  );
-  const parts = text.split(pattern);
-  return (
-    <>
-      {parts.map((part, i) => {
-        const link = ordered.find((entry) => entry.match === part);
-        return link ? (
-          <a
-            key={`${link.href}-${i}`}
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-ink underline decoration-line underline-offset-4 transition-colors hover:decoration-ink-3"
-          >
-            {part}
-          </a>
-        ) : (
-          <Fragment key={i}>{part}</Fragment>
-        );
-      })}
-    </>
-  );
 }
 
 /**

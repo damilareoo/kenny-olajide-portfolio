@@ -39,4 +39,32 @@ describe("CaseReel presentation", () => {
     render(<CaseReel blocks={blocks} assets={[]} />);
     expect(host.querySelector("[data-bleed]")).not.toBeNull();
   });
+
+  it("links the names a text block declares", () => {
+    const blocks: CaseBlock[] = [
+      {
+        kind: "text",
+        heading: "Pieces",
+        body: ["With @daomotola & @Damilare, we explored."],
+        links: [
+          { match: "@daomotola", href: "https://x.com/DaOmotola" },
+          { match: "@Damilare", href: "https://www.linkedin.com/in/damilareoo" },
+        ],
+      },
+    ];
+    render(<CaseReel blocks={blocks} assets={[]} />);
+    expect(host.querySelector('a[href="https://x.com/DaOmotola"]')!.textContent).toBe(
+      "@daomotola",
+    );
+    expect(
+      host.querySelector('a[href="https://www.linkedin.com/in/damilareoo"]')!.textContent,
+    ).toBe("@Damilare");
+  });
+
+  it("leaves text blocks without links untouched", () => {
+    const blocks: CaseBlock[] = [{ kind: "text", body: ["Just words."] }];
+    render(<CaseReel blocks={blocks} assets={[]} />);
+    expect(host.querySelector("a")).toBeNull();
+    expect(host.textContent).toContain("Just words.");
+  });
 });

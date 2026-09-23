@@ -1,5 +1,6 @@
 import { Frame } from "@/components/frame";
 import { Reveal } from "@/lib/reveal";
+import { LinkedText } from "@/lib/linked-text";
 import type { CaseBlock, CaseMedia } from "@/data/work";
 import type { Asset } from "@/data/assets.generated";
 
@@ -100,8 +101,16 @@ export function CaseReel({
   // Consumed in render order — a plain counter, because the fallback is
   // positional by definition.
   let next = 0;
+  /* Authored art carries no dimensions, but the manifest measured them when
+     the files landed. Read them off the asset list by path rather than
+     retyping them beside the block — a second copy of a number is a second
+     chance to be wrong, and a slot sized off the wrong ratio crops. */
+  const measured = new Map(assets.map((asset) => [asset.src, asset]));
   const take = (media: CaseMedia) => {
-    if (media.src) return { src: media.src, width: undefined, height: undefined };
+    if (media.src) {
+      const known = measured.get(media.src);
+      return { src: media.src, width: known?.width, height: known?.height };
+    }
     const asset = assets[next++];
     return { src: asset?.src, width: asset?.width, height: asset?.height };
   };
@@ -120,7 +129,7 @@ export function CaseReel({
               <div className="mt-3 space-y-4">
                 {block.body.map((paragraph) => (
                   <p key={paragraph} className="text-base leading-relaxed">
-                    {paragraph}
+                    <LinkedText text={paragraph} links={block.links ?? []} />
                   </p>
                 ))}
               </div>
@@ -166,6 +175,7 @@ export function CaseReel({
                       <figure key={n} className={holdFor(media.frame)}>
                         <Presented frame={media.frame}>
                           <Frame
+                            quality={90}
                             src={resolved.src}
                             alt={media.alt ?? ""}
                             width={resolved.width}
@@ -202,6 +212,7 @@ export function CaseReel({
                   <figure key={n} className={holdFor(media.frame)}>
                     <Presented frame={media.frame}>
                       <Frame
+                        quality={90}
                         src={resolved.src}
                         alt={media.alt ?? ""}
                         width={resolved.width}
@@ -242,6 +253,7 @@ export function CaseReel({
           <>
             <Presented frame={block.frame}>
               <Frame
+                quality={90}
                 src={resolved.src}
                 alt={block.alt ?? ""}
                 width={resolved.width}

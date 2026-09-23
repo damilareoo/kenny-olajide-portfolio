@@ -66,7 +66,7 @@ export type CaseBlock =
       items: [CaseMedia] | [CaseMedia, CaseMedia];
       tone?: "surface" | "strong";
     }
-  | { kind: "text"; heading?: string; body: string[] }
+  | { kind: "text"; heading?: string; body: string[]; links?: { match: string; href: string }[] }
   | { kind: "quote"; body: string; attribution?: string };
 
 /**
@@ -106,6 +106,12 @@ export type WorkItem = {
    * the work, these say where it lives.
    */
   features?: { label: string; href: string }[];
+  /**
+   * Placeholder slots, drawn in the final treatments while art is pending.
+   * Staged behind the fold with the rest of the reel; deleted — not filled —
+   * when the real frames land, so a slot never outlives its brief.
+   */
+  preview?: CaseBlock[];
   /**
    * The written argument. Both sit inside the entry's fold, in one centred
    * column with the record rows between them — `intro` above, `approach`
@@ -173,6 +179,72 @@ export const work: WorkItem[] = [
       { label: "Puzzle Run", href: "https://endgame.ai/puzzle-run" },
       { label: "Endgame Club", href: "https://endgame.ai/clubs" },
       { label: "Endgame Watch", href: "https://endgame.ai/watch" },
+    ],
+    /* The pending set, seated in final treatments: Hopea and Czar plates,
+       the writeup between them and the web frames, then two browser frames
+       for the web work. Nothing here is a placeholder — every image slot
+       names its committed file, and the test below holds that. */
+    preview: [
+      {
+        kind: "inset",
+        items: [
+          {
+            src: "/work/endgame-ai/hopea-1.png",
+            alt: "Hopea piece set on a blue board",
+            caption: "Hopea",
+          },
+          {
+            src: "/work/endgame-ai/hopea-2.png",
+            alt: "Hopea piece set on a purple board",
+            caption: "Hopea",
+          },
+        ],
+      },
+      {
+        kind: "inset",
+        items: [
+          {
+            src: "/work/endgame-ai/czar-1.png",
+            alt: "Czar piece set on a green board",
+            caption: "Czar",
+          },
+          {
+            src: "/work/endgame-ai/czar-2.png",
+            alt: "Czar piece set on a pink board",
+            caption: "Czar",
+          },
+        ],
+      },
+      {
+        kind: "text",
+        heading: "Chess Piece Set Exploration",
+        links: [
+          { match: "@daomotola", href: "https://x.com/DaOmotola" },
+          { match: "@Damilare", href: "https://www.linkedin.com/in/damilareoo" },
+        ],
+        body: [
+          "With @daomotola & @Damilare",
+          "Chess isn't only about the game itself. The pieces are part of the experience; their shape, character, and visual language can make the board feel more inviting.",
+          "We explored how a fresh, distinctive piece set could make online chess feel more expressive and approachable, especially for people who are new to chess. Sometimes, the first thing that draws someone in is simply how beautiful the game looks.",
+          "Together, we explored and developed Hopea (an Indian wood type) a custom chess piece with its own visual identity while making the board feel more modern, playful, and approachable.",
+        ],
+      },
+      {
+        kind: "full",
+        frame: "browser",
+        src: "/work/endgame-ai/web-1.png",
+        alt: "Endgame.ai Play Online lobby on the web",
+        caption: "Play lobby on endgame.ai",
+        ratio: "1000 / 602",
+      },
+      {
+        kind: "full",
+        frame: "browser",
+        src: "/work/endgame-ai/web-2.png",
+        alt: "Endgame.ai homepage on the web",
+        caption: "Homepage with featured broadcast",
+        ratio: "1440 / 573",
+      },
     ],
   },
 ];

@@ -31,6 +31,7 @@ export function Frame({
   preload = false,
   panel = false,
   fit = "cover",
+  quality = 75,
   className = "",
 }: {
   src?: string;
@@ -76,6 +77,11 @@ export function Frame({
    * is a small mount either side, which is what `bg-surface-2` is already for.
    */
   fit?: "cover" | "contain";
+  /**
+   * Optimizer quality, 1–100. The default 75 is the right price for feed
+   * thumbnails; case-study art is the thing being judged and gets 90.
+   */
+  quality?: number;
   className?: string;
 }) {
   const aspect = width && height ? `${width} / ${height}` : (ratio ?? "4 / 3");
@@ -105,6 +111,7 @@ export function Frame({
           fill
           sizes={sizes}
           preload={preload}
+          quality={quality}
           /* The optimiser flattens an animated GIF to its first frame, so a
              moving mark would arrive static. Serve those untouched. */
           unoptimized={src.endsWith(".gif")}

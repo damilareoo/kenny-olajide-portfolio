@@ -250,4 +250,49 @@ export const feedAssets: Asset[] = [
   }
 ];
 
-export const workAssets: Record<string, Asset[]> = {};
+export const workAssets: Record<string, Asset[]> = {
+  "endgame-ai": [
+    {
+      "src": "/work/endgame-ai/czar-1.png",
+      "title": "Czar 1",
+      "date": null,
+      "width": 1573,
+      "height": 1573
+    },
+    {
+      "src": "/work/endgame-ai/czar-2.png",
+      "title": "Czar 2",
+      "date": null,
+      "width": 1573,
+      "height": 1573
+    },
+    {
+      "src": "/work/endgame-ai/hopea-1.png",
+      "title": "Hopea 1",
+      "date": null,
+      "width": 1573,
+      "height": 1573
+    },
+    {
+      "src": "/work/endgame-ai/hopea-2.png",
+      "title": "Hopea 2",
+      "date": null,
+      "width": 1573,
+      "height": 1573
+    },
+    {
+      "src": "/work/endgame-ai/web-1.png",
+      "title": "Web 1",
+      "date": null,
+      "width": 2000,
+      "height": 1203
+    },
+    {
+      "src": "/work/endgame-ai/web-2.png",
+      "title": "Web 2",
+      "date": null,
+      "width": 2880,
+      "height": 1146
+    }
+  ]
+};

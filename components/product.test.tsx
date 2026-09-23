@@ -396,4 +396,32 @@ describe("Product", () => {
     expect(link.textContent).toContain("Damilare Osofisan");
     expect(link.getAttribute("rel")).toBe("noopener noreferrer");
   });
+
+  /* Preview slots stand in the final treatments behind the fold until art
+     lands — each prints what belongs in it rather than collapsing. */
+  it("stages preview slots in their final treatments", () => {
+    render(
+      <Product
+        item={{
+          ...item,
+          preview: [
+            { kind: "inset", items: [{ ratio: "1 / 1" }] },
+            {
+              kind: "text",
+              heading: "Chess Piece Set Exploration",
+              body: ["With @daomotola & @Damilare", "Hopea is an Indian wood type."],
+            },
+            { kind: "full", frame: "browser", ratio: "16 / 9" },
+          ],
+        }}
+        assets={[]}
+        index={0}
+        app={app}
+        bare
+      />,
+    );
+    expect(host.textContent).toContain("Awaiting art");
+    expect(host.textContent).toContain("Chess Piece Set Exploration");
+    expect(host.textContent).toContain("Hopea is an Indian wood type.");
+  });
 });
