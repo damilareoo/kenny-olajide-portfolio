@@ -5,7 +5,7 @@ import { ShotsMarquee } from "@/components/shots-marquee";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { readAppStore } from "@/lib/app-store";
-import { groupShots } from "@/lib/shots";
+import { groupShots, RAIL_END, stripShots } from "@/lib/shots";
 import { feedAssets, workAssets } from "@/data/assets.generated";
 import { site } from "@/data/site";
 import { work } from "@/data/work";
@@ -26,13 +26,9 @@ export default async function Home() {
      home shows the same pictures /shots files under the product. */
   const { groups } = groupShots(feedAssets);
   const shotsBySlug = Object.fromEntries(groups.map((group) => [group.item.slug, group.shots]));
-  /* The Endgame rail ends at the Settings screen (08). Everything past it is
-     contact-sheet cuts the owner says are not Endgame screens — they stay out
-     of the rail. Slice is inclusive of the marker; a missing marker falls back
-     to the whole group rather than an empty rail. */
-  const RAIL_END: Record<string, string> = {
-    "endgame-ai": "/shots/endgame-ai-08.jpg",
-  };
+  /* The strip below shows only what the rails do not, so no screen appears
+     twice — `stripShots` holds that rule; this holds the rail side of it. */
+  const strip = stripShots(groups);
   const railShots = (slug: string) => {
     const all = shotsBySlug[slug] ?? [];
     const end = RAIL_END[slug];
@@ -116,7 +112,7 @@ export default async function Home() {
         <div className="flex items-baseline justify-between gap-x-4 pb-4 text-sm text-ink-2">
           <span>Shots</span>
         </div>
-        <ShotsMarquee groups={groups} />
+        <ShotsMarquee groups={strip} />
       </section>
 
       {/* Contact footer: the playlist plus the email with a copy control,

@@ -47,3 +47,36 @@ export function groupShots(shots: readonly Asset[]): {
 
   return { groups, unfiled: shots.filter((shot) => !taken.has(shot.src)) };
 }
+
+/**
+ * Where a product's case rail ends, by the last screen it shows.
+ *
+ * The Endgame rail ends at the Settings screen (08). Everything past it is
+ * contact-sheet cuts the owner says are not Endgame screens. A product with
+ * no entry shows its whole feed group on its rail. The slice is inclusive of
+ * the marker; a missing marker falls back to the whole group rather than an
+ * empty rail.
+ */
+export const RAIL_END: Record<string, string> = {
+  "endgame-ai": "/shots/endgame-ai-08.jpg",
+};
+
+/**
+ * The feed minus what the cases already show, so no screen appears twice.
+ *
+ * Case rails scroll each product's own feed screens, so the Shots strip and
+ * the /shots archive show only what the rails do not: everything past the
+ * rail marker. A group the rail covers completely (ChessEver) drops out
+ * rather than printing an empty rail. XD keeps no feed at all — its screens
+ * live in its case — so nothing of XD's ever reaches the strip.
+ */
+export function stripShots(groups: ShotGroup[]): ShotGroup[] {
+  return groups.flatMap((group) => {
+    const end = RAIL_END[group.item.slug];
+    /* No marker means the rail scrolls the whole group — nothing left over. */
+    if (!end) return [];
+    const at = group.shots.findIndex((shot) => shot.src === end);
+    const extras = at === -1 ? group.shots : group.shots.slice(at + 1);
+    return extras.length > 0 ? [{ ...group, shots: extras }] : [];
+  });
+}

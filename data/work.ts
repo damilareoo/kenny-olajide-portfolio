@@ -88,6 +88,14 @@ export type WorkItem = {
   title: string;
   oneLiner: string;
   year: string;
+  /**
+   * The product's own mark, set at the end of the head row.
+   *
+   * Optional because most work has no mark to show, and a head that invents
+   * one is branding somebody else's product. Absent renders nothing — never
+   * a placeholder, never an initial.
+   */
+  mark?: { src: string; alt: string };
   /** The live product. Absent for work that no longer exists publicly. */
   href?: string;
   /** Who it was for, when the piece was client work. */
@@ -254,6 +262,7 @@ export const work: WorkItem[] = [
     title: "XD",
     year: "2025",
     role: "Product Designer",
+    mark: { src: "/xd-logo.jpg", alt: "XD logo" },
     oneLiner:
       "A desktop storefront for PC games — catalogue, library, and community in one dark interface.",
     intro: [
@@ -261,13 +270,13 @@ export const work: WorkItem[] = [
       "As the product designer, I designed the interface from the ground up, focusing on creating a clean, immersive, and intuitive experience for gamers. I worked across key areas of the platform, from navigation and game discovery to game pages, libraries, profiles, and other core interactions, while establishing a visual language that gives XD its own identity.",
       "The goal was to balance the information-rich nature of gaming platforms with a simple interface that makes discovering and getting into games feel effortless.",
     ],
-    /* Six desktop captures in three aspect-matched pairs: the lede browses
-       (catalogue, then library), the second pair works the community side,
-       and the tail pairs the tall game page with the tall news scroll.
-       Plain throughout — dark full-bleed screens carry their own edge, and
-       a pale stroke would be the only light thing in any of these frames.
-       The full-page community hub capture stays out of the reel — at 1:2.9
-       it pairs with nothing — and lives in Downloads until it earns a slot. */
+    /* Eight desktop captures, three aspect-matched pairs on the card: the
+       lede browses (catalogue, then library), the second pair configures
+       XDGSS, and the tail pairs the tall game page with the tall news
+       scroll. Plain throughout — dark full-bleed screens carry their own
+       edge, and a pale stroke would be the only light thing in any of these
+       frames. Specials and picks stay filed in work/ off the reel, and the
+       community hub runs in the Shots strip instead. */
     blocks: [
       {
         kind: "pair",
@@ -290,15 +299,15 @@ export const work: WorkItem[] = [
         kind: "pair",
         items: [
           {
-            src: "/work/xd/03-specials.jpg",
-            alt: "XD specials and promotions",
-            caption: "Specials",
+            src: "/work/xd/07-xdgss-setup.jpg",
+            alt: "XD XDGSS configuration screen",
+            caption: "XDGSS setup",
             plain: true,
           },
           {
-            src: "/work/xd/04-community-picks.jpg",
-            alt: "XD community picks",
-            caption: "Community picks",
+            src: "/work/xd/08-xdgss-popup.jpg",
+            alt: "XD Set up XDGSS dialog over sign-in",
+            caption: "Set up XDGSS",
             plain: true,
           },
         ],

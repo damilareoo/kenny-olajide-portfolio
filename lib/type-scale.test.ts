@@ -28,12 +28,11 @@ const GOVERNED = [
   "components/product.tsx",
   "components/shots-wall.tsx",
   /* The borderless surfaces. BareShots and ScreenRail carry no type of their
-     own today; Photo and CopyEmail set captions and controls at `2xs` — listed
-     so any size added later lands on the scale. */
+     own today; Photo sets captions at `2xs` — listed so any size added later
+     lands on the scale. */
   "components/bare-shots.tsx",
   "components/screen-rail.tsx",
   "components/photo.tsx",
-  "components/copy-email.tsx",
   /* The App Store card. Every size on it is a step — the listing name at
      `base`, the seller, genre and rating figure at `2xs`, the control at `xs`
      — and that is the only reason a card carrying somebody else's product

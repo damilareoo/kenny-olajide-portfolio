@@ -3,7 +3,7 @@ import { ShotsWall } from "@/components/shots-wall";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { feedAssets } from "@/data/assets.generated";
-import { groupShots } from "@/lib/shots";
+import { groupShots, stripShots } from "@/lib/shots";
 
 export const metadata: Metadata = {
   title: "Shots",
@@ -11,12 +11,15 @@ export const metadata: Metadata = {
 };
 
 /**
- * Every screen, from two products, filed under the product each came from.
+ * Every screen the cases do not already show, filed under the product each
+ * came from.
  *
- * The frames are the products' own design work, which is what a shots page on
- * a product designer's site should hold. No containers: each picture stands
- * bare at its own aspect through `BareShots`, so nothing is cropped and no
- * chrome sits between the reader and the work.
+ * The case rails scroll each product's own feed screens, so this archive
+ * shows only the extras — `stripShots` holds that rule. The frames are the
+ * products' own design work, which is what a shots page on a product
+ * designer's site should hold. No containers: each picture stands bare at
+ * its own aspect through `BareShots`, so nothing is cropped and no chrome
+ * sits between the reader and the work.
  */
 export default function ShotsPage() {
   const { groups, unfiled } = groupShots(feedAssets);
@@ -29,7 +32,7 @@ export default function ShotsPage() {
         <h1 className="text-xl font-bold tracking-tight">Shots</h1>
       </header>
 
-      <ShotsWall groups={groups} />
+      <ShotsWall groups={stripShots(groups)} />
 
       {/* A frame the manifest found and `groupShots` could not place. It should
           never appear — `lib/shots.test.ts` asserts the committed manifest has

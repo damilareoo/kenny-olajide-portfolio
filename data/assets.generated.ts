@@ -337,6 +337,20 @@ export const workAssets: Record<string, Asset[]> = {
       "date": null,
       "height": 3206,
       "width": 1600
+    },
+    {
+      "src": "/work/xd/07-xdgss-setup.jpg",
+      "title": "Xdgss setup",
+      "date": null,
+      "height": 829,
+      "width": 1600
+    },
+    {
+      "src": "/work/xd/08-xdgss-popup.jpg",
+      "title": "Xdgss popup",
+      "date": null,
+      "height": 829,
+      "width": 1600
     }
   ]
 };

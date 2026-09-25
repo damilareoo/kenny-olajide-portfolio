@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SiteFooter } from "@/components/site-footer";
 import { site } from "@/data/site";
 
@@ -17,6 +17,7 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root.unmount());
   host.remove();
+  vi.unstubAllGlobals();
 });
 const render = (ui: React.ReactElement) => act(() => root.render(ui));
 
@@ -25,17 +26,9 @@ describe("SiteFooter", () => {
     render(<SiteFooter />);
     expect(host.textContent).toContain("Have a role or a collaboration in mind?");
     expect(host.textContent).toContain("Message me");
-  });
-
-  it("keeps the one contact path: the mail row with a copy control", () => {
-    render(<SiteFooter />);
-    /* Two mailto links now — the contact door and the mail row. The row is
-       the one that prints the address. */
-    const mail = [...host.querySelectorAll(`a[href="mailto:${site.email}"]`)].find(
-      (a) => a.textContent?.includes(site.email),
-    )!;
-    expect(mail.textContent).toContain(site.email);
-    expect(host.querySelector("button")).not.toBeNull();
+    expect(
+      host.querySelector(`a[href="mailto:${site.email}"]`),
+    ).not.toBeNull();
   });
 
   it("mounts somebody else's player lazily, in our frame", () => {
@@ -48,5 +41,28 @@ describe("SiteFooter", () => {
     expect(frame.parentElement!.className).toMatch(/border-line/);
     const out = host.querySelector('a[href^="https://open.spotify.com/playlist/"]')!;
     expect(out.getAttribute("rel")).toBe("noopener noreferrer");
+  });
+
+  it("keeps the slimmer ending on about: no player", () => {
+    render(<SiteFooter playlist={false} />);
+    expect(host.querySelector("iframe")).toBeNull();
+    expect(host.textContent).not.toContain("On repeat");
+    expect(host.textContent).toContain("Have a role or a collaboration in mind?");
+    expect(host.textContent).toContain("Back to top");
+  });
+
+  it("signs the last line with Lagos time and climbs on command", () => {
+    render(<SiteFooter />);
+    expect(host.textContent).toMatch(/Lagos \d{2}:\d{2}, GMT \+1/);
+    expect(host.textContent).toContain(`© ${new Date().getFullYear()}, Kenny`);
+    const scrollTo = vi.fn();
+    vi.stubGlobal("scrollTo", scrollTo);
+    const top = [...host.querySelectorAll("button")].find((b) =>
+      b.textContent?.includes("Back to top"),
+    )!;
+    act(() => {
+      top.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
   });
 });

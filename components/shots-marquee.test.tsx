@@ -4,6 +4,8 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { ShotsMarquee } from "@/components/shots-marquee";
 import type { ShotGroup } from "@/lib/shots";
+import { feedAssets } from "@/data/assets.generated";
+import { groupShots, stripShots } from "@/lib/shots";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -69,5 +71,22 @@ describe("ShotsMarquee", () => {
   it("carries no visible labels — the motion is the signpost", () => {
     render(<ShotsMarquee groups={groups} />);
     expect(host.querySelector("h1, h2, h3, p")).toBeNull();
+  });
+
+  it("fills every viewport twice over, so the loop never shows air", () => {
+    /* The track travels exactly one half per loop. If a half ever measured
+       less than the widest container it runs in, the seam would open onto
+       empty ground once per loop. */
+    const { groups: full } = groupShots(feedAssets);
+    const strip = stripShots(full);
+    const half =
+      strip.reduce(
+        (n, group) =>
+          n +
+          group.shots.reduce((m, shot) => m + (shot.width / shot.height) * 416, 0),
+        0,
+      ) +
+      strip.reduce((n, group) => n + group.shots.length, 0) * 12;
+    expect(half).toBeGreaterThan(2400);
   });
 });

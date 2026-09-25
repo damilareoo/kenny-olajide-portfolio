@@ -187,6 +187,19 @@ export function Product({
         <span className="sr-only">{ordinal}</span>
         <GlyphText text={ordinal} size="0.5rem" className="shrink-0 text-ink-3" />
         <h2 className="min-w-0 text-xl font-medium tracking-tight">{item.title}</h2>
+        {/* The product's own mark, where one is recorded — small, at the end
+            of the row, inverted on the dark skin so a black-on-white mark
+            reads as white-on-black rather than glowing. */}
+        {item.mark && (
+          <Image
+            src={item.mark.src}
+            alt={item.mark.alt}
+            width={139}
+            height={72}
+            sizes="56px"
+            className="ml-auto h-6 w-auto shrink-0 self-center dark:invert"
+          />
+        )}
       </div>
 
       <p className="mt-3 mb-6 max-w-[42rem] text-base leading-relaxed text-ink-2">

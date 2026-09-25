@@ -45,7 +45,7 @@ export default function AboutPage() {
     <main className="mx-auto w-full max-w-[1240px] px-5 pb-14 pt-4 sm:px-6">
       <SiteNav current="/about" />
 
-      <div className="mx-auto flex w-full max-w-[540px] flex-col gap-16 pt-8">
+      <div className="mx-auto flex w-full max-w-[540px] flex-col gap-12 pt-8">
         {/* The face, in a circle, left-aligned. The file is an 800-square
             circle-masked portrait, so the crop costs nothing. */}
         <div className="w-44">
@@ -95,8 +95,9 @@ export default function AboutPage() {
         </Block>
 
         {/* The ending lives in the shared footer now — the same contact door,
-            playlist, and mail row as every other page. */}
-        <SiteFooter />
+            playlist, and last line as every other page, held a beat closer
+            here so the column does not end in air. */}
+        <SiteFooter className="mt-12" playlist={false} />
       </div>
     </main>
   );

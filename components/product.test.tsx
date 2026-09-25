@@ -74,6 +74,24 @@ describe("Product", () => {
     expect(paths.some((d) => d && d.includes("M15 5"))).toBe(true);
   });
 
+  it("sets the product's own mark at the end of the head row", () => {
+    render(
+      <Product
+        item={{ ...item, mark: { src: "/xd-logo.jpg", alt: "XD logo" } }}
+        assets={[]}
+        index={2}
+      />,
+    );
+    const mark = host.querySelector('img[alt="XD logo"]')!;
+    expect(mark).not.toBeNull();
+    expect(mark.closest("h2")).toBeNull();
+  });
+
+  it("prints no mark for work that records none", () => {
+    render(<Product item={item} assets={[]} index={0} />);
+    expect(host.querySelector("img")).toBeNull();
+  });
+
   it("stands the first case open when asked", () => {
     render(<Product item={item} assets={[]} index={0} defaultOpen />);
     const button = host.querySelector("button")!;

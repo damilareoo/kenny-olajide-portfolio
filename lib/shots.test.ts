@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { feedAssets } from "@/data/assets.generated";
 import { work } from "@/data/work";
-import { groupShots } from "@/lib/shots";
+import { groupShots, stripShots } from "@/lib/shots";
 
 describe("groupShots", () => {
   it("files every committed frame under a product", () => {
@@ -47,5 +47,34 @@ describe("groupShots", () => {
       { src: "/shots/endgame-aixx-01.jpg", title: "x", date: null, width: 1, height: 1 },
     ]);
     expect(groups).toEqual([]);
+  });
+});
+
+describe("stripShots", () => {
+  it("shows no screen the cases already show", () => {
+    const { groups } = groupShots(feedAssets);
+    const strip = stripShots(groups);
+    const shown = new Set(strip.flatMap((g) => g.shots.map((s) => s.src)));
+    /* The rails scroll ChessEver's whole group and Endgame's through 08. */
+    for (const src of feedAssets.map((a) => a.src)) {
+      if (src.startsWith("/shots/chessever-")) expect(shown.has(src)).toBe(false);
+      if (/endgame-ai-0[1-8]\.jpg$/.test(src)) expect(shown.has(src)).toBe(false);
+    }
+    /* And the extras survive: everything past 08. */
+    expect(shown.has("/shots/endgame-ai-09.png")).toBe(true);
+  });
+
+  it("drops a group the rail covers completely", () => {
+    const { groups } = groupShots(feedAssets);
+    expect(stripShots(groups).map((g) => g.item.slug)).toEqual(["endgame-ai"]);
+  });
+
+  it("drops a marker-less group whose rail shows the whole feed", () => {
+    /* ChessEver's rail has no end marker because it scrolls everything the
+       feed holds — so whatever the feed holds, the strip holds nothing. */
+    const { groups } = groupShots([
+      { src: "/shots/chessever-01.jpg", title: "x", date: null, width: 1, height: 1 },
+    ]);
+    expect(stripShots(groups)).toEqual([]);
   });
 });

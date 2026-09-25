@@ -83,4 +83,13 @@ describe("the work", () => {
     }
     expect(missing).toEqual([]);
   });
+
+  it("points every recorded product mark at a committed file", () => {
+    /* A mark that 404s leaves a broken image beside the title — the one
+       place on the page a missing file reads as a design decision. */
+    const missing = work
+      .filter((item) => item.mark && !existsSync(`public${item.mark.src}`))
+      .map((item) => item.slug);
+    expect(missing).toEqual([]);
+  });
 });
