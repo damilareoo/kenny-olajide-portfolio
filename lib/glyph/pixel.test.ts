@@ -98,36 +98,29 @@ describe("the rule keeps its own hand", () => {
 });
 
 describe("the floor belongs to the skin", () => {
-  /* The floor is two numbers now, and neither of them lives here. What this
-     file can still hold is the seam: globals.css is where they are, and
-     PIXEL_FLOOR is only what a renderer falls back to when no stylesheet has
-     loaded — so it has to be the light one, because a document with no
-     stylesheet has no `.dark` on it either. */
+  /* The floor is one number now, and it does not live here. What this file
+     can still hold is the seam: globals.css is where it is, and PIXEL_FLOOR
+     is only what a renderer falls back to when no stylesheet has loaded — so
+     it has to be the light one, because a light document is all there is. */
   const css = () => readFileSync(resolve(process.cwd(), "app/globals.css"), "utf8");
-  const floorIn = (block: string) => {
-    const scope = css().match(new RegExp(`${block}\\s*\\{[\\s\\S]*?\\n\\}`));
-    expect(scope, `globals.css must declare a ${block} block`).not.toBeNull();
+  const floorInRoot = () => {
+    const scope = css().match(/:root\s*\{[\s\S]*?\n\}/);
+    expect(scope, "globals.css must declare a :root block").not.toBeNull();
     const declared = scope![0].match(/--pixel-floor:\s*([\d.]+)/);
-    expect(declared, `${block} must declare --pixel-floor`).not.toBeNull();
+    expect(declared, ":root must declare --pixel-floor").not.toBeNull();
     return Number(declared![1]);
   };
 
-  it("declares a floor on each skin, inside the range an alpha has", () => {
+  it("declares a floor inside the range an alpha has", () => {
     /* The upper bound is not pedantry. Canvas ignores an out-of-range
        `globalAlpha` rather than clamping it, so a floor above 1 would paint
        every dot at whatever alpha the last one left set — silently. GlyphCell
        clamps what it reads; this keeps the stylesheet from needing it to. */
-    for (const skin of [":root", "\\.dark"]) {
-      expect(floorIn(skin)).toBeGreaterThan(0);
-      expect(floorIn(skin)).toBeLessThanOrEqual(1);
-    }
+    expect(floorInRoot()).toBeGreaterThan(0);
+    expect(floorInRoot()).toBeLessThanOrEqual(1);
   });
 
-  it("spends less ink on the dark skin, where near-black is already a surface", () => {
-    expect(floorIn("\\.dark")).toBeLessThan(floorIn(":root"));
-  });
-
-  it("falls back to the light skin's floor, which is the one a bare document has", () => {
-    expect(PIXEL_FLOOR).toBe(floorIn(":root"));
+  it("falls back to the floor, which is the one a bare document has", () => {
+    expect(PIXEL_FLOOR).toBe(floorInRoot());
   });
 });

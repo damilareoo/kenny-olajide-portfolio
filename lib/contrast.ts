@@ -44,20 +44,16 @@ export function contrastRatio(a: string, b: string): number {
  * The token values as authored, read out of the stylesheet itself.
  *
  * Read rather than duplicated: a copy of the palette in a test file is a second
- * source of truth that goes stale the first time somebody edits the CSS.
+ * source of truth that goes stale the first time somebody edits the CSS. One
+ * skin now — `:root` is the whole palette, because there is no dark block to
+ * read a second one from.
  */
-export function readSkins(css: string): {
-  light: Record<string, string>;
-  dark: Record<string, string>;
-} {
-  const block = (selector: string) => {
-    const match = css.match(new RegExp(`${selector}\\s*\\{([^}]*)\\}`));
-    if (!match) throw new Error(`no ${selector} block in the stylesheet`);
-    const tokens: Record<string, string> = {};
-    for (const [, name, value] of match[1].matchAll(/(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{3,6})\s*;/g)) {
-      tokens[name] = value;
-    }
-    return tokens;
-  };
-  return { light: block(":root"), dark: block("\\.dark") };
+export function readSkin(css: string): Record<string, string> {
+  const match = css.match(/:root\s*\{([^}]*)\}/);
+  if (!match) throw new Error("no :root block in the stylesheet");
+  const tokens: Record<string, string> = {};
+  for (const [, name, value] of match[1].matchAll(/(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{3,6})\s*;/g)) {
+    tokens[name] = value;
+  }
+  return tokens;
 }

@@ -72,13 +72,12 @@ export const viewport: Viewport = {
   /* Edge to edge under the notch; content pads back out with env() where it
      must. Without the tag every safe-area inset reads 0px. */
   viewportFit: "cover",
-  themeColor: [
-    /* --bg on each skin, or the browser chrome sits a shade off the page it
-       is framing. Held to app/globals.css by hand: a retune that moves --bg
-       moves these two. */
-    { media: "(prefers-color-scheme: light)", color: "#fcfcfc" },
-    { media: "(prefers-color-scheme: dark)", color: "#090909" },
-  ],
+  /* Light, declared twice: the meta keeps browser-native surfaces (form
+     controls, scrollbars) on the light one whatever the system prefers, and
+     the theme colour matches the chrome to the ground. There is no dark
+     theme colour because there is no dark theme. */
+  colorScheme: "light",
+  themeColor: "#fcfcfc",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -89,11 +88,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           {children}
-          {/* Inside ThemeProvider so the board is drawn in whichever theme is
-              on. Last in the tree because it is the last thing that should
-              ever take focus, and it takes none until someone types e4. */}
+          {/* Inside ThemeProvider because GlyphCell reads the theme through
+              `useTheme` to time its repaints; forced light, so the board is
+              always drawn in the light skin. Last in the tree because it is
+              the last thing that should ever take focus, and it takes none
+              until someone types e4. */}
           <EasterEgg />
         </ThemeProvider>
       </body>
