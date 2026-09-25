@@ -294,5 +294,49 @@ export const workAssets: Record<string, Asset[]> = {
       "width": 2880,
       "height": 1146
     }
+  ],
+  "xd": [
+    {
+      "src": "/work/xd/01-trending-games.jpg",
+      "title": "Trending games",
+      "date": null,
+      "height": 1138,
+      "width": 1600
+    },
+    {
+      "src": "/work/xd/02-library.jpg",
+      "title": "Library",
+      "date": null,
+      "height": 1138,
+      "width": 1600
+    },
+    {
+      "src": "/work/xd/03-specials.jpg",
+      "title": "Specials",
+      "date": null,
+      "height": 1138,
+      "width": 1600
+    },
+    {
+      "src": "/work/xd/04-community-picks.jpg",
+      "title": "Community picks",
+      "date": null,
+      "height": 1138,
+      "width": 1600
+    },
+    {
+      "src": "/work/xd/05-game-detail.jpg",
+      "title": "Game detail",
+      "date": null,
+      "height": 2406,
+      "width": 1200
+    },
+    {
+      "src": "/work/xd/06-community-news.jpg",
+      "title": "Community news",
+      "date": null,
+      "height": 3206,
+      "width": 1600
+    }
   ]
 };

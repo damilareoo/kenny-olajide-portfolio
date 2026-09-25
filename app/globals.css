@@ -400,6 +400,42 @@ body {
   }
 }
 
+/* The shots drift: one line that moves on its own, so nobody has to find
+   a control to learn there is more — and it never stops, not even under
+   the cursor, so the motion stays a fact of the strip rather than a trick
+   of it. The edge fade is the same promise in still form. Animation lives
+   behind `no-preference` only: the blanket reduced-motion rule would freeze
+   the loop on its first frame and strand everything past it, so reduced
+   motion gets the same line as a plain horizontal scroll instead. */
+.shots-viewport {
+  overflow-x: auto;
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.shots-track {
+  display: flex;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shots-viewport {
+    overflow: hidden;
+  }
+
+  /* One loop, no seam: the track holds two identical halves and travels
+     exactly one of them (-50%), so the end frame is the start frame and
+     nothing jumps, gaps, or restarts. */
+  .shots-track {
+    animation: shots-drift 110s linear infinite;
+  }
+}
+
+@keyframes shots-drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* Emil pass: pressable + lift, transform/opacity only, ease-out, <300ms.
    Hover-gated so touch never sees a stuck hover state. */.pressable {
   transition:

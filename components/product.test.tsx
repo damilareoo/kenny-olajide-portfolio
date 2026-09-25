@@ -19,7 +19,6 @@ const item: WorkItem = {
   title: "Example",
   oneLiner: "One line.",
   year: "2025",
-  disciplines: ["Product Design"],
   blocks: [
     { kind: "text", body: ["Lede one."] },
     { kind: "text", body: ["Lede two."] },

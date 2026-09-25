@@ -8,8 +8,7 @@
 // The CONTENT is Kenny's and is unchanged from what this repo already held.
 // Two fields were renamed into the new schema and nothing was added:
 // `summary` is now `oneLiner` and `body` is now `intro`, which is where the
-// source's `Product` prints them. `disciplines` is the one new field with a
-// value, and it says the one thing the record already said in prose.
+// source's `Product` prints them.
 //
 // Fields the source's schema offers and this file deliberately leaves empty:
 // `stack`, `href`, `client`, and `blocks`. Nothing about how these products
@@ -17,15 +16,6 @@
 // invented to fill a slot is the failure this repo's honesty rule exists to
 // prevent. An absent field renders as no row at all, which is what a record
 // with nothing to say should look like.
-
-export const disciplines = [
-  "Product Design",
-  "Interaction",
-  "Identity",
-  "Build",
-] as const;
-
-export type Discipline = (typeof disciplines)[number];
 
 export type CaseMedia = {
   /** Path under public/work/<slug>/. Absent renders a labelled empty frame. */
@@ -40,6 +30,13 @@ export type CaseMedia = {
    * imitation of chrome and never a shadow.
    */
   frame?: "phone" | "browser";
+  /**
+   * No stroke, no ground — the capture sits borderless at the tile radius.
+   * For art that carries its own edge. A dark full-bleed screen wants this;
+   * a pale stroke drawn round it would be the only light thing in the frame.
+   * Implies no device treatment: a plain capture is never held in chrome.
+   */
+  plain?: true;
   /**
    * One frame per case may break the column and run the full measure. Which one
    * is authored: a computed "widest image wins" would put the emphasis wherever
@@ -91,7 +88,6 @@ export type WorkItem = {
   title: string;
   oneLiner: string;
   year: string;
-  disciplines: Discipline[];
   /** The live product. Absent for work that no longer exists publicly. */
   href?: string;
   /** Who it was for, when the piece was client work. */
@@ -145,7 +141,6 @@ export const work: WorkItem[] = [
     year: "2025",
     role: "0–1 Product Experience",
     href: "https://chessever.com",
-    disciplines: ["Product Design"],
     collaborators: [
       {
         name: "Damilare Osofisan",
@@ -171,7 +166,6 @@ export const work: WorkItem[] = [
     year: "2026",
     role: "Product Designer",
     href: "https://endgame.ai",
-    disciplines: ["Product Design"],
     oneLiner:
       "An iOS chess app that turns post-game analysis into something a club player can actually read.",
     intro: [
@@ -250,6 +244,79 @@ export const work: WorkItem[] = [
             src: "/work/endgame-ai/web-2.png",
             alt: "Endgame.ai homepage featuring its Netflix partnership",
             caption: "Homepage with Netflix partnership",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "xd",
+    title: "XD",
+    year: "2025",
+    role: "Product Designer",
+    oneLiner:
+      "A desktop storefront for PC games — catalogue, library, and community in one dark interface.",
+    intro: [
+      "XD is a gaming platform designed as a competitor to Steam and Epic Games, built to bring game discovery, libraries, and the broader gaming experience into one place.",
+      "As the product designer, I designed the interface from the ground up, focusing on creating a clean, immersive, and intuitive experience for gamers. I worked across key areas of the platform, from navigation and game discovery to game pages, libraries, profiles, and other core interactions, while establishing a visual language that gives XD its own identity.",
+      "The goal was to balance the information-rich nature of gaming platforms with a simple interface that makes discovering and getting into games feel effortless.",
+    ],
+    /* Six desktop captures in three aspect-matched pairs: the lede browses
+       (catalogue, then library), the second pair works the community side,
+       and the tail pairs the tall game page with the tall news scroll.
+       Plain throughout — dark full-bleed screens carry their own edge, and
+       a pale stroke would be the only light thing in any of these frames.
+       The full-page community hub capture stays out of the reel — at 1:2.9
+       it pairs with nothing — and lives in Downloads until it earns a slot. */
+    blocks: [
+      {
+        kind: "pair",
+        items: [
+          {
+            src: "/work/xd/01-trending-games.jpg",
+            alt: "XD trending games catalogue",
+            caption: "Trending",
+            plain: true,
+          },
+          {
+            src: "/work/xd/02-library.jpg",
+            alt: "XD personal game library",
+            caption: "Library",
+            plain: true,
+          },
+        ],
+      },
+      {
+        kind: "pair",
+        items: [
+          {
+            src: "/work/xd/03-specials.jpg",
+            alt: "XD specials and promotions",
+            caption: "Specials",
+            plain: true,
+          },
+          {
+            src: "/work/xd/04-community-picks.jpg",
+            alt: "XD community picks",
+            caption: "Community picks",
+            plain: true,
+          },
+        ],
+      },
+      {
+        kind: "pair",
+        items: [
+          {
+            src: "/work/xd/05-game-detail.jpg",
+            alt: "XD game detail page with reviews",
+            caption: "Game page",
+            plain: true,
+          },
+          {
+            src: "/work/xd/06-community-news.jpg",
+            alt: "XD community news scroll",
+            caption: "Community news",
+            plain: true,
           },
         ],
       },

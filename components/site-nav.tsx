@@ -10,7 +10,7 @@ import { site } from "@/data/site";
  *
  * Seyi-style — one mark that opens the site, rather than a bar of
  * destinations. The header is identical on every route: the name on the
- * left, one control on the right. Everything else — the three routes, the
+ * left, one control on the right. Everything else — the two routes, the
  * way out by mail — lives in the overlay.
  *
  * Motion is CSS only (interruptible, off the main thread): the overlay fades
@@ -21,7 +21,6 @@ import { site } from "@/data/site";
  */
 const ROUTES = [
   { href: "/", label: "Home" },
-  { href: "/shots", label: "Shots" },
   { href: "/about", label: "About" },
 ] as const;
 
@@ -131,10 +130,17 @@ export function SiteNav({ current }: { current?: string }) {
               onClick={() => setOpen(false)}
               tabIndex={open ? undefined : -1}
               aria-label="Close menu"
-              className="pressable inline-flex items-center gap-2 rounded-[4px] px-1.5 py-1 font-mono text-2xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink"
+              className="pressable lift inline-flex shrink-0 items-center gap-2 rounded-full border border-line px-3.5 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] text-ink transition-colors hover:border-ink-3"
             >
               Close
-              <Plus open />
+              <svg aria-hidden="true" className="size-3" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M15 5 5.00068 14.9993M14.9993 15 5 5.00071"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="square"
+                />
+              </svg>
             </button>
           </div>
 
@@ -198,25 +204,18 @@ export function SiteNav({ current }: { current?: string }) {
 }
 
 /**
- * A plus that turns into a close mark.
+ * The plus beside Menu.
  *
- * Two hairlines, one rotating 90 degrees — transform only, so the morph is
- * cheap and interruptible. Drawn in currentColor at the text size, so it
- * sits on the baseline of the label it accompanies.
+ * Two hairlines drawn in currentColor at the text size, so it sits on the
+ * baseline of the label it accompanies. The close control carries a real X
+ * instead of this morphed — at menu size the rotated pair read as a slash,
+ * and a control that says Close should draw what it means.
  */
-function Plus({ open = false }: { open?: boolean }) {
+function Plus() {
   return (
     <span aria-hidden className="relative inline-block size-3 shrink-0">
-      <span
-        className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current transition-transform duration-200 ease-out ${
-          open ? "rotate-45" : ""
-        }`}
-      />
-      <span
-        className={`absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current transition-transform duration-200 ease-out ${
-          open ? "-rotate-45" : ""
-        }`}
-      />
+      <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current" />
+      <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
     </span>
   );
 }

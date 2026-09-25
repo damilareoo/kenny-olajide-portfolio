@@ -9,7 +9,7 @@ import { CaseReel } from "@/components/case-reel";
 import { GlyphIcon } from "@/components/glyph-icon";
 import { GlyphText } from "@/components/glyph-text";
 import { PanelField } from "@/components/panel-field";
-import { RecordRow, SectionLabel, Tags } from "@/components/ui";
+import { RecordRow, SectionLabel } from "@/components/ui";
 import { appReel } from "@/lib/app-reel";
 import { LEDE_BLOCKS, TAIL_BLOCKS, splitBlocks } from "@/lib/case-blocks";
 import { LinkedText } from "@/lib/linked-text";
@@ -85,7 +85,7 @@ export function Product({
    */
   shots?: BareShot[];
   /**
-   * The first case stands open on load: the page's argument is the work,
+   * Both cases stand open on load: the page's argument is the work,
    * and a closed wall of bars makes a first-time reader open every door
    * before seeing any of it.
    */
@@ -372,9 +372,6 @@ export function Product({
                       ))}
                     </RecordRow>
                   )}
-                  <RecordRow label="Discipline">
-                    <Tags items={item.disciplines} />
-                  </RecordRow>
                   {item.stack && <RecordRow label="Stack">{item.stack}</RecordRow>}
                   {item.href && (
                     <RecordRow label="Live">

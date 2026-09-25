@@ -32,6 +32,7 @@ export function Frame({
   panel = false,
   fit = "cover",
   quality = 75,
+  framed = true,
   className = "",
 }: {
   src?: string;
@@ -82,6 +83,14 @@ export function Frame({
    * thumbnails; case-study art is the thing being judged and gets 90.
    */
   quality?: number;
+  /**
+   * Draw the hairline and the raised ground. On by default and stays on:
+   * most art on this site wants the slot. Off is for captures that carry
+   * their own edge — a dark full-bleed screen gains nothing from a pale
+   * stroke drawn round it, and the stroke would be the only light thing
+   * in the frame.
+   */
+  framed?: boolean;
   className?: string;
 }) {
   const aspect = width && height ? `${width} / ${height}` : (ratio ?? "4 / 3");
@@ -97,7 +106,7 @@ export function Frame({
     <div
       style={{ aspectRatio: aspect, ...(capRatio ? { "--frame-ratio": capRatio } : {}) } as React.CSSProperties}
       data-frame={swept || undefined}
-      className={`relative overflow-hidden rounded-[var(--radius-tile)] border border-line bg-surface-2 transition-colors ${capRatio ? "frame-cap" : ""} ${className}`}
+      className={`relative overflow-hidden rounded-[var(--radius-tile)] transition-colors ${framed ? "border border-line bg-surface-2" : ""} ${capRatio ? "frame-cap" : ""} ${className}`}
     >
       {swept && (
         /* Sibling of the image, not a wrapper around it: `fill` positions the

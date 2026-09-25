@@ -61,12 +61,14 @@ const PHONE_PLATE = ["max-w-[30rem]", "max-w-[30rem]", "max-w-[52rem]"] as const
  */
 function Presented({
   frame,
+  plain,
   children,
 }: {
   frame?: CaseMedia["frame"];
+  plain?: true;
   children: React.ReactNode;
 }) {
-  if (!frame) return <>{children}</>;
+  if (!frame || plain) return <>{children}</>;
   return (
     <div data-frame-style={frame} className={`bg-surface ${FRAME_STYLE[frame]}`}>
       {children}
@@ -173,7 +175,7 @@ export function CaseReel({
                     const resolved = take(media);
                     return (
                       <figure key={n} className={holdFor(media.frame)}>
-                        <Presented frame={media.frame}>
+                        <Presented frame={media.frame} plain={media.plain}>
                           <Frame
                             quality={90}
                             src={resolved.src}
@@ -181,6 +183,7 @@ export function CaseReel({
                             width={resolved.width}
                             height={resolved.height}
                             ratio={media.ratio ?? "4 / 3"}
+                            framed={media.plain !== true}
                             sizes="(min-width: 640px) 36vw, 74vw"
                           />
                         </Presented>
@@ -210,7 +213,7 @@ export function CaseReel({
                   { media: b, resolved: right },
                 ].map(({ media, resolved }, n) => (
                   <figure key={n} className={holdFor(media.frame)}>
-                    <Presented frame={media.frame}>
+                    <Presented frame={media.frame} plain={media.plain}>
                       <Frame
                         quality={90}
                         src={resolved.src}
@@ -218,6 +221,7 @@ export function CaseReel({
                         width={resolved.width}
                         height={resolved.height}
                         ratio={media.ratio ?? "4 / 3"}
+                        framed={media.plain !== true}
                         sizes="(min-width: 640px) 45vw, 92vw"
                       />
                     </Presented>
@@ -251,7 +255,7 @@ export function CaseReel({
         const bled = block.bleed === true;
         const plate = (
           <>
-            <Presented frame={block.frame}>
+            <Presented frame={block.frame} plain={block.plain}>
               <Frame
                 quality={90}
                 src={resolved.src}
@@ -259,6 +263,7 @@ export function CaseReel({
                 width={resolved.width}
                 height={resolved.height}
                 ratio={block.ratio ?? "16 / 9"}
+                framed={block.plain !== true}
                 preload={preloadFirst && i === 0}
                 /* The full-bleed frame is the one that reads as arriving. A
                    pair or an inset plate dissolving four ways at once is a

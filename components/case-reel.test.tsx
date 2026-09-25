@@ -34,6 +34,22 @@ describe("CaseReel presentation", () => {
     expect(host.querySelector("[data-frame-style]")).toBeNull();
   });
 
+  it("draws no stroke on a plain capture", () => {
+    /* Dark full-bleed screens carry their own edge. Plain drops the slot's
+       hairline and ground but keeps the tile radius — borderless, not shapeless. */
+    const blocks: CaseBlock[] = [
+      { kind: "full", src: "/work/xd/01-trending-games.jpg", plain: true },
+    ];
+    render(<CaseReel blocks={blocks} assets={[]} />);
+    expect(host.querySelector(".border-line")).toBeNull();
+  });
+
+  it("keeps the stroke where plain is not asked for", () => {
+    const blocks: CaseBlock[] = [{ kind: "full", src: "/work/xd/01-trending-games.jpg" }];
+    render(<CaseReel blocks={blocks} assets={[]} />);
+    expect(host.querySelector(".border-line")).not.toBeNull();
+  });
+
   it("lets one frame break the column", () => {
     const blocks: CaseBlock[] = [{ kind: "full", bleed: true }];
     render(<CaseReel blocks={blocks} assets={[]} />);

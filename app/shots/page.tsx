@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ShotsWall } from "@/components/shots-wall";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { feedAssets } from "@/data/assets.generated";
 import { groupShots } from "@/lib/shots";
@@ -40,6 +41,8 @@ export default function ShotsPage() {
           product
         </p>
       )}
+
+      <SiteFooter />
     </main>
   );
 }

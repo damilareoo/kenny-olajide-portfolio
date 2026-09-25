@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
-import { GlyphIcon } from "@/components/glyph-icon";
 import { GlyphText } from "@/components/glyph-text";
 import { Photo } from "@/components/photo";
 import { RoleList } from "@/components/role-list";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { roles } from "@/data/experience";
 import { site } from "@/data/site";
@@ -94,24 +94,9 @@ export default function AboutPage() {
           <RoleList roles={roles} />
         </Block>
 
-        {/* The ending, seyioniyitan-style: one open door rather than a
-            summary. The open-to-work claim is the owner's own line from the
-            home — repeated here as the way out, not restated as a fact. */}
-        <section className="rule-t pt-6">
-          <p className="font-mono text-2xs uppercase tracking-wider text-ink-3">Contact</p>
-          <a
-            href={`mailto:${site.email}`}
-            className="pressable group mt-3 flex items-baseline justify-between gap-x-4 text-left"
-          >
-            <span className="max-w-[20ch] text-lg font-medium leading-snug tracking-tight text-ink">
-              Have a role or a collaboration in mind?
-            </span>
-            <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-2xs uppercase tracking-wider text-ink-2 transition-colors group-hover:text-ink">
-              Message me
-              <GlyphIcon name="arrow-out" size="0.4375rem" />
-            </span>
-          </a>
-        </section>
+        {/* The ending lives in the shared footer now — the same contact door,
+            playlist, and mail row as every other page. */}
+        <SiteFooter />
       </div>
     </main>
   );

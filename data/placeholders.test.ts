@@ -39,8 +39,8 @@ describe("content honesty", () => {
 });
 
 describe("the work", () => {
-  it("selects exactly the two pieces the brief names, ChessEver first", () => {
-    expect(work.map((w) => w.slug)).toEqual(["chessever", "endgame-ai"]);
+  it("selects exactly the three pieces the brief names, ChessEver first", () => {
+    expect(work.map((w) => w.slug)).toEqual(["chessever", "endgame-ai", "xd"]);
   });
 
   it("finds a piece by slug and returns undefined for anything else", () => {
