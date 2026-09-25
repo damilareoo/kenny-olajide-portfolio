@@ -49,8 +49,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: `${site.name} — ${site.role}`, template: `%s — ${site.name}` },
   description: "Product designer working on chess software.",
-  openGraph: { type: "website", siteName: site.name, url: site.url },
-  twitter: { card: "summary_large_image" },
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    url: site.url,
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: `${site.name}, product designer`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og.jpg"],
+  },
 };
 
 export const viewport: Viewport = {

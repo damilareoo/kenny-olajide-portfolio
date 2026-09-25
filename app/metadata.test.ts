@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import sitemap from "./sitemap";
 import robots from "./robots";
 import manifest from "./manifest";
@@ -22,6 +22,20 @@ describe("metadata", () => {
     expect(manifest().name).toBe("Kenny Olajide");
     expect(manifest().background_color).toBe("#fcfcfc");
     expect(manifest().theme_color).toBe("#090909");
+  });
+
+  it("ships one share image for every platform, at the universal size", () => {
+    /* Every scraper — iMessage, WhatsApp, Telegram, Slack, Discord, X,
+       Facebook, LinkedIn — reads og:image, and Twitter falls back to it, so
+       one absolute 1200x630 JPEG covers all of them. A generated route would
+       also work, but the owner supplied the art: the file is the card. */
+    expect(existsSync("public/og.jpg"), "public/og.jpg is committed").toBe(true);
+    const layout = readFileSync("app/layout.tsx", "utf8");
+    expect(layout).toContain('url: "/og.jpg"');
+    expect(layout).toContain("width: 1200");
+    expect(layout).toContain("height: 630");
+    expect(layout).toContain('card: "summary_large_image"');
+    expect(layout).toContain('images: ["/og.jpg"]');
   });
 
   it("holds the browser-chrome colours to the stylesheet's own grounds", () => {
