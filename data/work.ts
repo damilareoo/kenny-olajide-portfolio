@@ -88,14 +88,6 @@ export type WorkItem = {
   title: string;
   oneLiner: string;
   year: string;
-  /**
-   * The product's own mark, set at the end of the head row.
-   *
-   * Optional because most work has no mark to show, and a head that invents
-   * one is branding somebody else's product. Absent renders nothing — never
-   * a placeholder, never an initial.
-   */
-  mark?: { src: string; alt: string };
   /** The live product. Absent for work that no longer exists publicly. */
   href?: string;
   /** Who it was for, when the piece was client work. */
@@ -262,7 +254,6 @@ export const work: WorkItem[] = [
     title: "XD",
     year: "2025",
     role: "Product Designer",
-    mark: { src: "/xd-logo.jpg", alt: "XD logo" },
     oneLiner:
       "A desktop storefront for PC games — catalogue, library, and community in one dark interface.",
     intro: [
