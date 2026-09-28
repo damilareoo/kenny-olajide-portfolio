@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { Analytics } from "@vercel/analytics/next";
 import { EasterEgg } from "@/components/easter-egg";
 import { site } from "@/data/site";
 import "./globals.css";
@@ -97,6 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               until someone types e4. */}
           <EasterEgg />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
